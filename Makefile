@@ -12,10 +12,11 @@ INCLUDES = -I./oskernel
 
 HD_IMG_NAME:= "hd.img"
 
-all: ${DIRS} ${FILES}
+all: clean ${DIRS} ${FILES}
 	dd if=${BIN}/boot.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=0 count=1 conv=notrunc
+	dd if=${BIN}/setup.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=1 count=4 conv=notrunc
 
-${BIN}/boot.bin:
+${BIN}/boot.bin ${BIN}/setup.bin:
 	$(MAKE) -C ${SRC}/boot/${ARC} ROOT_PATH=${ROOT_PATH}
 
 ${BUILD}:
@@ -23,3 +24,10 @@ ${BUILD}:
 
 ${BIN}:
 	$(shell mkdir ${BIN})
+
+clean:
+	rm -rf ${BUILD}
+	rm -rf ${BIN}
+
+qemu:
+	qemu-system-i386 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME)

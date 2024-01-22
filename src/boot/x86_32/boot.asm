@@ -1,4 +1,4 @@
-ORG 0x7c00
+ORG 0x7c00              ;bootloader代码会被加载到0x7c00
 
 SETUP_START equ 0x500
 
@@ -20,8 +20,8 @@ start:
     mov sp, 0x7c00
     sti
 
-    mov ebx, 1
-    mov ecx, 4
+    mov ebx, 1      ;
+    mov ecx, 4      ;
     mov edi, SETUP_START
     call ata_lba_read
 
