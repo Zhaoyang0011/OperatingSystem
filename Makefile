@@ -5,10 +5,11 @@ BUILD:=${ROOT_PATH}/build
 TOOL:=${ROOT_PATH}/tool
 BIN:=${ROOT_PATH}/bin
 SRC:=${ROOT_PATH}/src
-ARC?=x86_32
+ARC?=x86_64
 FILES:= ${BIN}/boot.bin
 DIRS:= ${BUILD} ${BIN}
-INCLUDES = -I./oskernel
+
+DEBUG:= -g
 
 HD_IMG_NAME:= "hd.img"
 
@@ -31,3 +32,6 @@ clean:
 
 qemu:
 	qemu-system-i386 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME)
+
+qemug:
+	qemu-system-i386 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME) -S -s
