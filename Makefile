@@ -5,7 +5,7 @@ BUILD:=${ROOT_PATH}/build
 TOOL:=${ROOT_PATH}/tool
 BIN:=${ROOT_PATH}/bin
 SRC:=${ROOT_PATH}/src
-ARC?=x86_64
+ARC?=x86_32
 FILES:= ${BIN}/boot.bin
 DIRS:= ${BUILD} ${BIN}
 
@@ -30,8 +30,16 @@ clean:
 	rm -rf ${BUILD}
 	rm -rf ${BIN}
 
+QEMU:=: qemu-system-i386
+
+ifeq ($(ARC), x86_64)
+	QEMU:= qemu-system-x86_64
+else ifeq ($(ARC), x86_32)
+	QEMU:= qemu-system-i386
+endif
+
 qemu:
-	qemu-system-i386 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME)
+	${QEMU} -m 2048 -hda $(BUILD)/$(HD_IMG_NAME)
 
 qemug:
-	qemu-system-i386 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME) -S -s
+	${QEMU} -m 2048 -hda $(BUILD)/$(HD_IMG_NAME) -S -s

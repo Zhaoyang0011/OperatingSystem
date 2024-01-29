@@ -82,12 +82,12 @@ protected_start:
     ;call chk_cpuid
     ;call chk_cpu_long_mode
 
-    call setup_main
+    ;mov ebx, 5
+    ;mov ecx, 200
+    ;mov edi, KERNEL_START - KERNEL_OFF
+    ;call ata_lba_read
 
-    mov ebx, 5
-    mov ecx, 200
-    mov edi, KERNEL_START - KERNEL_OFF
-    call ata_lba_read
+    call setup_main
 
     jmp CODE_SEG:KERNEL_START
 

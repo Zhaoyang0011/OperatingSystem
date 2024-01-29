@@ -12,11 +12,14 @@ ${BIN}/boot.bin: ./boot.asm
 ${BIN}/setup.bin: ${BUILD}/setup.o
 	objcopy -O binary $< $@
 
-${BUILD}/setup.o:${BUILD}/setup_asm.o ${BUILD}/setup_c.o
+${BUILD}/setup.o:${BUILD}/setup_asm.o ${BUILD}/setup_c.o ${BUILD}/ldr.o
 	ld -m elf_i386 $^ -o $@ -Ttext 0x500
 
 ${BUILD}/setup_asm.o: ./setup.asm
 	nasm -f elf32 -g $< -o $@
 
 ${BUILD}/setup_c.o: ./setup.c
+	gcc ${CFLAGS_X86} ${INCLUDE} -g -c $< -o $@
+
+${BUILD}/ldr.o: ./ldr.c
 	gcc ${CFLAGS_X86} ${INCLUDE} -g -c $< -o $@
