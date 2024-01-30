@@ -5,7 +5,7 @@ BUILD:=${ROOT_PATH}/build
 TOOL:=${ROOT_PATH}/tool
 BIN:=${ROOT_PATH}/bin
 SRC:=${ROOT_PATH}/src
-ARC?=x86_32
+ARC?=x86_64
 FILES:= ${BIN}/boot.bin
 DIRS:= ${BUILD} ${BIN}
 
