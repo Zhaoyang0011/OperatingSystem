@@ -1,6 +1,6 @@
 %define MBSP_ADR 0x100000
 %define IA32_EFER 0xC0000080
-%define PML4T_BADR 0x1000000      ;0x20000;0x5000
+%define PML4T_ADR 0x1000000      ;0x20000;0x5000
 %define KRLVIRADR 0x0
 %define KINITSTACK_OFF 16
 global _start
@@ -23,7 +23,7 @@ _start:
     mov eax, cr4
     bts eax, 5                      ; CR4.PAE = 1
     mov cr4, eax
-    mov eax, PML4T_BADR
+    mov eax, PML4T_ADR
     mov cr3, eax
 ;enable 64bits long-mode
     mov ecx, IA32_EFER

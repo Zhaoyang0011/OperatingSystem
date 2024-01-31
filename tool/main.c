@@ -30,6 +30,12 @@ typedef struct kernel_desc{
     uint64_t next_pg;       //next paging address
 }__attribute__((packed)) kernel_desc_t;
 
+void set_kernel_desc(kernel_desc_t *pdesc, uint64_t kernel_size) {
+    memset(pdesc, 0, sizeof(kernel_desc_t));
+    pdesc->kernel_magic = ZHOS_MAGIC;
+    pdesc->kernel_size = kernel_size;
+}
+
 int main (int argc,char *argv[]) {
     if(argc != 3){
         printf("Only support 2 parameters\n");
@@ -52,8 +58,7 @@ int main (int argc,char *argv[]) {
     char buf[4096];
     memset(buf, 0, sizeof(buf));
     kernel_desc_t desc;
-    desc.kernel_magic = ZHOS_MAGIC;
-    desc.kernel_size = kernel_size;
+    set_kernel_desc(&desc, kernel_size);
 
     int ofd;
 
@@ -62,7 +67,7 @@ int main (int argc,char *argv[]) {
         return -1;
     }
     write(ofd, &desc, sizeof(desc));
-    write(ofd, buf, 4096 - sizeof (desc));
+    write(ofd, buf, 0x1000 - sizeof (desc));
 
     lseek(ifd, 0 , SEEK_SET);
     int offset = 0;
@@ -72,7 +77,7 @@ int main (int argc,char *argv[]) {
         write(ofd, buf, read_size);
     } while (read_size!=0);
 
-    printf("package finished!\n");
+    printf("Succefully packed kernel!\n");
     close(ifd);
     close(ofd);
 

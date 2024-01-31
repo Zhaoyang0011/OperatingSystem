@@ -6,7 +6,7 @@ CODE_SEG equ gdt_code - gdt_start
 DATA_SEG equ gdt_data - gdt_start
 
 KERNEL_START equ 0x2000000
-KERNEL_OFF equ -0x1000
+KERNEL_DESC_OFF equ -0x1000
 E820_DESC equ 0x5000
 E820_ADR equ E820_DESC + 4
 
@@ -83,8 +83,8 @@ protected_start:
     call chk_cpu_long_mode
 
     mov ebx, 5
-    mov ecx, 200
-    mov edi, KERNEL_START + KERNEL_OFF
+    mov ecx, 100
+    mov edi, (KERNEL_START + KERNEL_DESC_OFF)
     call ata_lba_read
 
     call setup_main

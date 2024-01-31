@@ -4,12 +4,6 @@
 
 #define VIDEO_MEM 0xB8000
 
-void die()
-{
-    while (TRUE)
-        ;
-}
-
 void kerror(char *err_msg, int length)
 {
     if (length > 0 || length <= 100)
@@ -25,7 +19,7 @@ void kerror(char *err_msg, int length)
     {
         kerror("invalid error massage!", 22);
     }
-    die();
+    while (TRUE);
 }
 
 void init_stack()
@@ -37,7 +31,7 @@ void init_stack()
 
 void init_memory_info()
 {
-
+    
 }
 
 /**
@@ -57,7 +51,6 @@ void init_pages()
         pdpte[i] = 0;
     }
 
-    // 
     p[0] = (uint64_t)((uint32_t)pdpte | KPML4_RW | KPML4_P);
     p[(KRNL_VIRTUAL_ADDRESS_START >> 39) & 0x1ff] = (uint64_t)((uint32_t)pdpte | KPML4_RW | KPML4_P);
 
@@ -70,7 +63,7 @@ void init_pages()
             pde[j] = 0 | adr | KPDE_PS | KPDE_RW | KPDE_P;
             adr += (0x1 << KPDP_SHIFT);
         }
-        pde = (uint64_t *)((uint64_t)pde + 0x1000);
+        pde = (uint64_t *)(((uint64_t)pde) + 0x1000);
     }
 }
 
