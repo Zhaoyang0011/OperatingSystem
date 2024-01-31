@@ -22,14 +22,25 @@ void kerror(char *err_msg, int length)
     while (TRUE);
 }
 
-void init_stack()
+// check and init kernel info
+void chkini_kernel_info(kernel_desc_t *kernel_desc)
 {
-    kernel_desc_t *kernel_desc = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
+    kernel_desc->kernel_start = KERNEL_START;
+    if (kernel_desc->kernel_magic != ZHOS_MAGIC)
+    {
+        char *error_msg = "Invalid kernel magic number";
+        kerror(error_msg, 28);
+    }
+}
+
+void init_stack(kernel_desc_t *kernel_desc)
+{
     kernel_desc->stack_init_adr = STACK_PHYADR;
     kernel_desc->stack_size = STACK_SIZE;
 }
 
-void init_memory_info()
+// 
+void init_memory_info(kernel_desc_t *kernel_desc)
 {
     
 }
@@ -39,7 +50,7 @@ void init_memory_info()
  * To simplify programming difficulty, we use 2M as the page size.
  * After entering long mode we will modify the paging settings and use 4K as the page size.
  */
-void init_pages()
+void init_pages(kernel_desc_t *kernel_desc)
 {
     uint64_t *p = (uint64_t *)KINITPAGE_PHYADR;
     uint64_t *pdpte = (uint64_t *)(KINITPAGE_PHYADR + 0x1000);
@@ -53,6 +64,13 @@ void init_pages()
 
     p[0] = (uint64_t)((uint32_t)pdpte | KPML4_RW | KPML4_P);
     p[(KRNL_VIRTUAL_ADDRESS_START >> 39) & 0x1ff] = (uint64_t)((uint32_t)pdpte | KPML4_RW | KPML4_P);
+
+    kernel_desc->kernel_start = KERNEL_START;
+    if (kernel_desc->kernel_magic != ZHOS_MAGIC)
+    {
+        char *error_msg = "Invalid kernel magic number";
+        kerror(error_msg, 28);
+    }
 
     uint64_t adr = 0;
     for (uint_t i = 0; i < 16; i++)
@@ -70,13 +88,9 @@ void init_pages()
 void init_machine_param()
 {
     kernel_desc_t *kernel_desc = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
-    if (kernel_desc->kernel_magic != ZHOS_MAGIC)
-    {
-        char *error_msg = "Invalid kernel magic number";
-        kerror(error_msg, 28);
-    }
 
-    init_stack();
-    init_memory_info();
-    init_pages();
+    chkini_kernel_info(kernel_desc);
+    init_stack(kernel_desc);
+    init_memory_info(kernel_desc);
+    init_pages(kernel_desc);
 }
