@@ -79,8 +79,8 @@ protected_start:
     mov ss, ax
     mov esp, 0x9fc00
 
-    ;call chk_cpuid
-    ;call chk_cpu_long_mode
+    call chk_cpuid
+    call chk_cpu_long_mode
 
     mov ebx, 5
     mov ecx, 100
