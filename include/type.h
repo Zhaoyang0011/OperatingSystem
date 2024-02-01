@@ -19,8 +19,8 @@ typedef long long sint64_t;
 typedef long sint_t;
 typedef unsigned long addr_t;
 
-#define ALIGN(x, a) (((x) + (a) - 1) & ~((a) - 1))
-#define P4K_ALIGN(x) ALIGN(x,0x1000)
+#define ALIGN(x, a) (((x) + (a)-1) & ~((a)-1))
+#define P4K_ALIGN(x) ALIGN(x, 0x1000)
 
 #define TRUE 1
 #define FALSE 0

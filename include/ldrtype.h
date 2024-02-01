@@ -19,7 +19,7 @@ typedef struct e820_map
 {
     uint64_t addr; /* start of memory segment8 */
     uint64_t size; /* size of memory segment8 */
-    uint32_t type;  /* type of memory segment 4*/
+    uint32_t type; /* type of memory segment 4*/
 } __attribute__((packed)) e820_map_t;
 
 typedef struct e820_desc
@@ -70,8 +70,6 @@ typedef struct e820_desc
 #define KPDP_SHIFT 21
 #define PGENTY_SIZE 512
 
-#define ALIGN(x, a) (((x) + (a)-1) & ~((a)-1))
-#define P4K_ALIGN(x) ALIGN(x, 0x1000)
 #define ZHOS_MAGIC (uint64_t)((((uint64_t)'Z') << 56) | (((uint64_t)'H') << 48) | (((uint64_t)'O') << 40) | (((uint64_t)'S') << 32) | (((uint64_t)'M') << 24) | (((uint64_t)'A') << 16) | (((uint64_t)'C') << 8) | ((uint64_t)'H'))
 
 typedef struct kernel_desc
