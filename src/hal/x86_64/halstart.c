@@ -3,8 +3,11 @@
 
 extern kernel_desc_t kernel_info;
 
-void init_hal() {}
+void init_hal()
+{
+}
 
-void hal_start() {
-  init_hal();
+void hal_start()
+{
+    init_hal();
 }

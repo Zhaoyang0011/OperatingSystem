@@ -1,6 +1,6 @@
-#include <ldrtype.h>
-
 #include "ldr.h"
+
+#include <ldrtype.h>
 
 #define VIDEO_MEM 0xB8000
 
@@ -49,7 +49,8 @@ e820_map_t *chk_memsize(e820_desc_t *e8p, uint64_t addr, uint64_t size)
     }
     for (uint32_t i = 0; i < e8p->e820_num; i++)
     {
-        if ((e8p->maps[i].type == RAM_USABLE) && (addr >= e8p->maps[i].addr) && (len < (e8p->maps[i].addr + e8p->maps[i].size)))
+        if ((e8p->maps[i].type == RAM_USABLE) && (addr >= e8p->maps[i].addr) &&
+            (len < (e8p->maps[i].addr + e8p->maps[i].size)))
         {
             return &e8p->maps[i];
         }
