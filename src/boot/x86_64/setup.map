@@ -1,0 +1,396 @@
+
+Discarded input sections
+
+ .note.GNU-stack
+                0x0000000000000000        0x0 /home/szy/os/OperationgSystem/build/setup_c.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 /home/szy/os/OperationgSystem/build/ldr.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /home/szy/os/OperationgSystem/build/setup_asm.o
+LOAD /home/szy/os/OperationgSystem/build/setup_c.o
+LOAD /home/szy/os/OperationgSystem/build/ldr.o
+Address of section .text set to 0x500
+                [!provide]                        PROVIDE (__executable_start = SEGMENT_START ("text-segment", 0x8048000))
+                0x0000000008048094                . = (SEGMENT_START ("text-segment", 0x8048000) + SIZEOF_HEADERS)
+
+.interp
+ *(.interp)
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.hash
+ *(.hash)
+
+.gnu.hash
+ *(.gnu.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.dyn        0x0000000008048094        0x0
+ *(.rel.init)
+ *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
+ *(.rel.fini)
+ *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
+ *(.rel.data.rel.ro .rel.data.rel.ro.* .rel.gnu.linkonce.d.rel.ro.*)
+ *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
+ *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*)
+ *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*)
+ *(.rel.ctors)
+ *(.rel.dtors)
+ *(.rel.got)
+ .rel.got       0x0000000008048094        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+ *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*)
+ *(.rel.ifunc)
+
+.rel.plt        0x0000000008048094        0x0
+ *(.rel.plt)
+                [!provide]                        PROVIDE (__rel_iplt_start = .)
+ *(.rel.iplt)
+ .rel.iplt      0x0000000008048094        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+                [!provide]                        PROVIDE (__rel_iplt_end = .)
+
+.relr.dyn
+ *(.relr.dyn)
+                0x0000000008049000                . = ALIGN (CONSTANT (MAXPAGESIZE))
+
+.init
+ *(SORT_NONE(.init))
+
+.plt            0x0000000008049000        0x0
+ *(.plt)
+ *(.iplt)
+ .iplt          0x0000000008049000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+
+.plt.got
+ *(.plt.got)
+
+.plt.sec
+ *(.plt.sec)
+
+.text           0x0000000000000500      0x6d8
+ *(.text.unlikely .text.*_unlikely .text.unlikely.*)
+ *(.text.exit .text.exit.*)
+ *(.text.startup .text.startup.*)
+ *(.text.hot .text.hot.*)
+ *(SORT_BY_NAME(.text.sorted.*))
+ *(.text .stub .text.* .gnu.linkonce.t.*)
+ .text          0x0000000000000500      0x142 /home/szy/os/OperationgSystem/build/setup_asm.o
+                0x0000000000000500                _start
+ .text          0x0000000000000642       0x8a /home/szy/os/OperationgSystem/build/setup_c.o
+                0x0000000000000642                die
+                0x0000000000000684                setup_main
+ .text          0x00000000000006cc      0x50c /home/szy/os/OperationgSystem/build/ldr.o
+                0x00000000000006cc                kerror
+                0x000000000000074b                chkini_kernel_info
+                0x00000000000007a6                init_stack
+                0x00000000000007ce                chk_memsize
+                0x00000000000008db                get_memsize
+                0x000000000000094b                init_memory_info
+                0x00000000000009ff                init_pages
+                0x0000000000000b90                init_machine_param
+ *(.gnu.warning)
+
+.fini
+ *(SORT_NONE(.fini))
+                [!provide]                        PROVIDE (__etext = .)
+                [!provide]                        PROVIDE (_etext = .)
+                [!provide]                        PROVIDE (etext = .)
+                0x0000000000001000                . = ALIGN (CONSTANT (MAXPAGESIZE))
+                0x0000000000001000                . = SEGMENT_START ("rodata-segment", (ALIGN (CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 0x1))))
+
+.rodata         0x0000000000001000       0x86
+ *(.rodata .rodata.* .gnu.linkonce.r.*)
+ .rodata        0x0000000000001000       0x86 /home/szy/os/OperationgSystem/build/ldr.o
+
+.rodata1
+ *(.rodata1)
+
+.eh_frame_hdr
+ *(.eh_frame_hdr)
+ *(.eh_frame_entry .eh_frame_entry.*)
+
+.eh_frame       0x0000000000001088      0x174
+ *(.eh_frame)
+ .eh_frame      0x0000000000001088       0x54 /home/szy/os/OperationgSystem/build/setup_c.o
+ .eh_frame      0x00000000000010dc      0x120 /home/szy/os/OperationgSystem/build/ldr.o
+                                        0x138 (size before relaxing)
+ *(.eh_frame.*)
+
+.gcc_except_table
+ *(.gcc_except_table .gcc_except_table.*)
+
+.gnu_extab
+ *(.gnu_extab*)
+
+.exception_ranges
+ *(.exception_ranges*)
+                0x0000000000003000                . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE))
+
+.eh_frame
+ *(.eh_frame)
+ *(.eh_frame.*)
+
+.gnu_extab
+ *(.gnu_extab)
+
+.gcc_except_table
+ *(.gcc_except_table .gcc_except_table.*)
+
+.exception_ranges
+ *(.exception_ranges*)
+
+.tdata          0x0000000000003000        0x0
+                [!provide]                        PROVIDE (__tdata_start = .)
+ *(.tdata .tdata.* .gnu.linkonce.td.*)
+
+.tbss
+ *(.tbss .tbss.* .gnu.linkonce.tb.*)
+ *(.tcommon)
+
+.preinit_array  0x0000000000003000        0x0
+                [!provide]                        PROVIDE (__preinit_array_start = .)
+ *(.preinit_array)
+                [!provide]                        PROVIDE (__preinit_array_end = .)
+
+.init_array     0x0000000000003000        0x0
+                [!provide]                        PROVIDE (__init_array_start = .)
+ *(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*))
+ *(.init_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .ctors)
+                [!provide]                        PROVIDE (__init_array_end = .)
+
+.fini_array     0x0000000000003000        0x0
+                [!provide]                        PROVIDE (__fini_array_start = .)
+ *(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*))
+ *(.fini_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .dtors)
+                [!provide]                        PROVIDE (__fini_array_end = .)
+
+.ctors
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+ *(SORT_BY_NAME(.ctors.*))
+ *(.ctors)
+
+.dtors
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+ *(SORT_BY_NAME(.dtors.*))
+ *(.dtors)
+
+.jcr
+ *(.jcr)
+
+.data.rel.ro
+ *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*)
+ *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*)
+
+.dynamic
+ *(.dynamic)
+
+.got            0x0000000000003000        0x0
+ *(.got)
+ .got           0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+ *(.igot)
+                0x0000000000003000                . = DATA_SEGMENT_RELRO_END (., (SIZEOF (.got.plt) >= 0xc)?0xc:0x0)
+
+.got.plt        0x0000000000003000        0x0
+ *(.got.plt)
+ .got.plt       0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+ *(.igot.plt)
+ .igot.plt      0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+
+.data           0x0000000000003000        0x0
+ *(.data .data.* .gnu.linkonce.d.*)
+ .data          0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/setup_c.o
+ .data          0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/ldr.o
+
+.data1
+ *(.data1)
+                0x0000000000003000                _edata = .
+                [!provide]                        PROVIDE (edata = .)
+                0x0000000000003000                . = .
+                0x0000000000003000                __bss_start = .
+
+.bss            0x0000000000003000        0x0
+ *(.dynbss)
+ *(.bss .bss.* .gnu.linkonce.b.*)
+ .bss           0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/setup_c.o
+ .bss           0x0000000000003000        0x0 /home/szy/os/OperationgSystem/build/ldr.o
+ *(COMMON)
+                0x0000000000003000                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x0000000000003000                . = ALIGN (0x4)
+                0x0000000000003000                . = SEGMENT_START ("ldata-segment", .)
+                0x0000000000003000                . = ALIGN (0x4)
+                0x0000000000003000                _end = .
+                [!provide]                        PROVIDE (end = .)
+                0x0000000000003000                . = DATA_SEGMENT_END (.)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x2b
+ *(.comment)
+ .comment       0x0000000000000000       0x2b /home/szy/os/OperationgSystem/build/setup_c.o
+                                         0x2c (size before relaxing)
+ .comment       0x000000000000002b       0x2c /home/szy/os/OperationgSystem/build/ldr.o
+
+.gnu.build.attributes
+ *(.gnu.build.attributes .gnu.build.attributes.*)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000       0x60
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0x20 /home/szy/os/OperationgSystem/build/setup_asm.o
+ .debug_aranges
+                0x0000000000000020       0x20 /home/szy/os/OperationgSystem/build/setup_c.o
+ .debug_aranges
+                0x0000000000000040       0x20 /home/szy/os/OperationgSystem/build/ldr.o
+
+.debug_pubnames
+                0x0000000000000000        0x0
+ *(.debug_pubnames)
+ .debug_pubnames
+                0x0000000000000000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+
+.debug_info     0x0000000000000000      0x697
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x0000000000000000       0x3b /home/szy/os/OperationgSystem/build/setup_asm.o
+ .debug_info    0x000000000000003b      0x1d7 /home/szy/os/OperationgSystem/build/setup_c.o
+ .debug_info    0x0000000000000212      0x485 /home/szy/os/OperationgSystem/build/ldr.o
+
+.debug_abbrev   0x0000000000000000      0x252
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000       0x1b /home/szy/os/OperationgSystem/build/setup_asm.o
+ .debug_abbrev  0x000000000000001b       0xc9 /home/szy/os/OperationgSystem/build/setup_c.o
+ .debug_abbrev  0x00000000000000e4      0x16e /home/szy/os/OperationgSystem/build/ldr.o
+
+.debug_line     0x0000000000000000      0x3e7
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x0000000000000000       0xaa /home/szy/os/OperationgSystem/build/setup_asm.o
+ .debug_line    0x00000000000000aa       0x92 /home/szy/os/OperationgSystem/build/setup_c.o
+ .debug_line    0x000000000000013c      0x2ab /home/szy/os/OperationgSystem/build/ldr.o
+
+.debug_frame    0x0000000000000000        0x0
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+
+.debug_str      0x0000000000000000      0x2ac
+ *(.debug_str)
+ .debug_str     0x0000000000000000      0x209 /home/szy/os/OperationgSystem/build/setup_c.o
+                                        0x236 (size before relaxing)
+ .debug_str     0x0000000000000209       0xa3 /home/szy/os/OperationgSystem/build/ldr.o
+                                        0x2d3 (size before relaxing)
+
+.debug_loc      0x0000000000000000        0x0
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000        0x0 /home/szy/os/OperationgSystem/build/setup_asm.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges
+ *(.debug_ranges)
+
+.debug_addr
+ *(.debug_addr)
+
+.debug_line_str
+                0x0000000000000000       0x72
+ *(.debug_line_str)
+ .debug_line_str
+                0x0000000000000000       0x6c /home/szy/os/OperationgSystem/build/setup_c.o
+                                         0xb1 (size before relaxing)
+ .debug_line_str
+                0x000000000000006c        0x6 /home/szy/os/OperationgSystem/build/ldr.o
+                                         0xa5 (size before relaxing)
+
+.debug_loclists
+ *(.debug_loclists)
+
+.debug_macro
+ *(.debug_macro)
+
+.debug_names
+ *(.debug_names)
+
+.debug_rnglists
+ *(.debug_rnglists)
+
+.debug_str_offsets
+ *(.debug_str_offsets)
+
+.debug_sup
+ *(.debug_sup)
+
+.gnu.attributes
+ *(.gnu.attributes)
+
+/DISCARD/
+ *(.note.GNU-stack)
+ *(.gnu_debuglink)
+ *(.gnu.lto_*)
+OUTPUT(/home/szy/os/OperationgSystem/build/setup.o elf32-i386)

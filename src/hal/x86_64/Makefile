@@ -13,13 +13,17 @@ ${BIN}/kernel.pkg: ${BUILD}/OSTool ${BIN}/kernel.bin
 ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
-${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_c.o
-	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld
+${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_c.o \
+				  ${BUILD}/hal_start.o
+	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
 	nasm -f elf64 -g $< -o $@
 
 ${BUILD}/kernel_c.o: ./kernel.c
+	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
+
+${BUILD}/hal_start.o: ./hal_start.c
 	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
 
 

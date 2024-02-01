@@ -89,11 +89,6 @@ void init_memory_info(kernel_desc_t *kernel_desc)
     kernel_desc->mach_memsize = get_memsize(e820_desc);
 }
 
-/**
- * This funcion prepares the memory page information that the long mode needed.
- * To simplify programming difficulty, we use 2M as the page size.
- * After entering long mode we will modify the paging settings and use 4K as the page size.
- */
 void init_pages(kernel_desc_t *kernel_desc)
 {
     uint64_t *p = (uint64_t *)KINITPAGE_PHYADR;

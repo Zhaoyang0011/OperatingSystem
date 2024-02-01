@@ -15,7 +15,16 @@ void die()
     while (TRUE);
 }
 
+/**
+ * This is the main function of the setup. 
+ * It will call other functions that prepares our device information.
+ */
 void setup_main()
 {
-    init_machine_param();
+    kernel_desc_t *kernel_desc = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
+    
+    chkini_kernel_info(kernel_desc);
+    init_stack(kernel_desc);
+    init_memory_info(kernel_desc);
+    init_pages(kernel_desc);
 }
