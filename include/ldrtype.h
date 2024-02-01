@@ -17,8 +17,8 @@
 
 typedef struct e820_map
 {
-    uint64_t saddr; /* start of memory segment8 */
-    uint64_t lsize; /* size of memory segment8 */
+    uint64_t addr; /* start of memory segment8 */
+    uint64_t size; /* size of memory segment8 */
     uint32_t type;  /* type of memory segment 4*/
 } __attribute__((packed)) e820_map_t;
 

@@ -19,7 +19,8 @@ void kerror(char *err_msg, int length)
     {
         kerror("invalid error massage!", 22);
     }
-    while (TRUE);
+    while (TRUE)
+        ;
 }
 
 // check and init kernel info
@@ -39,10 +40,53 @@ void init_stack(kernel_desc_t *kernel_desc)
     kernel_desc->stack_size = STACK_SIZE;
 }
 
-// 
+e820_map_t *chk_memsize(e820_desc_t *e8p, uint64_t addr, uint64_t size)
+{
+    uint64_t len = addr + size;
+    if (e8p == NULL || e8p->e820_num == 0)
+    {
+        return NULL;
+    }
+    for (uint32_t i = 0; i < e8p->e820_num; i++)
+    {
+        if ((e8p->maps[i].type == RAM_USABLE) && (addr >= e8p->maps[i].addr) && (len < (e8p->maps[i].addr + e8p->maps[i].size)))
+        {
+            return &e8p->maps[i];
+        }
+    }
+    return NULL;
+}
+
+uint64_t get_memsize(e820_desc_t *e820_desc)
+{
+    uint64_t size = 0;
+    for (int i = 0; i < e820_desc->e820_num; ++i)
+    {
+        if (e820_desc->maps[i].type == RAM_USABLE)
+        {
+            size += e820_desc->maps[i].size;
+        }
+    }
+    return size;
+}
+
+//
 void init_memory_info(kernel_desc_t *kernel_desc)
 {
-    
+    e820_desc_t *e820_desc = (e820_desc_t *)E820_DESC;
+    if (e820_desc->e820_num == 0)
+    {
+        kerror("No e820map", 20);
+    }
+    if (chk_memsize(e820_desc, 0x100000, 0x8000000) == 0)
+    {
+        kerror("Your computer is low on memory, the memory cannot be less than 128MB!", 20);
+    }
+
+    kernel_desc->mmap_adr = (uint64_t)(e820_desc->maps);
+    kernel_desc->mmap_nr = (uint64_t)e820_desc->e820_num;
+    kernel_desc->mmap_sz = (uint64_t)(e820_desc->e820_num * sizeof(e820_map_t));
+    kernel_desc->mach_memsize = get_memsize(e820_desc);
 }
 
 /**
