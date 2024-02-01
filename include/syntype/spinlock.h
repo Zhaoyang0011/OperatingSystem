@@ -8,9 +8,6 @@ typedef struct spinlock
     volatile uint32_t lock;
 } spinlock_t;
 
-void init_spinlock(spinlock_t* spinlock)
-{
-    spinlock->lock = 0;
-}
+void init_spinlock(spinlock_t* spinlock);
 
 #endif
