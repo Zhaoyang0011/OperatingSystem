@@ -313,11 +313,11 @@ Address of section .text set to 0x500
  .debug_abbrev  0x000000000000001b       0xc9 /home/szy/os/OperationgSystem/build/setup_c.o
  .debug_abbrev  0x00000000000000e4      0x16e /home/szy/os/OperationgSystem/build/ldr.o
 
-.debug_line     0x0000000000000000      0x3e7
+.debug_line     0x0000000000000000      0x3e9
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x0000000000000000       0xaa /home/szy/os/OperationgSystem/build/setup_asm.o
- .debug_line    0x00000000000000aa       0x92 /home/szy/os/OperationgSystem/build/setup_c.o
- .debug_line    0x000000000000013c      0x2ab /home/szy/os/OperationgSystem/build/ldr.o
+ .debug_line    0x00000000000000aa       0x94 /home/szy/os/OperationgSystem/build/setup_c.o
+ .debug_line    0x000000000000013e      0x2ab /home/szy/os/OperationgSystem/build/ldr.o
 
 .debug_frame    0x0000000000000000        0x0
  *(.debug_frame)

@@ -14,7 +14,7 @@ ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
 ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_c.o \
-				  ${BUILD}/hal_start.o
+				  ${BUILD}/halstart.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
@@ -23,7 +23,7 @@ ${BUILD}/kernel_entry.o: ./kernel_entry.asm
 ${BUILD}/kernel_c.o: ./kernel.c
 	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
 
-${BUILD}/hal_start.o: ./hal_start.c
+${BUILD}/halstart.o: ./halstart.c
 	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
 
 

@@ -1,6 +1,7 @@
 #include <hal/halstart.h>
 #include <ldrtype.h>
 #include <memory.h>
+#include <spinlock.h>
 
 __attribute__((section(".data"))) kernel_desc_t kernel_info;
 
@@ -21,5 +22,7 @@ void kernel_main()
     copy_kernel_desc(&kernel_info);
     hal_start();
     while (TRUE)
-        ;
+    {
+        int i = 0;
+    }
 }
