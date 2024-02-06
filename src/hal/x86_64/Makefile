@@ -14,16 +14,16 @@ ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
 ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_c.o \
-				  ${BUILD}/halstart.o
+				  ${BUILD}/halinit.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
 	nasm -f elf64 -g $< -o $@
 
-${BUILD}/kernel_c.o: ./kernel.c
+${BUILD}/kernel_c.o: ./kernel_entry.c
 	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
 
-${BUILD}/halstart.o: ./halstart.c
+${BUILD}/halinit.o: ./halinit.c
 	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
 
 
