@@ -5,12 +5,12 @@
 #include <memory.h>
 #include <spinlock.h>
 
-void copy_kernel_desc(kernel_desc_t *p_kernel_desc)
+void copy_kernel_desc()
 {
     kernel_desc_t *temp = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
-    memcpy(temp, p_kernel_desc, sizeof(kernel_desc_t));
+    memcpy(temp, &kernel_info, sizeof(kernel_desc_t));
 
-    if (p_kernel_desc->kernel_magic != ZHOS_MAGIC)
+    if (kernel_info.kernel_magic != ZHOS_MAGIC)
     {
         while (TRUE)
             ;
@@ -19,7 +19,7 @@ void copy_kernel_desc(kernel_desc_t *p_kernel_desc)
 
 void kernel_main()
 {
-    copy_kernel_desc(&kernel_info);
+    copy_kernel_desc();
 
     init_hal();
 

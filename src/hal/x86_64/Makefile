@@ -20,7 +20,7 @@ ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_c.o \
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
 	nasm -f elf64 -g $< -o $@
 
-${BUILD}/kernel_c.o: ./kernel_entry.c
+${BUILD}/kernel_c.o: ./kernel.c
 	gcc ${CFLAGS_X64} ${INCLUDE} -g -c $< -o $@
 
 ${BUILD}/halinit.o: ./halinit.c
