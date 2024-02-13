@@ -1,6 +1,8 @@
+#include "type.h"
 #include <config_x86_64.h>
 #include <hal/halglobal.h>
 #include <hal/halinit.h>
+#include <kprint.h>
 #include <ldrtype.h>
 #include <memory.h>
 #include <spinlock.h>
@@ -8,13 +10,23 @@
 void copy_kernel_desc()
 {
     kernel_desc_t *temp = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
-    memcpy(temp, &kernel_info, sizeof(kernel_desc_t));
+    memcpy(temp, &kernel_descriptor, sizeof(kernel_desc_t));
 
-    if (kernel_info.kernel_magic != ZHOS_MAGIC)
+    if (kernel_descriptor.kernel_magic != ZHOS_MAGIC)
     {
+        kprint("Incorrect kernel head!");
         while (TRUE)
             ;
     }
+
+    if (kernel_descriptor.kernel_size == 0)
+    {
+        kprint("");
+        while (TRUE)
+            ;
+    }
+    
+    kernel_descriptor.next_pg = P4K_ALIGN(kernel_descriptor.next_pg);
 }
 
 void kernel_main()

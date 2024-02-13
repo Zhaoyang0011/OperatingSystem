@@ -11,6 +11,6 @@
 #define HAL_DEFGLOB_VARIABLE(vartype, varname) \
     EXTERN __attribute__((section(".data"))) vartype varname
 
-HAL_DEFGLOB_VARIABLE(kernel_desc_t, kernel_info);
+HAL_DEFGLOB_VARIABLE(kernel_desc_t, kernel_descriptor);
 
 #endif
