@@ -1,7 +1,7 @@
 #include <kprint.h>
 #include <type.h>
 
-KLINE char *strcpyk(char *s, char *d)
+KLINE char *kstrcpy(char *s, char *d)
 {
     while (*s)
     {
@@ -12,7 +12,7 @@ KLINE char *strcpyk(char *s, char *d)
     return s;
 }
 
-KLINE char *printintk(char *str, int n, int base)
+KLINE char * kprint_int(char *str, int n, int base)
 {
     register char *p;
     char strbuf[36];
@@ -33,7 +33,7 @@ KLINE char *printintk(char *str, int n, int base)
     return str;
 }
 
-KLINE void write_console(char *str)
+KLINE void kwrite_console(char *str)
 {
 }
 
@@ -54,15 +54,15 @@ void kprint(const char *fmt, ...)
         switch (*fmt)
         {
         case 'd':
-            p = printintk(p, va_arg(args, uint_t), 10);
+            p = kprint_int(p, va_arg(args, uint_t), 10);
             fmt++;
             break;
         case 'x':
-            p = printintk(p, va_arg(args, uint_t), 16);
+            p = kprint_int(p, va_arg(args, uint_t), 16);
             fmt++;
             break;
         case 's':
-            p = strcpyk(p, (char *)va_arg(args, uint_t));
+            p = kstrcpy(p, (char *)va_arg(args, uint_t));
             fmt++;
             break;
         default:
@@ -70,5 +70,5 @@ void kprint(const char *fmt, ...)
         }
     }
     va_end(args);
-    write_console(buf);
+    kwrite_console(buf);
 }
