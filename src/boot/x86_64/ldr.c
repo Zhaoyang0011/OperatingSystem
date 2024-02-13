@@ -30,8 +30,14 @@ void chkini_kernel_info(kernel_desc_t *kernel_desc)
     if (kernel_desc->kernel_magic != ZHOS_MAGIC)
     {
         char *error_msg = "Invalid kernel magic number";
-        kerror(error_msg, 28);
+        kerror(error_msg, 50);
     }
+    if (kernel_desc->kernel_size == 0)
+    {
+        char *error_msg = "Incorrect kernel size";
+        kerror(error_msg, 50);
+    }
+    kernel_desc->next_pg = P4K_ALIGN(KERNEL_START + kernel_desc->kernel_size);
 }
 
 void init_stack(kernel_desc_t *kernel_desc)

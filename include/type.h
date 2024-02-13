@@ -25,4 +25,7 @@ typedef unsigned long addr_t;
 #define TRUE 1
 #define FALSE 0
 
+#define EXTERN extern
+#define KEXTERN extern
+
 #endif

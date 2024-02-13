@@ -3,11 +3,14 @@
 
 #include <ldrtype.h>
 
-#define HAL_DEFGLOB_VARIABLE(vartype,varname) \
-__attribute__((section(".data"))) vartype varname
-
-#ifdef X86_64
-HAL_DEFGLOB_VARIABLE(kernel_desc_t, kernel_info);
+#ifdef HALGOBAL_HEAD
+#undef EXTERN
+#define EXTERN
 #endif
+
+#define HAL_DEFGLOB_VARIABLE(vartype, varname) \
+    EXTERN __attribute__((section(".data"))) vartype varname
+
+HAL_DEFGLOB_VARIABLE(kernel_desc_t, kernel_info);
 
 #endif

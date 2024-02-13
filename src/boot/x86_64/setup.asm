@@ -1,6 +1,6 @@
 global _start
 extern setup_main
-extern die
+extern setup_die
 
 CODE_SEG equ gdt_code - gdt_start
 DATA_SEG equ gdt_data - gdt_start
@@ -49,7 +49,7 @@ loop:
 	mov eax, 0xe820
 	mov ecx, 20
 	mov edx, 0x534d4150
-	int 15h
+	int 0x15
     jc .1
 
     inc esi
@@ -83,7 +83,7 @@ protected_start:
     call chk_cpu_long_mode
 
     mov ebx, 5
-    mov ecx, 100
+    mov ecx, 107
     mov edi, (KERNEL_START + KERNEL_DESC_OFF)
     call ata_lba_read
 
@@ -117,10 +117,8 @@ ata_lba_read:
     mov al, 0x20
     out dx, al
 
-
 .next_sector:
     push ecx
-
 
     mov dx, 0x1f7
 .check_hd:
@@ -164,7 +162,7 @@ chk_cpu_long_mode:
 
 no_cpuid:
 no_long_mode:
-    call die
+    call setup_die
 
 gdt_start:
 gdt_null:

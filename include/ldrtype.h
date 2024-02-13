@@ -3,6 +3,9 @@
 
 #include <type.h>
 
+/**
+ * Physical memory macro and strucure
+ */
 #define E820_DESC 0x5000
 #define E820_ADR (E820_DESC + 4)
 
@@ -17,9 +20,9 @@
 
 typedef struct e820_map
 {
-    uint64_t addr; /* start of memory segment8 */
-    uint64_t size; /* size of memory segment8 */
-    uint32_t type; /* type of memory segment 4*/
+    uint64_t addr; // start of memory segment8
+    uint64_t size; // size of memory segment8
+    uint32_t type; // type of memory segment 4
 } __attribute__((packed)) e820_map_t;
 
 typedef struct e820_desc
@@ -38,7 +41,25 @@ typedef struct e820_desc
 #define E820_DESC 0x5000
 #define E820_MAX 200
 
-// memory page macro
+/**
+ * cpu information macro and structure
+ */
+typedef struct cpuid_desc
+{
+    sint32_t function_id;
+    sint32_t info[4];
+} __attribute__((packed)) cpuid_desc_t;
+
+typedef struct cpu_desc
+{
+
+} __attribute__((packed)) cpu_info_t;
+
+/**
+ * kernel information macro and structure
+ */
+
+// virtual memory page macro
 #define KRNL_VIRTUAL_ADDRESS_START 0xffff800000000000
 #define KPML4_P (1 << 0)
 #define KPML4_RW (1 << 1)

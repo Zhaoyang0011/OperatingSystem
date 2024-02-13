@@ -14,9 +14,9 @@ DEBUG:= -g
 HD_IMG_NAME:= "hd.img"
 
 all: clean ${DIRS} ${FILES}
-	dd if=${BIN}/boot.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=0 count=1 conv=notrunc
-	dd if=${BIN}/setup.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=1 count=4 conv=notrunc
-	dd if=${BIN}/kernel.pkg of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=5 count=200 conv=notrunc
+	dd if=${BIN}/boot.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=0 count=1 conv=sync
+	dd if=${BIN}/setup.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=1 count=4 conv=sync
+	dd if=${BIN}/kernel.pkg of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=5 count=220 conv=sync
 
 ${BIN}/boot.bin ${BIN}/setup.bin:
 	$(MAKE) -C ${SRC}/boot/${ARC} ROOT_PATH=${ROOT_PATH}
@@ -43,7 +43,7 @@ else ifeq ($(ARC), x86_32)
 endif
 
 qemu:
-	qemu-system-x86_64 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME)
+	qemu-system-x86_64 -m 4096 -hda $(BUILD)/$(HD_IMG_NAME)
 
 qemug:
-	qemu-system-x86_64 -m 2048 -hda $(BUILD)/$(HD_IMG_NAME) -S -s
+	qemu-system-x86_64 -m 4096 -hda $(BUILD)/$(HD_IMG_NAME) -S -s
