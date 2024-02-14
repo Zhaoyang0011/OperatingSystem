@@ -46,13 +46,13 @@ typedef struct e820_desc
  */
 typedef struct cpuid_desc
 {
-    sint32_t function_id;
-    sint32_t info[4];
+    uint32_t function_id;
+    uint32_t info[4];
 } __attribute__((packed)) cpuid_desc_t;
 
 typedef struct cpu_desc
 {
-
+    
 } __attribute__((packed)) cpu_info_t;
 
 /**

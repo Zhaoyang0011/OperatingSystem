@@ -80,7 +80,7 @@ protected_start:
     mov esp, 0x9fc00
 
     call chk_cpuid
-    call chk_cpu_long_mode
+;    call chk_cpu_long_mode
 
     mov ebx, 5
     mov ecx, 110
@@ -149,16 +149,16 @@ chk_cpuid:
     jz no_cpuid
     ret
 
-chk_cpu_long_mode:
-    mov eax, 0x80000000    ; Set the A-register to 0x80000000.
-    cpuid                  ; CPU identification.
-    cmp eax, 0x80000001    ; Compare the A-register with 0x80000001.
-    jb no_long_mode        ; It is less, there is no long mode.
-    mov eax, 0x80000001    ; Set the A-register to 0x80000001.
-    cpuid                  ; CPU identification.
-    test edx, 1 << 29      ; Test if the LM-bit, which is bit 29, is set in the D-register.
-    jz no_long_mode        ; They aren't, there is no long mode.
-    ret
+; chk_cpu_long_mode:
+;     mov eax, 0x80000000    ; Set the A-register to 0x80000000.
+;     cpuid                  ; CPU identification.
+;     cmp eax, 0x80000001    ; Compare the A-register with 0x80000001.
+;     jb no_long_mode        ; It is less, there is no long mode.
+;     mov eax, 0x80000001    ; Set the A-register to 0x80000001.
+;     cpuid                  ; CPU identification.
+;     test edx, 1 << 29      ; Test if the LM-bit, which is bit 29, is set in the D-register.
+;     jz no_long_mode        ; They aren't, there is no long mode.
+;     ret
 
 no_cpuid:
 no_long_mode:

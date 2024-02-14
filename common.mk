@@ -1,5 +1,5 @@
 CFLAGS_X86:= -m32 # 32 bit program
-CFLAGS_X86+= -masm=intel
+#CFLAGS_X86+= -masm=intel
 CFLAGS_X86+= -fno-builtin			# no gcc built-in function
 CFLAGS_X86+= -nostdinc				# no std head file
 CFLAGS_X86+= -fno-pic				# position independent code

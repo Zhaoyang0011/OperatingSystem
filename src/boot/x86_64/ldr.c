@@ -4,6 +4,15 @@
 
 #define VIDEO_MEM 0xB8000
 
+KLINE uint32_t cpuid(cpuid_desc_t *cpuid_desc)
+{
+    asm volatile("cpuid"
+                 : "=a"(*cpuid_desc->info), "=b"(*(cpuid_desc->info + 1)), "=c"(*(cpuid_desc->info + 2)),
+                   "=d"(*(cpuid_desc->info + 3))
+                 : "a"(cpuid_desc->function_id));
+    return (uint32_t)cpuid_desc->info[0];
+}
+
 void kerror(char *err_msg, int length)
 {
     if (length > 0 || length <= 100)
@@ -23,20 +32,43 @@ void kerror(char *err_msg, int length)
         ;
 }
 
+// check cpu long mode
+int chkcpu_long_mode()
+{
+    cpuid_desc_t cpu_desc;
+    cpu_desc.function_id = 0x80000000;
+
+    if (cpuid(&cpu_desc) < 0x80000001)
+        return FALSE;
+
+    cpu_desc.function_id = 0x80000001;
+    cpuid(&cpu_desc);
+
+    if (cpu_desc.info[3] & (1 << 29))
+        return TRUE;
+
+    return FALSE;
+}
+
 // check and init kernel info
 void chkini_kernel_info(kernel_desc_t *kernel_desc)
 {
     kernel_desc->kernel_start = KERNEL_START;
     if (kernel_desc->kernel_magic != ZHOS_MAGIC)
     {
-        char *error_msg = "Invalid kernel magic number";
-        kerror(error_msg, 50);
+        kerror("Invalid kernel magic number", 50);
     }
+
     if (kernel_desc->kernel_size == 0)
     {
-        char *error_msg = "Incorrect kernel size";
-        kerror(error_msg, 50);
+        kerror("Incorrect kernel size", 50);
     }
+
+    if (!chkcpu_long_mode())
+    {
+        kerror("Your computer doest not support long mode", 50);
+    }
+
     kernel_desc->next_pg = P4K_ALIGN(KERNEL_START + kernel_desc->kernel_size);
 }
 
