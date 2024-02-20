@@ -1,7 +1,7 @@
 #ifndef MEM_H
 #define MEM_H
 
-#include "type.h"
+#include <type.h>
 
 KLINE void memset(void *addr, char val, uint32_t size)
 {
@@ -19,6 +19,15 @@ KLINE void memcpy(void *s, void *d, uint32_t size)
     {
         dest[i] = src[i];
     }
+}
+
+KLINE int strncmp(const char *p, const char *q, uint32_t n)
+{
+    while (n > 0 && *p && *p == *q)
+        n--, p++, q++;
+    if (n == 0)
+        return 0;
+    return (uchar_t)*p - (uchar_t)*q;
 }
 
 #endif

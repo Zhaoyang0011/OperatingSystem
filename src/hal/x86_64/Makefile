@@ -15,7 +15,7 @@ ${BIN}/kernel.bin: ${BUILD}/kernel.o
 
 ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/halinit.o ${BUILD}/halglobal.o ${BUILD}/phymem.o \
-				${BUILD}/kprint.o ${BUILD}/cpuctrl.o
+				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/cpuctrl.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
@@ -39,9 +39,11 @@ ${BUILD}/phymem.o: ./phymem.c
 ${BUILD}/kprint.o: ./kprint.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/cpuctrl.o: ./cpuctrl.c
+${BUILD}/cpu.o: ./cpu.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
+${BUILD}/cpuctrl.o: ./cpuctrl.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c
 	gcc $< -o $@

@@ -1,6 +1,6 @@
 ORG 0x7c00
 
-SETUP_START equ 0x500
+SETUP_START equ 0x7e00
 
 [section .text]
 [BITS 16]
@@ -21,7 +21,7 @@ start:
     sti
 
     mov ebx, 1
-    mov ecx, 4
+    mov ecx, 7
     mov edi, SETUP_START
     call ata_lba_read
 

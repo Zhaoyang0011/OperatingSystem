@@ -13,7 +13,7 @@ ${BIN}/setup.bin: ${BUILD}/setup.o
 	objcopy -O binary $< $@
 
 ${BUILD}/setup.o:${BUILD}/setup_asm.o ${BUILD}/setup_c.o ${BUILD}/ldr.o
-	ld -m elf_i386 $^ -o $@ -Ttext 0x500 -Map setup.map
+	ld -m elf_i386 $^ -o $@ -Ttext 0x7e00 -Map ${BUILD}/setup.map
 
 ${BUILD}/setup_asm.o: ./setup.asm
 	nasm -f elf32 -g $< -o $@

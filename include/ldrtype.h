@@ -34,7 +34,7 @@ typedef struct e820_desc
 #define KERNEL_START 0x2000000
 #define KERNEL_DESC_OFF -0x1000
 // stack macro
-#define STACK_PHYADR (0x90000 - 0x10)
+#define STACK_PHYADR (0x200000 - 0x1000)
 #define STACK_SIZE 0x1000
 // kernel init page physical address
 #define KINITPAGE_PHYADR 0x1000000
@@ -52,7 +52,7 @@ typedef struct cpuid_desc
 
 typedef struct cpu_desc
 {
-    
+
 } __attribute__((packed)) cpu_info_t;
 
 /**

@@ -82,8 +82,8 @@ protected_start:
     call chk_cpuid
 ;    call chk_cpu_long_mode
 
-    mov ebx, 5
-    mov ecx, 110
+    mov ebx, 8
+    mov ecx, 112
     mov edi, (KERNEL_START + KERNEL_DESC_OFF)
     call ata_lba_read
 

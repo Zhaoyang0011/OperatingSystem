@@ -1,6 +1,6 @@
-#include "ldr.h"
-
 #include <ldrtype.h>
+
+#include "ldr.h"
 
 #define VIDEO_MEM 0xB8000
 
@@ -161,14 +161,4 @@ void init_pages(kernel_desc_t *kernel_desc)
         }
         pde = (uint64_t *)(((uint64_t)pde) + 0x1000);
     }
-}
-
-void init_machine_param()
-{
-    kernel_desc_t *kernel_desc = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
-
-    chkini_kernel_info(kernel_desc);
-    init_stack(kernel_desc);
-    init_memory_info(kernel_desc);
-    init_pages(kernel_desc);
 }

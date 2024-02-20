@@ -2,6 +2,7 @@
 #define _HAL_GLOBAL_H
 
 #include <ldrtype.h>
+#include <hal/cpu.h>
 
 #ifdef HALGOBAL_HEAD
 #undef EXTERN

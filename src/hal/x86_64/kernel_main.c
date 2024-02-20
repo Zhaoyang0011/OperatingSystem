@@ -1,5 +1,5 @@
-#include "type.h"
 #include <config_x86_64.h>
+#include <type.h>
 #include <hal/halglobal.h>
 #include <hal/halinit.h>
 #include <kprint.h>
@@ -27,6 +27,7 @@ void copy_kernel_desc()
     }
     
     kernel_descriptor.next_pg = P4K_ALIGN(kernel_descriptor.next_pg);
+    kernel_descriptor.kernel_size = kernel_descriptor.next_pg - KERNEL_START;
 }
 
 void kernel_main()

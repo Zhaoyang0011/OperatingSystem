@@ -65,7 +65,7 @@ long_mode_entry:
 	xor r13, r13
 	xor r14, r14
 	xor r15, r15
-	mov rsp, 0x9f000
+	mov rsp, 0x200010
 	call kernel_main
     jmp $
 
