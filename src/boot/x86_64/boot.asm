@@ -21,7 +21,7 @@ start:
     sti
 
     mov ebx, 1
-    mov ecx, 7
+    mov ecx, 11
     mov edi, SETUP_START
     call ata_lba_read
 
