@@ -83,7 +83,7 @@ protected_start:
 ;    call chk_cpu_long_mode
 
     mov ebx, 8
-    mov ecx, 112
+    mov ecx, 34
     mov edi, (KERNEL_START + KERNEL_DESC_OFF)
     call ata_lba_read
 

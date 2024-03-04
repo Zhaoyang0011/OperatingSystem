@@ -4,8 +4,6 @@
 %define KRLVIRADR 0x0
 %define KINITSTACK_OFF 16
 global _start
-global x64_GDT
-global kernel_pml4
 extern kernel_main
 
 [SECTION .text]
@@ -86,11 +84,3 @@ get_len	equ	gdt_end_64 - gdt_start_64			; length of gdt
 gdt_desc:
     dw get_len - 1					; limit of gdt
 	dq gdt_start_64
-
-[section .data]
-
-stack:
-	times 1024 dq 0
-
-kernel_pml4:
-	times 512*10 dq 0

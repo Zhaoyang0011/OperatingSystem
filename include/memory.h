@@ -30,4 +30,12 @@ KLINE int strncmp(const char *p, const char *q, uint32_t n)
     return (uchar_t)*p - (uchar_t)*q;
 }
 
+KLINE int strlen(const char *p)
+{
+    const char *q = p;
+    while (*q != 0)
+        q++;
+    return q - p;
+}
+
 #endif

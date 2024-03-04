@@ -43,7 +43,7 @@ else ifeq ($(ARC), x86_32)
 endif
 
 qemu:
-	qemu-system-x86_64 -m 4096 -hda $(BUILD)/$(HD_IMG_NAME)
+	qemu-system-x86_64 -smp 4 -m 4096 -hda $(BUILD)/$(HD_IMG_NAME)
 
 qemug:
-	qemu-system-x86_64 -m 4096 -hda $(BUILD)/$(HD_IMG_NAME) -S -s
+	qemu-system-x86_64 -smp 4 -m 4096 -hda $(BUILD)/$(HD_IMG_NAME) -S -s
