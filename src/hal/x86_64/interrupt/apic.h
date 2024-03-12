@@ -38,11 +38,11 @@
 // FEE0 01D0H Trigger Mode Register (TMR); bits 191:160 Read Only.
 
 // Local APIC registers, divided by 4 for use as uint[] indices.
-#define ID      (0x0020/4)   // ID
-#define VER     (0x0030/4)   // Version
-#define TPR     (0x0080/4)   // Task Priority
-#define EOI     (0x00B0/4)   // EOI
-#define SVR     (0x00F0/4)   // Spurious Interrupt Vector
+#define LAPIC_ID      (0x0020/4)   // ID
+#define LAPIC_VER     (0x0030/4)   // Version
+#define LAPIC_TPR     (0x0080/4)   // Task Priority
+#define LAPIC_EOI     (0x00B0/4)   // EOI
+#define LAPIC_SVR     (0x00F0/4)   // Spurious Interrupt Vector
   #define ENABLE     0x00000100   // Unit Enable
 #define ESR     (0x0280/4)   // Error Status
 #define ICRLO   (0x0300/4)   // Interrupt Command

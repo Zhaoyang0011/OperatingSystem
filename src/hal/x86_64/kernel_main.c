@@ -1,6 +1,7 @@
 #include <config_x86_64.h>
 #include <hal/halglobal.h>
 #include <hal/halinit.h>
+#include <hal/interrupt.h>
 #include <kprint.h>
 #include <ldrtype.h>
 #include <memory.h>
@@ -35,7 +36,7 @@ void kernel_main()
     copy_kernel_desc();
 
     init_hal();
-
+    
     //
     while (TRUE)
         ;

@@ -1,6 +1,7 @@
 extern hal_hwint_allocator
 extern hal_fault_allocator
 extern hal_syscl_allocator
+extern handle_divide
 
 global	exc_divide_error
 global	exc_single_step_exception
@@ -206,6 +207,7 @@ global  asm_ret_from_user_mode
 	mov rdi,%1
 	mov rsi,rsp
 	call hal_fault_allocator
+	
 	RESTOREALLFAULT
 %endmacro
 
