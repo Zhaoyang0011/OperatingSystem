@@ -17,7 +17,8 @@ ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/halinit.o ${BUILD}/halglobal.o ${BUILD}/phymem.o \
 				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/cpuctrl.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
-				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o
+				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o \
+				${BUILD}/i8259.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
@@ -60,6 +61,9 @@ ${BUILD}/gdtidt.o: ./interrupt/gdtidt.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/interrupt.o: ./interrupt/interrupt.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/i8259.o: ./interrupt/i8259.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/phymem.o: ./mem/phymem.c

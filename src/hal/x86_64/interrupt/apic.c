@@ -1,10 +1,8 @@
 #include "apic.h"
 #include "../apci.h"
 #include "../x86.h"
+#include "i8259.h"
 #include <console.h>
-#include <hal/halglobal.h>
-
-HAL_DEFGLOB_VARIABLE(uint32_t *, lapic);
 
 bool_t cpu_has_msr()
 {
@@ -24,24 +22,24 @@ void write_msr(uint32_t msr, uint32_t lo, uint32_t hi)
     __asm__ __volatile__("wrmsr" : : "a"(lo), "d"(hi), "c"(msr));
 }
 
-void init_local_apic(localapic *local_apic)
+void local_apic_found(localapic *local_apic)
 {
 }
 
-void init_io_apic(ioapic *io_apic)
+void io_apic_found(ioapic *local_apic)
 {
 }
 
-void init_one_apic(APICHeader_t *apic_header)
+void find_one_apic(APICHeader_t *apic_header)
 {
     switch (apic_header->type)
     {
     case APIC_LOCAL: {
-        init_local_apic((localapic *)apic_header);
+        local_apic_found((localapic *)apic_header);
         break;
     }
     case APIC_IO: {
-        init_io_apic((ioapic *)apic_header);
+        io_apic_found((ioapic *)apic_header);
         break;
     }
     case APIC_IO_ISO: {
@@ -76,10 +74,10 @@ void init_one_apic(APICHeader_t *apic_header)
     }
 }
 
-void init_apic(MADT_t *madt)
+void find_apic(MADT_t *madt)
 {
     if (madt == NULL)
-        panic("MADT address error.");
+        panic("MADT address error!");
 
     // set local apic address
     uint8_t *end = ((uint8_t *)madt) + madt->header.Length;
@@ -88,7 +86,54 @@ void init_apic(MADT_t *madt)
     for (uint8_t *apic_desc = madt->entry; apic_desc < end;)
     {
         APICHeader_t *header = (APICHeader_t *)apic_desc;
-        init_one_apic(header);
+        find_one_apic(header);
         apic_desc += header->length;
     }
+}
+
+void init_apic()
+{
+    if (!lapic)
+        panic("Local apic not initiated!");
+
+    disable_i8259();
+
+    // Enable local APIC; set spurious interrupt vector.
+    lapicw(LAPIC_SVR, LAPIC_SVR_ENABLE | (T_IRQ0 + IRQ_SPURIOUS));
+
+    // The timer repeatedly counts down at bus frequency
+    // from lapic[TICR] and then issues an interrupt.
+    // If xv6 cared more about precise timekeeping,
+    // TICR would be calibrated using an external time source.
+    lapicw(LAPIC_TIMER_DCR, LAPIC_TIMER_X1);
+    lapicw(LAPIC_TIMER, LAPIC_TIMER_PERIODIC | (T_IRQ0 + IRQ_TIMER));
+    lapicw(LAPIC_TIMER_ICR, 10000000);
+
+    // Disable logical interrupt lines.
+    lapicw(LAPIC_LINT0, LAPIC_MASKED);
+    lapicw(LAPIC_LINT1, LAPIC_MASKED);
+
+    // Disable performance counter overflow interrupts
+    // on machines that provide that interrupt entry.
+    if (((lapic[LAPIC_VER] >> 16) & 0xFF) >= 4)
+        lapicw(LAPIC_PCINT, LAPIC_MASKED);
+
+    // Map error interrupt to IRQ_ERROR.
+    lapicw(LAPIC_ERROR, T_IRQ0 + IRQ_ERROR);
+
+    // Clear error status register (requires back-to-back writes).
+    lapicw(LAPIC_ESR, 0);
+    lapicw(LAPIC_ESR, 0);
+
+    // Ack any outstanding interrupts.
+    lapicw(LAPIC_EOI, 0);
+
+    // Send an Init Level De-Assert to synchronise arbitration ID's.
+    lapicw(LAPIC_ICRHI, 0);
+    lapicw(LAPIC_ICRLO, LAPIC_ICRLO_BCAST | LAPIC_ICRLO_INIT | LAPIC_ICRLO_LEVEL);
+    while (lapic[LAPIC_ICRLO] & LAPIC_ICRLO_DELIVS)
+        ;
+
+    // Enable interrupts on the APIC (but not on the processor).
+    lapicw(LAPIC_TPR, 0);
 }

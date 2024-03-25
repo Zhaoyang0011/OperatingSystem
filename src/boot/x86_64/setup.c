@@ -22,10 +22,14 @@ void setup_die()
  */
 void setup_main()
 {
+    ata_lba_read(12, 8, KERNEL_START + KERNEL_DESC_OFF);
+
     kernel_desc_t *kernel_desc = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
 
     chkini_kernel_info(kernel_desc);
     init_stack(kernel_desc);
     init_memory_info(kernel_desc);
     init_pages(kernel_desc);
+
+    ata_lba_read(20, kernel_desc->kernel_size / 512 + 1, KERNEL_START);
 }

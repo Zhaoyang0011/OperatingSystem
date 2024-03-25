@@ -1,5 +1,4 @@
 #include "gdtidt.h"
-#include "../x86.h"
 
 extern void hxi_exc_general_intpfault();
 extern void exc_divide_error();
@@ -42,6 +41,7 @@ void init_idt()
         set_int_desc((uint32_t)i, DA_386IGate, hxi_exc_general_intpfault, PRIVILEGE_KRNL);
     }
     set_int_desc(INT_VECTOR_DIVIDE, DA_386IGate, exc_divide_error, PRIVILEGE_KRNL);
+    
     set_idtr(x64_idt);
     load_x64_idt(&idtr);
     return;

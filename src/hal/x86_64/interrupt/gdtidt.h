@@ -107,9 +107,9 @@ typedef struct idt_reg
 
 typedef void (*int_handler_t)();
 
+void init_idt();
+
 HAL_DEFGLOB_VARIABLE(gate_t, x64_idt)[IDT_MAX];
 HAL_DEFGLOB_VARIABLE(idtr_t, idtr);
-
-void init_idt();
 
 #endif

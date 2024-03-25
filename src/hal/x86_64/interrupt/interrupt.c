@@ -1,10 +1,12 @@
 #include "gdtidt.h"
+#include "apic.h"
 #include "type.h"
 #include <hal/interrupt.h>
 
 void init_interrupt()
 {
     init_idt();
+    init_apic();
 }
 
 void kerror(char *err_msg, int length)

@@ -15,4 +15,9 @@ KLINE uint32_t cpuid(cpuid_desc_t *cpuid_desc)
     return (uint32_t)cpuid_desc->info[0];
 }
 
+KLINE void outb(uint16_t port, uint8_t val)
+{
+    __asm__ __volatile__("outb %b0, %w1" : : "a"(val), "Nd"(port) : "memory");
+}
+
 #endif

@@ -6,9 +6,9 @@
 
 void init_mp()
 {
-    MADT_t *madt = search_madt();
+    MADT_t *madt = find_madt();
     if (madt == NULL)
         panic("MADT address error.");
 
-    init_apic(madt);
+    find_apic(madt);
 }

@@ -30,7 +30,7 @@ bool_t chk_rsdp_sum(uchar_t *addr)
     return sum == 0;
 }
 
-void *search_rsdp_range(uchar_t *start, uint32_t length)
+void *find_rsdp_range(uchar_t *start, uint32_t length)
 {
     uchar_t *end, *p;
     end = start + length;
@@ -42,7 +42,7 @@ void *search_rsdp_range(uchar_t *start, uint32_t length)
     return NULL;
 }
 
-void *search_sdt(uchar_t *signature, uchar_t *start, uint32_t length)
+void *find_sdt(uchar_t *signature, uchar_t *start, uint32_t length)
 {
     uchar_t *end, *p;
     end = start + length;
@@ -54,21 +54,21 @@ void *search_sdt(uchar_t *signature, uchar_t *start, uint32_t length)
     return NULL;
 }
 
-void *search_rsdp()
+void *find_rsdp()
 {
     uchar_t *bda = (uchar_t *)(0x400);
     uchar_t *p;
     void *rsdp = NULL;
 
     p = (uchar_t *)(((bda[0x0F] << 8) | bda[0x0E]) << 4);
-    rsdp = search_rsdp_range(p, 1024);
+    rsdp = find_rsdp_range(p, 1024);
     if (rsdp != NULL)
         return rsdp;
 
-    return search_rsdp_range((uchar_t *)0xE0000, 0x20000);
+    return find_rsdp_range((uchar_t *)0xE0000, 0x20000);
 }
 
-void *search_madt_rsdt(RSDT_t *redt)
+void *find_madt_rsdt(RSDT_t *redt)
 {
     if (redt == NULL)
         return NULL;
@@ -89,7 +89,7 @@ void *search_madt_rsdt(RSDT_t *redt)
     return NULL;
 }
 
-void *search_madt_xsdt(XSDT_t *xedt)
+void *find_madt_xsdt(XSDT_t *xedt)
 {
     if (xedt == NULL)
         return NULL;
@@ -110,9 +110,9 @@ void *search_madt_xsdt(XSDT_t *xedt)
     return NULL;
 }
 
-MADT_t *search_madt()
+MADT_t *find_madt()
 {
-    void *rsdp_adr = search_rsdp();
+    void *rsdp_adr = find_rsdp();
 
     if (rsdp_adr == NULL)
     {
@@ -124,7 +124,7 @@ MADT_t *search_madt()
     XSDP_t *xsdp = rsdp_adr;
 
     if (xsdp->Revision == 0)
-        return search_madt_rsdt((void *)xsdp->RsdtAddress);
+        return find_madt_rsdt((void *)xsdp->RsdtAddress);
 
-    return search_madt_xsdt((void *)xsdp->XsdtAddress);
+    return find_madt_xsdt((void *)xsdp->XsdtAddress);
 }

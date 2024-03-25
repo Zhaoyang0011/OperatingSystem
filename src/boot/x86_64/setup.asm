@@ -82,59 +82,59 @@ protected_start:
     call chk_cpuid
 ;    call chk_cpu_long_mode
 
-    mov ebx, 12
-    mov ecx, 35
-    mov edi, (KERNEL_START + KERNEL_DESC_OFF)
-    call ata_lba_read
+;    mov ebx, 12
+;    mov ecx, 36
+;    mov edi, (KERNEL_START + KERNEL_DESC_OFF)
+;    call ata_lba_read
 
     call setup_main
 
     jmp CODE_SEG:KERNEL_START
 
-ata_lba_read:
-    mov eax, ebx
-    ; LBA low
-    mov dx, 0x1f3
-    out dx, al
-
-    ; LBA mid
-    mov dx, 0x1f4
-    shr eax, 8
-    out dx, al
-
-    ; LBA high
-    mov dx, 0x1f5
-    shr eax, 16
-    out dx, al
-
-    mov dx, 0x1f6
-    shr eax, 8
-    and al, 0x0f
-    or al, 0xe0
-    out dx, al
-
-    mov dx, 0x1f7
-    mov al, 0x20
-    out dx, al
-
-.next_sector:
-    push ecx
-
-    mov dx, 0x1f7
-.check_hd:
-    in al, dx
-    test al, 8
-    jz .check_hd
-
-.read_hd:
-    mov ecx, 256
-    mov dx, 0x1f0
-    rep insw
-
-    pop ecx
-    loop .next_sector
-
-    ret
+;ata_lba_read:
+;    mov eax, ebx
+;    ; LBA low
+;    mov dx, 0x1f3
+;    out dx, al
+;
+;    ; LBA mid
+;    mov dx, 0x1f4
+;    shr eax, 8
+;    out dx, al
+;
+;    ; LBA high
+;    mov dx, 0x1f5
+;    shr eax, 16
+;    out dx, al
+;
+;    mov dx, 0x1f6
+;    shr eax, 8
+;    and al, 0x0f
+;    or al, 0xe0
+;    out dx, al
+;
+;    mov dx, 0x1f7
+;    mov al, 0x20
+;    out dx, al
+;
+;.next_sector:
+;    push ecx
+;
+;    mov dx, 0x1f7
+;.check_hd:
+;    in al, dx
+;    test al, 8
+;    jz .check_hd
+;
+;.read_hd:
+;    mov ecx, 256
+;    mov dx, 0x1f0
+;    rep insw
+;
+;    pop ecx
+;    loop .next_sector
+;
+;    ret
 
 chk_cpuid:
     pushfd                               ;Save EFLAGS

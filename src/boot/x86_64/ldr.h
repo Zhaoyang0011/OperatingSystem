@@ -9,6 +9,8 @@
 
 #include <ldrtype.h>
 
+void ata_lba_read(uint32_t sector_start, uint32_t sector_count, uint32_t dest_adr);
+
 /**
  * check if kernel is successfully loaded, and init kernel start address
  */

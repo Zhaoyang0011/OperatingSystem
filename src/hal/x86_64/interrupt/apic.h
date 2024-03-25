@@ -1,6 +1,7 @@
 #ifndef _APIC_H
 #define _APIC_H
 
+#include <hal/halglobal.h>
 #include <type.h>
 
 #include "../apci.h"
@@ -38,36 +39,61 @@
 // FEE0 01D0H Trigger Mode Register (TMR); bits 191:160 Read Only.
 
 // Local APIC registers, divided by 4 for use as uint[] indices.
-#define LAPIC_ID      (0x0020/4)   // ID
-#define LAPIC_VER     (0x0030/4)   // Version
-#define LAPIC_TPR     (0x0080/4)   // Task Priority
-#define LAPIC_EOI     (0x00B0/4)   // EOI
-#define LAPIC_SVR     (0x00F0/4)   // Spurious Interrupt Vector
-  #define ENABLE     0x00000100   // Unit Enable
-#define ESR     (0x0280/4)   // Error Status
-#define ICRLO   (0x0300/4)   // Interrupt Command
-  #define INIT       0x00000500   // INIT/RESET
-  #define STARTUP    0x00000600   // Startup IPI
-  #define DELIVS     0x00001000   // Delivery status
-  #define ASSERT     0x00004000   // Assert interrupt (vs deassert)
-  #define DEASSERT   0x00000000
-  #define LEVEL      0x00008000   // Level triggered
-  #define BCAST      0x00080000   // Send to all APICs, including self.
-  #define BUSY       0x00001000
-  #define FIXED      0x00000000
-#define ICRHI   (0x0310/4)   // Interrupt Command [63:32]
-#define TIMER   (0x0320/4)   // Local Vector Table 0 (TIMER)
-  #define X1         0x0000000B   // divide counts by 1
-  #define PERIODIC   0x00020000   // Periodic
-#define PCINT   (0x0340/4)   // Performance Counter LVT
-#define LINT0   (0x0350/4)   // Local Vector Table 1 (LINT0)
-#define LINT1   (0x0360/4)   // Local Vector Table 2 (LINT1)
-#define ERROR   (0x0370/4)   // Local Vector Table 3 (ERROR)
-  #define MASKED     0x00010000   // Interrupt masked
-#define TICR    (0x0380/4)   // Timer Initial Count
-#define TCCR    (0x0390/4)   // Timer Current Count
-#define TDCR    (0x03E0/4)   // Timer Divide Configuration
+#define LAPIC_ID (0x0020 / 4)       // ID
+#define LAPIC_VER (0x0030 / 4)      // Version
+#define LAPIC_TPR (0x0080 / 4)      // Task Priority
+#define LAPIC_EOI (0x00B0 / 4)      // EOI
+#define LAPIC_SVR (0x00F0 / 4)      // Spurious Interrupt Vector
+#define LAPIC_SVR_ENABLE 0x00000100 // Unit Enable
+#define LAPIC_ESR (0x0280 / 4)      // Error Status
 
-void init_apic(MADT_t* madt);
+#define LAPIC_ICRLO (0x0300 / 4)       // Interrupt Command
+#define LAPIC_ICRLO_INIT 0x00000500    // INIT/RESET
+#define LAPIC_ICRLO_STARTUP 0x00000600 // Startup IPI
+#define LAPIC_ICRLO_DELIVS 0x00001000  // Delivery status
+#define LAPIC_ICRLO_ASSERT 0x00004000  // Assert interrupt (vs deassert)
+#define LAPIC_ICRLO_DEASSERT 0x00000000
+#define LAPIC_ICRLO_LEVEL 0x00008000 // Level triggered
+#define LAPIC_ICRLO_BCAST 0x00080000 // Send to all APICs, including self.
+#define LAPIC_ICRLO_BUSY 0x00001000
+#define LAPIC_ICRLO_FIXED 0x00000000
+
+#define LAPIC_ICRHI (0x0310 / 4) // Interrupt Command [63:32]
+
+#define LAPIC_TIMER (0x0320 / 4)        // Local Vector Table 0 (TIMER)
+#define LAPIC_TIMER_X1 0x0000000B       // divide counts by 1
+#define LAPIC_TIMER_PERIODIC 0x00020000 // Periodic
+
+#define LAPIC_PCINT (0x0340 / 4) // Performance Counter LVT
+#define LAPIC_LINT0 (0x0350 / 4) // Local Vector Table 1 (LINT0)
+#define LAPIC_LINT1 (0x0360 / 4) // Local Vector Table 2 (LINT1)
+#define LAPIC_ERROR (0x0370 / 4) // Local Vector Table 3 (ERROR)
+
+#define LAPIC_MASKED 0x00010000 // Interrupt masked
+
+#define LAPIC_TIMER_ICR (0x0380 / 4) // Timer Initial Count
+#define LAPIC_TIMER_CCR (0x0390 / 4) // Timer Current Count
+#define LAPIC_TIMER_DCR (0x03E0 / 4) // Timer Divide Configuration
+
+#define T_IRQ0 0x20 // IRQ 0 corresponds to int T_IRQ
+
+#define IRQ_TIMER 0
+#define IRQ_KBD 1
+#define IRQ_COM1 4
+#define IRQ_IDE 14
+#define IRQ_ERROR 19
+#define IRQ_SPURIOUS 31
+
+HAL_DEFGLOB_VARIABLE(uint32_t *, lapic);
+
+void find_apic(MADT_t *madt);
+
+void init_apic();
+
+KLINE void lapicw(int index, int value)
+{
+    lapic[index] = value;
+    lapic[LAPIC_ID];
+}
 
 #endif

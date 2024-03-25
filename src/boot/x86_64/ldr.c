@@ -13,6 +13,59 @@ KLINE uint32_t cpuid(cpuid_desc_t *cpuid_desc)
     return (uint32_t)cpuid_desc->info[0];
 }
 
+void ata_lba_read(uint32_t sector_start, uint32_t sector_count, uint32_t dest_adr)
+{
+
+    __asm__ __volatile__("mov %0, %%eax\n\t" // 将 lba 参数加载到 eax 中
+                                             // LBA low
+                         "mov %1, %%ecx\n\t"
+                         "mov %2, %%edi\n\t"
+                         "mov $0x1f3, %%dx\n\t"
+                         "out %%al, %%dx\n\t"
+
+                         // LBA mid
+                         "mov $0x1f4, %%dx\n\t"
+                         "shr $8, %%eax\n\t"
+                         "out %%al, %%dx\n\t"
+
+                         // LBA high
+                         "mov $0x1f5, %%dx\n\t"
+                         "shr $16, %%eax\n\t"
+                         "out %%al, %%dx\n\t"
+
+                         // 设置硬盘寄存器
+                         "mov $0x1f6, %%dx\n\t"
+                         "shr $8, %%eax\n\t"
+                         "and $0x0f, %%al\n\t"
+                         "or $0xe0, %%al\n\t"
+                         "out %%al, %%dx\n\t"
+
+                         // 发送读取命令
+                         "mov $0x1f7, %%dx\n\t"
+                         "mov $0x20, %%al\n\t"
+                         "out %%al, %%dx\n\t"
+
+                         // 读取扇区数据
+                         ".next_sector:\n\t"
+                         "push %%ecx\n\t"
+
+                         "mov $0x1f7, %%dx\n\t"
+                         ".check_hd:\n\t"
+                         "in %%dx, %%al\n\t"
+                         "test $8, %%al\n\t"
+                         "jz .check_hd\n\t"
+
+                         "movl $0x100, %%ecx\n\t" // 将 sector_count 加载到 ecx 中
+                         "mov $0x1f0, %%dx\n\t"
+                         "rep insw\n\t"
+
+                         "pop %%ecx\n\t"
+                         "loop .next_sector\n\t"
+                         :
+                         : "m"(sector_start), "m"(sector_count), "m"(dest_adr)
+                         : "eax", "edx", "ecx");
+}
+
 void kerror(char *err_msg, int length)
 {
     if (length > 0 || length <= 100)

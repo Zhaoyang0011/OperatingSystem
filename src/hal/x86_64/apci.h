@@ -137,9 +137,9 @@ typedef struct APIC9
     uint32_t apci_id;
 } __attribute__((packed)) lapic_x2;
 
-void *search_rsdp();
+void *find_rsdp();
 
-MADT_t *search_madt();
+MADT_t *find_madt();
 
 MADT_t *parse_madt();
 
