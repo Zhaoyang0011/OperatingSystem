@@ -14,11 +14,11 @@ ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
 ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
-				${BUILD}/halinit.o ${BUILD}/halglobal.o ${BUILD}/phymem.o \
-				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/cpuctrl.o \
+				${BUILD}/halinit.o ${BUILD}/halglobal.o \
+				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
-				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o \
-				${BUILD}/i8259.o
+				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
+				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
@@ -42,7 +42,7 @@ ${BUILD}/kprint.o: ./kprint.c
 ${BUILD}/cpu.o: ./cpu.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/cpuctrl.o: ./cpuctrl.c
+${BUILD}/spinlock.o: ./spinlock.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/apci.o: ./apci.c
@@ -66,7 +66,16 @@ ${BUILD}/interrupt.o: ./interrupt/interrupt.c
 ${BUILD}/i8259.o: ./interrupt/i8259.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/phymem.o: ./mem/phymem.c
+${BUILD}/phymem.o: ./memory/phymem.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/memory.o: ./memory/memory.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/mempage.o: ./memory/mempage.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/memarea.o: ./memory/memarea.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c

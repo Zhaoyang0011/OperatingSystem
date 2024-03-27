@@ -4,8 +4,8 @@
 #include <hal/interrupt.h>
 #include <kprint.h>
 #include <ldrtype.h>
-#include <memory.h>
 #include <spinlock.h>
+#include <string.h>
 #include <type.h>
 
 void copy_kernel_desc()
@@ -36,7 +36,7 @@ void kernel_main()
     copy_kernel_desc();
 
     init_hal();
-    
+
     //
     while (TRUE)
         ;

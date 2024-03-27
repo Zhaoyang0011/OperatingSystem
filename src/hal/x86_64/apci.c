@@ -1,7 +1,7 @@
 #include "apci.h"
 
 #include <kprint.h>
-#include <memory.h>
+#include <string.h>
 
 uchar_t chk_sum(uchar_t *addr, uint32_t len)
 {

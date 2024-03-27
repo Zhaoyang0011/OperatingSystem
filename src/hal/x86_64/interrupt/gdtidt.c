@@ -19,12 +19,11 @@ void set_int_desc(uint8_t vector, uint8_t desc_type, int_handler_t handler, uint
 
 KLINE void load_x64_idt(idtr_t *idtr)
 {
-    __asm__ __volatile__(
-        "lidt (%0) \n\t"
+    __asm__ __volatile__("lidt (%0) \n\t"
 
-        :
-        : "r"(idtr)
-        : "memory");
+                         :
+                         : "r"(idtr)
+                         : "memory");
     return;
 }
 
@@ -40,8 +39,9 @@ void init_idt()
     {
         set_int_desc((uint32_t)i, DA_386IGate, hxi_exc_general_intpfault, PRIVILEGE_KRNL);
     }
-    set_int_desc(INT_VECTOR_DIVIDE, DA_386IGate, exc_divide_error, PRIVILEGE_KRNL);
     
+    set_int_desc(INT_VECTOR_DIVIDE, DA_386IGate, exc_divide_error, PRIVILEGE_KRNL);
+
     set_idtr(x64_idt);
     load_x64_idt(&idtr);
     return;

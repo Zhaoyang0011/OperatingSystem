@@ -91,7 +91,7 @@ void find_apic(MADT_t *madt)
     }
 }
 
-void init_apic()
+void init_lapic()
 {
     if (!lapic)
         panic("Local apic not initiated!");

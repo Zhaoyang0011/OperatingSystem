@@ -88,9 +88,10 @@ HAL_DEFGLOB_VARIABLE(uint32_t *, lapic);
 
 void find_apic(MADT_t *madt);
 
-void init_apic();
+void init_lapic();
 
-KLINE void lapicw(int index, int value)
+// write lapic register
+KLINE void lapicw(uint32_t index, uint32_t value)
 {
     lapic[index] = value;
     lapic[LAPIC_ID];

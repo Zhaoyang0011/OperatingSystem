@@ -1,7 +1,7 @@
-#include <hal/cpuctrl.h>
 #include <hal/halglobal.h>
-#include <hal/phymem.h>
+#include <hal/memory/phymem.h>
 #include <kprint.h>
+#include <spinlock.h>
 #include <type.h>
 
 int init_one_phymem(physical_memory_t *pm)
@@ -78,7 +78,7 @@ void init_phymem_core(e820_map_t *e820, physical_memory_t *pm, uint64_t num)
 
 void init_physical_memory()
 {
-    if (kernel_descriptor.mmap_adr == 0 && kernel_descriptor.mmap_nr == 0)
+    if (kernel_descriptor.mmap_adr == 0 || kernel_descriptor.mmap_nr == 0)
     {
         kprint("Memory map incorrect!");
         while (TRUE)
