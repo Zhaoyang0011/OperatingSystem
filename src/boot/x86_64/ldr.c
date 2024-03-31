@@ -197,13 +197,6 @@ void init_pages(kernel_desc_t *kernel_desc)
     p[0] = (uint64_t)((uint32_t)pdpte | KPML4_RW | KPML4_P);
     p[(KRNL_VIRTUAL_ADDRESS_START >> 39) & 0x1ff] = (uint64_t)((uint32_t)pdpte | KPML4_RW | KPML4_P);
 
-    kernel_desc->kernel_start = KERNEL_START;
-    if (kernel_desc->kernel_magic != ZHOS_MAGIC)
-    {
-        char *error_msg = "Invalid kernel magic number";
-        kerror(error_msg, 28);
-    }
-
     uint64_t adr = 0;
     for (uint_t i = 0; i < 16; i++)
     {

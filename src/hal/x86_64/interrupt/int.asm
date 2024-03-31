@@ -1,7 +1,7 @@
 extern hal_hwint_allocator
 extern hal_fault_allocator
 extern hal_syscl_allocator
-extern handle_divide
+extern div_zero
 
 global	exc_divide_error
 global	exc_single_step_exception
@@ -196,6 +196,23 @@ global  asm_ret_from_user_mode
 	RESTOREALLFAULT
 %endmacro
 
+%macro	SRFTFAULT_FUNC 2
+	push	  _NOERRO_CODE
+	SAVEALLFAULT
+[section .hwint.text]
+[BITS 64]
+	mov r14w,0x10
+	mov ds,r14w
+	mov es,r14w
+	mov fs,r14w
+	mov gs,r14w
+
+	mov rdi,%1 ;rdi, rsi
+	mov rsi,rsp
+	call %2
+	RESTOREALLFAULT
+%endmacro
+
 %macro	SRFTFAULT_ECODE 1
 	SAVEALLFAULT
 	mov r14w,0x10
@@ -223,6 +240,22 @@ global  asm_ret_from_user_mode
 	mov	rdi, %1
 	mov rsi,rsp
 	call hal_hwint_allocator
+
+	RESTOREALL
+%endmacro
+
+%macro HARWINT_FUNC 2
+	SAVEALL
+	
+	mov r14w,0x10
+	mov ds,r14w
+	mov es,r14w
+	mov fs,r14w
+	mov gs,r14w
+
+	mov	rdi, %1
+	mov rsi,rsp
+	call %2
 
 	RESTOREALL
 %endmacro
@@ -302,7 +335,20 @@ global  asm_ret_from_user_mode
 
 ALIGN	16
 exc_divide_error:
-	SRFTFAULT 0
+	SAVEALL
+	
+	mov r14w,0x10
+	mov ds,r14w
+	mov es,r14w
+	mov fs,r14w
+	mov gs,r14w
+
+	mov	rdi, 0
+	mov rsi,rsp
+	call div_zero
+
+	RESTOREALL
+
 ALIGN	16
 exc_single_step_exception:
 	SRFTFAULT 1

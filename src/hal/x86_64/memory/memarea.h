@@ -105,6 +105,7 @@ typedef struct s_MEMAREA
 
 void init_memory_area();
 void memarea_t_init(memarea_t *memarea);
+void load_mempage_memarea();
 
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
 

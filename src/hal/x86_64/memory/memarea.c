@@ -3,16 +3,16 @@
 
 void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t oderpnr)
 {
-	spinlock_init(&mapflist->af_lock);
-	mapflist->af_stus = stus;
-	mapflist->af_oder = oder;
-	mapflist->af_oderpnr = oderpnr;
-	mapflist->af_fobjnr = 0;
-	mapflist->af_mobjnr = 0;
-	mapflist->af_alcindx = 0;
-	mapflist->af_freindx = 0;
-	list_init(&mapflist->af_frelist);
-	list_init(&mapflist->af_alclist);
+    spinlock_init(&mapflist->af_lock);
+    mapflist->af_stus = stus;
+    mapflist->af_oder = oder;
+    mapflist->af_oderpnr = oderpnr;
+    mapflist->af_fobjnr = 0;
+    mapflist->af_mobjnr = 0;
+    mapflist->af_alcindx = 0;
+    mapflist->af_freindx = 0;
+    list_init(&mapflist->af_frelist);
+    list_init(&mapflist->af_alclist);
 }
 
 void memdivmer_t_init(memdivmer_t *memdivmer)
@@ -84,4 +84,10 @@ void init_memory_area()
     kernel_descriptor.ma_desc_arr = (uint64_t)memarea_arr;
     kernel_descriptor.ma_nr = MEMAREA_MAX;
     kernel_descriptor.ma_sz = sizeof(memarea_t) * MEMAREA_MAX;
+}
+
+// load memory page to memory area
+void load_mempage_memarea()
+{
+    
 }

@@ -60,15 +60,15 @@ void init_mpdsc(mpdesc_t *mp)
     mp->mpd_phyadrs.paf_dirty = PAF_NO_DIRTY;
     mp->mpd_phyadrs.paf_busy = PAF_NO_BUSY;
     mp->mpd_phyadrs.paf_rsv = PAF_RSV_VAL;
-    mp->mpd_phyadrs.paf_padrs = PAF_INIT_PADRS;
+    mp->mpd_phyadrs.paf_paddr = PAF_INIT_PADRS;
     mp->mpd_odlink = NULL;
 }
 
 void write_one_mpdsc(mpdesc_t *mp, uint64_t phyadr)
 {
     init_mpdsc(mp);
-	phyadrflgs_t *tmp = (phyadrflgs_t *)(&phyadr);
-	mp->mpd_phyadrs.paf_padrs = tmp->paf_padrs;
+    phyadrflgs_t *tmp = (phyadrflgs_t *)(&phyadr);
+    mp->mpd_phyadrs.paf_paddr = tmp->paf_paddr;
 }
 
 uint64_t init_mpdsc_core(kernel_desc_t *kernel, mpdesc_t *mpsadr, uint64_t mpnr)
@@ -118,4 +118,120 @@ void init_memory_page()
     kernel_descriptor.mp_desc_sz = corempnr * sizeof(mpdesc_t);
 
     kernel_descriptor.next_pg = P4K_ALIGN(kernel_descriptor.mp_desc_arr + kernel_descriptor.mp_desc_sz);
+    kernel_descriptor.kernel_size = kernel_descriptor.next_pg - kernel_descriptor.kernel_start;
+}
+
+mpdesc_t *search_start_mempage(mpdesc_t *mpdesc_arr, uint64_t mpnr, uint64_t saddr)
+{
+    saddr = saddr & PAF_ADDR_MASK;
+    int i = saddr >> 12;
+    if (i >= mpnr)
+        return NULL;
+
+    uint64_t mp_addr = (mpdesc_arr[i].mpd_addr & PAF_ADDR_MASK);
+    if (mp_addr > saddr)
+    {
+        for (; i > 0; --i)
+        {
+            if ((mpdesc_arr[i].mpd_addr & PAF_ADDR_MASK) == saddr)
+                return mpdesc_arr + i;
+        }
+        return NULL;
+    }
+
+    for (; i < mpnr; ++i)
+    {
+        if ((mpdesc_arr[i].mpd_addr & PAF_ADDR_MASK) == saddr)
+            return mpdesc_arr + i;
+    }
+    return NULL;
+}
+
+// 搜索一段内存地址空间所对应的mpgdesc_t结构
+uint64_t search_segment_occupympg(mpdesc_t *mpdesc_arr, uint64_t mpnr, uint64_t saddr, uint64_t eaddr)
+{
+    mpdesc_t *mp_start = search_start_mempage(mpdesc_arr, mpnr, saddr);
+    if (mp_start == NULL)
+    {
+        return 0;
+    }
+
+    uint64_t num = ((eaddr - saddr) >> 12) + 1;
+
+    if (mpnr - num < mp_start - mpdesc_arr)
+    {
+        return 0;
+    }
+
+    if ((mp_start[num - 1].mpd_addr & PAF_ADDR_MASK) != (eaddr & PAF_ADDR_MASK))
+    {
+        return 0;
+    }
+
+    uint64_t mphyadr = 0, occ_mpnr = 0;
+    for (uint64_t tmpadr = saddr; tmpadr < eaddr; tmpadr += PAGE_SIZE, occ_mpnr++)
+    {
+        // 从开始地址对应的第一个msadsc_t结构开始设置，直到结束地址对应的最后一个masdsc_t结构
+        mphyadr = mp_start[occ_mpnr].mpd_addr & PAF_ADDR_MASK;
+        if (mphyadr != tmpadr)
+        {
+            return 0;
+        }
+        if (MF_MOCTY_FREE != mp_start[occ_mpnr].mpd_indxflgs.mpf_mocty ||
+            0 != mp_start[occ_mpnr].mpd_indxflgs.mpf_uindx || PAF_NO_ALLOC != mp_start[occ_mpnr].mpd_phyadrs.paf_alloc)
+        {
+            return 0;
+        }
+        // 设置msadsc_t结构为已经分配，已经分配给内核
+        mp_start[occ_mpnr].mpd_indxflgs.mpf_mocty = MF_MOCTY_KRNL;
+        mp_start[occ_mpnr].mpd_indxflgs.mpf_uindx++;
+        mp_start[occ_mpnr].mpd_phyadrs.paf_alloc = PAF_ALLOC;
+    }
+
+    if (occ_mpnr != num)
+        return 0;
+
+    return occ_mpnr;
+}
+
+bool_t search_krloccupymsadsc_core()
+{
+    uint64_t retschmnr = 0;
+    mpdesc_t *mp_arr = (mpdesc_t *)kernel_descriptor.mp_desc_arr;
+    uint64_t msanr = kernel_descriptor.mp_desc_nr;
+    // 搜索BIOS中断表占用的内存页所对应msadsc_t结构
+    retschmnr = search_segment_occupympg(mp_arr, msanr, 0, 0x1000 - 1);
+    if (0 == retschmnr)
+    {
+        return FALSE;
+    }
+    // 搜索内核栈占用的内存页所对应msadsc_t结构
+    retschmnr = search_segment_occupympg(mp_arr, msanr, kernel_descriptor.stack_init_adr,
+                                         kernel_descriptor.stack_init_adr + kernel_descriptor.stack_size - 1);
+    if (0 == retschmnr)
+    {
+        return FALSE;
+    }
+    // 搜索内核占用的内存页所对应msadsc_t结构
+    retschmnr = search_segment_occupympg(mp_arr, msanr, KINITPAGE_PHYADR, KINITPAGE_PHYADR + 0x1000 * 19 - 1);
+    if (0 == retschmnr)
+    {
+        return FALSE;
+    }
+    retschmnr = search_segment_occupympg(mp_arr, msanr, kernel_descriptor.kernel_start, kernel_descriptor.next_pg - 1);
+    if (0 == retschmnr)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+void init_mempage_occupation()
+{
+    // 实际初始化搜索内核占用的内存页面
+    if (search_krloccupymsadsc_core() == FALSE)
+    {
+        panic("search_krloccupymsadsc_core fail\n");
+    }
+    return;
 }
