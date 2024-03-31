@@ -5,6 +5,23 @@
 #include <struct/list.h>
 #include <type.h>
 
+#define MF_OLKTY_INIT (0)
+#define MF_OLKTY_ODER (1)
+#define MF_OLKTY_BAFH (2)
+#define MF_OLKTY_TOBJ (3)
+
+#define MF_LSTTY_LIST (0)
+#define MF_MOCTY_FREE (0)
+#define MF_MOCTY_KRNL (1)
+#define MF_MOCTY_USER (2)
+#define MF_MRV1_VAL (0)
+#define MF_UINDX_INIT (0)
+#define MF_UINDX_MAX (0xffffff)
+#define MF_MARTY_INIT (0)
+#define MF_MARTY_HWD (1)
+#define MF_MARTY_KRL (2)
+#define MF_MARTY_PRC (3)
+#define MF_MARTY_SHD (4)
 // 内存空间地址描述符标志
 // memory page descriptor flags
 typedef struct mpflgs
@@ -18,6 +35,17 @@ typedef struct mpflgs
 
 // 物理地址和标志
 // physical address flags
+#define PAF_NO_ALLOC (0)
+#define PAF_ALLOC (1)
+#define PAF_NO_SHARED (0)
+#define PAF_NO_SWAP (0)
+#define PAF_NO_CACHE (0)
+#define PAF_NO_KMAP (0)
+#define PAF_NO_LOCK (0)
+#define PAF_NO_DIRTY (0)
+#define PAF_NO_BUSY (0)
+#define PAF_RSV_VAL (0)
+#define PAF_INIT_PADRS (0)
 typedef struct phyadrflgs
 {
     uint64_t paf_alloc : 1;  // 分配位
@@ -28,20 +56,20 @@ typedef struct phyadrflgs
     uint64_t paf_lock : 1;   // 锁定位
     uint64_t paf_dirty : 1;  // 脏位
     uint64_t paf_busy : 1;   // 忙位
-    uint64_t paf_rv2 : 4;    // 保留位
+    uint64_t paf_rsv : 4;    // 保留位
     uint64_t paf_padrs : 52; // 页物理地址位
 } __attribute__((packed)) phyadrflgs_t;
 
 // 内存空间地址描述符
 // memory page descriptor
-typedef struct mpdesc
+typedef struct memory_page_descriptor
 {
     list_t mpd_list;          // 链表
     spinlock_t mpd_lock;      // 保护自身的自旋锁
     mpflgs_t mpd_indxflgs;    // 内存空间地址描述符标志
     phyadrflgs_t mpd_phyadrs; // 物理地址和标志
     void *mpd_odlink;         // 相邻且相同大小msadsc的指针
-} __attribute__((packed)) mpdesc_t;
+} mpdesc_t;
 
 void init_memory_page();
 

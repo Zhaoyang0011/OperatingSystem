@@ -5,10 +5,10 @@
 
 typedef struct spinlock
 {
-    volatile uint64_t lock;
+    volatile uint32_t lock;
 } spinlock_t;
 
-void init_spinlock(spinlock_t *spinlock);
+void spinlock_init(spinlock_t *spinlock);
 
 KLINE void spin_lock(spinlock_t *spinlock);
 

@@ -55,42 +55,6 @@ typedef struct cpu_desc
 
 } __attribute__((packed)) cpu_info_t;
 
-/**
- * kernel information macro and structure
- */
-
-// virtual memory page macro
-#define KRNL_VIRTUAL_ADDRESS_START 0xffff800000000000
-#define KPML4_P (1 << 0)
-#define KPML4_RW (1 << 1)
-#define KPML4_US (1 << 2)
-#define KPML4_PWT (1 << 3)
-#define KPML4_PCD (1 << 4)
-#define KPML4_A (1 << 5)
-
-#define KPDPTE_P (1 << 0)
-#define KPDPTE_RW (1 << 1)
-#define KPDPTE_US (1 << 2)
-#define KPDPTE_PWT (1 << 3)
-#define KPDPTE_PCD (1 << 4)
-#define KPDPTE_A (1 << 5)
-
-#define KPDE_P (1 << 0)
-#define KPDE_RW (1 << 1)
-#define KPDE_US (1 << 2)
-#define KPDE_PWT (1 << 3)
-#define KPDE_PCD (1 << 4)
-#define KPDE_A (1 << 5)
-#define KPDE_D (1 << 6)
-#define KPDE_PS (1 << 7)
-#define KPDE_G (1 << 8)
-#define KPDE_PAT (1 << 12)
-
-#define KPML4_SHIFT 39
-#define KPDPTTE_SHIFT 30
-#define KPDP_SHIFT 21
-#define PGENTY_SIZE 512
-
 #define ZHOS_MAGIC                                                                                                     \
     (uint64_t)((((uint64_t)'Z') << 56) | (((uint64_t)'H') << 48) | (((uint64_t)'O') << 40) | (((uint64_t)'S') << 32) | \
                (((uint64_t)'M') << 24) | (((uint64_t)'A') << 16) | (((uint64_t)'C') << 8) | ((uint64_t)'H'))

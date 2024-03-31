@@ -6,7 +6,7 @@
 
 int init_one_phymem(physical_memory_t *pm)
 {
-    init_spinlock(&pm->lock);
+    spinlock_init(&pm->lock);
     pm->pm_type = 0;
     pm->pm_stype = 0;
     pm->pm_flags = 0;

@@ -1,4 +1,5 @@
 #include <ldrtype.h>
+#include <memlayout.h>
 
 #include "ldr.h"
 

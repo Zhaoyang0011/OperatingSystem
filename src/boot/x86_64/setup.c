@@ -31,5 +31,8 @@ void setup_main()
     init_memory_info(kernel_desc);
     init_pages(kernel_desc);
 
-    ata_lba_read(20, kernel_desc->kernel_size / 512 + 1, KERNEL_START);
+    uint32_t sector_count = kernel_desc->kernel_size / 512;
+    if (kernel_desc->kernel_size % 512 != 0)
+        sector_count++;
+    ata_lba_read(20, sector_count, KERNEL_START);
 }
