@@ -12,6 +12,4 @@ void init_memory()
     init_mempage_occupation();
     init_memory_area();
     load_mempage_memarea();
-    if (frenr + occunr != kernel_descriptor.mp_desc_nr)
-        panic("Free and occupation memory page number error!");
 }

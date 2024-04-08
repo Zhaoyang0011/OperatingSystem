@@ -240,7 +240,6 @@ bool_t search_occupympgdesc_core()
         return FALSE;
     }
 
-    occunr = bios_occu + krlstack_occu + krlpage_occu + krl_occu;
     return TRUE;
 }
 

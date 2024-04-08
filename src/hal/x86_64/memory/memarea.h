@@ -108,6 +108,5 @@ void memarea_t_init(memarea_t *memarea);
 void load_mempage_memarea();
 
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
-HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
 
 #endif

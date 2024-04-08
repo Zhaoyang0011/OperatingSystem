@@ -1,6 +1,6 @@
+#include <console.h>
 #include <hal/halglobal.h>
 #include <hal/memory/phymem.h>
-#include <kprint.h>
 #include <spinlock.h>
 #include <type.h>
 
@@ -64,6 +64,18 @@ int set_one_phymem(e820_map_t *e820, physical_memory_t *pm)
 
 void sort_phymem(physical_memory_t *pm, uint64_t num)
 {
+    for (uint64_t i = 0; i < num - 1; ++i)
+    {
+        for (uint64_t j = 0; j < num - i - 1; ++j)
+        {
+            if (pm[j].pm_start > pm[j + 1].pm_start)
+            {
+                physical_memory_t temp = pm[j];
+                pm[j] = pm[j + 1];
+                pm[j + 1] = temp;
+            }
+        }
+    }
 }
 
 void init_phymem_core(e820_map_t *e820, physical_memory_t *pm, uint64_t num)
@@ -80,9 +92,7 @@ void init_physical_memory()
 {
     if (kernel_descriptor.mmap_adr == 0 || kernel_descriptor.mmap_nr == 0)
     {
-        kprint("Memory map incorrect!");
-        while (TRUE)
-            ;
+        panic("Memory map incorrect!");
     }
 
     physical_memory_t *pm_sadr = (physical_memory_t *)kernel_descriptor.next_pg;

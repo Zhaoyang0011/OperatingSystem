@@ -82,6 +82,4 @@ typedef struct memory_page_descriptor
 void init_memory_page();
 void init_mempage_occupation();
 
-HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
-
 #endif

@@ -203,7 +203,6 @@ bool_t scan_continuous_free_memorypage(mpdesc_t *scan_start, mpdesc_t *scan_end,
         uint64_t paddr = continous_start[i - 1].mpd_addr & PAF_ADDR_MASK;
         uint64_t caddr = continous_start[i].mpd_addr & PAF_ADDR_MASK;
 
-        // TODO:
         if (paddr + PAGE_SIZE != caddr || continous_start[i].mpd_adrflgs.paf_alloc != PAF_NO_ALLOC ||
             continous_start[i].mpd_indxflgs.mpf_marty != memarea->ma_type ||
             continous_start[i].mpd_indxflgs.mpf_marty != memarea->ma_type)
@@ -274,7 +273,7 @@ bool_t load_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, memarea_t *
 
         if (!load_continous_mempage_memarea(memarea, continous_start, continous_end))
             panic("Load memory page error");
-        frenr += continous_end - continous_start + 1;
+
         scan_start = continous_end + 1;
     }
 
@@ -283,7 +282,6 @@ bool_t load_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, memarea_t *
 
 bool_t load_mempage_memarea_core()
 {
-    frenr = 0;
     mpdesc_t *mpdesc_arr = (mpdesc_t *)kernel_descriptor.mp_desc_arr;
     uint64_t mpnr = kernel_descriptor.mp_desc_nr;
 
