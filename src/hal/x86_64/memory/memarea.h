@@ -12,15 +12,15 @@
 #define MPAF_STUS_DIVP 2
 #define MPAF_STUS_DIVM 3
 
-// memory alloc free list
+// memory page alloc free list
 typedef struct mpaflist
 {
     spinlock_t af_lock; // 保护自身结构的自旋锁
     uint32_t af_stus;   // 状态
     uint_t af_oder;     // 页面数的位移量
     uint_t af_oderpnr;  // oder对应的页面数比如 oder为2那就是1<<2=4
-    uint_t af_fobjnr;   // 多少个空闲msadsc_t结构，即空闲页面
-    uint_t af_mobjnr;   // 此结构的msadsc_t结构总数，即此结构总页面
+    uint_t af_fobjnr;   // 多少个空闲mpdesc_t结构，即空闲页面
+    uint_t af_mobjnr;   // 此结构的mpdesc_t结构总数，即此结构总页面
     uint_t af_alcindx;  // 此结构的分配计数
     uint_t af_freindx;  // 此结构的释放计数
     list_t af_frelist;  // 挂载此结构的空闲msadsc_t结构
@@ -42,18 +42,18 @@ typedef struct memdivmer
     uint_t dm_predmindx;
     uint_t dm_divnr;
     uint_t dm_mernr;
-    mpaflist_t dm_mdmlielst[MDIVMER_ARR_LMAX];
-    mpaflist_t dm_onemsalst;
+    mpaflist_t dm_mdmlst[MDIVMER_ARR_LMAX];
+    mpaflist_t dm_onelst;
 } memdivmer_t;
 
 void memdivmer_t_init(memdivmer_t *memdivmer);
 
+#define MEMAREA_MAX 4
 #define MA_TYPE_INIT 0
 #define MA_TYPE_HWAD 1
 #define MA_TYPE_KRNL 2
 #define MA_TYPE_PROC 3
 #define MA_TYPE_SHAR 4
-#define MEMAREA_MAX 4
 #define MA_HWAD_LSTART 0
 #define MA_HWAD_LSZ 0x2000000
 #define MA_HWAD_LEND (MA_HWAD_LSTART + MA_HWAD_LSZ - 1)
@@ -108,5 +108,6 @@ void memarea_t_init(memarea_t *memarea);
 void load_mempage_memarea();
 
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
+HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
 
 #endif

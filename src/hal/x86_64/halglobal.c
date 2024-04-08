@@ -12,5 +12,9 @@ HAL_DEFGLOB_VARIABLE(int_flt_desc_t, int_fault)[IDT_MAX];
 // lapic.h
 HAL_DEFGLOB_VARIABLE(volatile uint32_t *, lapic);
 
+// mempage.y
+HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
+
 // memarea.h
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
+HAL_DEFGLOB_VARIABLE(uint64_t, frenr);

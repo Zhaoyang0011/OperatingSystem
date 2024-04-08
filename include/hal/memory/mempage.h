@@ -1,6 +1,7 @@
 #ifndef _MEM_PAGE_H
 #define _MEM_PAGE_H
 
+#include <hal/halglobal.h>
 #include <spinlock.h>
 #include <struct/list.h>
 #include <type.h>
@@ -61,7 +62,7 @@ typedef struct phyadrflgs
     uint64_t paf_dirty : 1;  // 脏位
     uint64_t paf_busy : 1;   // 忙位
     uint64_t paf_rsv : 4;    // 保留位
-    uint64_t paf_paddr : 52;  // 页物理地址位
+    uint64_t paf_paddr : 52; // 页物理地址位
 } __attribute__((packed)) phyadrflgs_t;
 
 // 内存空间地址描述符
@@ -73,12 +74,14 @@ typedef struct memory_page_descriptor
     mpflgs_t mpd_indxflgs; // 内存空间地址描述符标志
     union {
         uint64_t mpd_addr;
-        phyadrflgs_t mpd_phyadrs; // 物理地址和标志
+        phyadrflgs_t mpd_adrflgs; // 物理地址和标志
     };
     void *mpd_odlink; // 相邻且相同大小msadsc的指针
 } mpdesc_t;
 
 void init_memory_page();
 void init_mempage_occupation();
+
+HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
 
 #endif
