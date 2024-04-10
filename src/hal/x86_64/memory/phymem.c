@@ -4,7 +4,7 @@
 #include <spinlock.h>
 #include <type.h>
 
-int init_one_phymem(physical_memory_t *pm)
+void init_one_phymem(physical_memory_t *pm)
 {
     spinlock_init(&pm->lock);
     pm->pm_type = 0;

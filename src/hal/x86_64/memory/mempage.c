@@ -104,8 +104,9 @@ uint64_t init_mpdsc_core(kernel_desc_t *kernel, mpdesc_t *mpsadr, uint64_t mpnr)
         }
     }
 
-    if (check_mpdesc_order(mpsadr, mpnr))
+    if (!check_mpdesc_order(mpsadr, mpnr))
     {
+        panic("memory page order error!");
     }
 
     return retmpnr;

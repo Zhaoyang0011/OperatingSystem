@@ -298,8 +298,8 @@ bool_t load_mempage_memarea_core()
 void load_mempage_memarea()
 {
     if (set_mempage_memarea() == FALSE)
-        panic("");
+        panic("Set memory page area error!");
     if (load_mempage_memarea_core() == FALSE)
-        panic("");
+        panic("load memory page to memory area error!");
     return;
 }

@@ -1,4 +1,3 @@
-#include "console.h"
 #include "memarea.h"
 #include <hal/memory/memory.h>
 #include <hal/memory/mempage.h>
