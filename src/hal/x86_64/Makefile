@@ -42,9 +42,6 @@ ${BUILD}/kprint.o: ./kprint.c
 ${BUILD}/cpu.o: ./cpu.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/spinlock.o: ./spinlock.c
-	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
-
 ${BUILD}/apci.o: ./apci.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
@@ -76,6 +73,9 @@ ${BUILD}/mempage.o: ./memory/mempage.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/memarea.o: ./memory/memarea.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/spinlock.o: ./synchronize/spinlock.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c
