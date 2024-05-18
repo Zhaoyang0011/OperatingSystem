@@ -1,6 +1,7 @@
 #define HALGOBAL_HEAD
 #include "interrupt/gdtidt.h"
 #include "memory/memarea.h"
+#include "memory/memgrob.h"
 #include <hal/halglobal.h>
 #include <hal/interrupt.h>
 
@@ -18,3 +19,6 @@ HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
 // memarea.h
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
 HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
+
+// memarea.h
+HAL_DEFGLOB_VARIABLE(memgrob_t, memgrob);
