@@ -3,6 +3,7 @@
 
 #include <hal/memory/mempage.h>
 
-mpdesc_t *memory_divide();
+#define DMF_RELDIV 0
+#define DMF_MAXDIV 1
 
 #endif

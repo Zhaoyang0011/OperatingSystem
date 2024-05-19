@@ -22,6 +22,7 @@ typedef long sint_t;
 typedef unsigned long addr_t;
 
 typedef sint_t bool_t;
+typedef uint64_t cpuflg_t;
 
 #define ALIGN(x, a) (((x) + (a)-1) & ~((a)-1))
 #define P4K_ALIGN(x) ALIGN(x, 0x1000)

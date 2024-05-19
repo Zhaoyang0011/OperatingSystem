@@ -23,11 +23,11 @@ typedef struct mpaflist
     uint_t af_mobjnr;   // 此结构的mpdesc_t结构总数，即此结构总页面
     uint_t af_alcindx;  // 此结构的分配计数
     uint_t af_freindx;  // 此结构的释放计数
-    list_t af_frelist;  // 挂载此结构的空闲msadsc_t结构
-    list_t af_alclist;  // 挂载此结构已经分配的msadsc_t结构
+    list_t af_frelist;  // 挂载此结构的空闲mpdesc_t结构
+    list_t af_alclist;  // 挂载此结构已经分配的mpdesc_t结构
 } mpaflist_t;
 
-void mpaflist_t_init(mpaflist_t * mapflist, uint32_t stus, uint_t oder, uint_t oderpnr);
+void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t oderpnr);
 
 // memory divide merge
 #define MDIVMER_ARR_LMAX 52

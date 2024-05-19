@@ -78,6 +78,9 @@ ${BUILD}/memarea.o: ./memory/memarea.c
 ${BUILD}/memgrob.o: ./memory/memgrob.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
+${BUILD}/memdivmer.o: ./memory/memdivmer.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
 ${BUILD}/spinlock.o: ./synchronize/spinlock.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 

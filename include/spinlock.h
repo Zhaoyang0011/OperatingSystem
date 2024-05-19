@@ -14,4 +14,8 @@ KLINE void spin_lock(spinlock_t *spinlock);
 
 KLINE void spin_unlock(spinlock_t *spinlock);
 
+void spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg);
+
+void spinunlock_sti(spinlock_t *lock, cpuflg_t *cpuflg);
+
 #endif
