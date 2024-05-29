@@ -218,11 +218,13 @@ bool_t scan_continuous_free_memorypage(mpdesc_t *scan_start, mpdesc_t *scan_end,
 
 bool_t load_continous_mempage_mpaflist(mpaflist_t *mpaflst, mpdesc_t *start, mpdesc_t *end)
 {
-    if (start - end + 1 != mpaflst->af_oderpnr)
+    if (end - start + 1 != mpaflst->af_oderpnr)
         return FALSE;
     list_add(&start->mpd_list, &mpaflst->af_frelist);
     start->mpd_odlink = end;
-    end->mpd_odlink = &mpaflst;
+    end->mpd_odlink = mpaflst;
+    mpaflst->af_fobjnr++;
+    mpaflst->af_mobjnr++;
     return TRUE;
 }
 
@@ -245,7 +247,10 @@ bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_st
             shar++;
 
         uint32_t load_num = 1 << shar;
-        load_continous_mempage_mpaflist(&memarea->ma_mdmdata.dm_mdmlst[shar], load_start, load_start + load_num - 1);
+        if (!load_continous_mempage_mpaflist(&memarea->ma_mdmdata.dm_mdmlst[shar], load_start,
+                                             load_start + load_num - 1))
+            return FALSE;
+
         memarea->ma_mdmdata.dm_mdmlst[shar].af_freindx++;
         memarea->ma_maxpages += load_num;
         memarea->ma_freepages += load_num;
@@ -258,7 +263,7 @@ bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_st
     return TRUE;
 }
 
-bool_t load_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, memarea_t *memarea)
+bool_t load_mempage_memarea_one(memarea_t *memarea, mpdesc_t *mpdesc_arr, uint64_t mpnr)
 {
     if (mpdesc_arr == NULL || memarea == NULL || mpnr == 0)
         return FALSE;
@@ -298,7 +303,7 @@ bool_t load_mempage_memarea_core()
 
     for (int i = 0; i < MEMAREA_MAX - 1; ++i)
     {
-        if (!load_mempage_memarea_one(mpdesc_arr, mpnr, &memarea_arr[i]))
+        if (!load_mempage_memarea_one(&memarea_arr[i], mpdesc_arr, mpnr))
             return FALSE;
     }
 
