@@ -6,7 +6,7 @@ void spinlock_init(spinlock_t *spinlock)
 }
 
 // 加锁函数
-KLINE void spin_lock(spinlock_t *lock)
+void spin_lock(spinlock_t *lock)
 {
     __asm__ __volatile__("1:         \n"
                          "lock; xchg  %0, %1 \n"
@@ -26,7 +26,7 @@ KLINE void spin_lock(spinlock_t *lock)
 }
 
 // 解锁函数
-KLINE void spin_unlock(spinlock_t *lock)
+void spin_unlock(spinlock_t *lock)
 {
     __asm__ __volatile__("movl   $0, %0\n" // 解锁把lock内存中的值设为0就行
                          :

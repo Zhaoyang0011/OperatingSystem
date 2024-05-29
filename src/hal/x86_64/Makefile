@@ -18,7 +18,7 @@ ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
 				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
-				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o ${BUILD}/memgrob.o
+				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o ${BUILD}/memgrob.o ${BUILD}/memdivmer.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm

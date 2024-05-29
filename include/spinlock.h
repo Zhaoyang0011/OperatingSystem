@@ -10,9 +10,9 @@ typedef struct spinlock
 
 void spinlock_init(spinlock_t *spinlock);
 
-KLINE void spin_lock(spinlock_t *spinlock);
+void spin_lock(spinlock_t *lock);
 
-KLINE void spin_unlock(spinlock_t *spinlock);
+void spin_unlock(spinlock_t *lock);
 
 void spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg);
 
