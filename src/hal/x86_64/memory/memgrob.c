@@ -1,6 +1,8 @@
-#include "memgrob.h"
 #include <console.h>
+#include <hal/memory/memgrob.h>
 #include <memlayout.h>
+
+HAL_DEFGLOB_VARIABLE(memgrob_t, memgrob);
 
 void memmgrob_t_init(memgrob_t *initp)
 {

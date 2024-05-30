@@ -1,9 +1,9 @@
 #define HALGOBAL_HEAD
 #include "interrupt/gdtidt.h"
-#include "memory/memarea.h"
-#include "memory/memgrob.h"
 #include <hal/halglobal.h>
 #include <hal/interrupt.h>
+#include <hal/memory/memarea.h>
+#include <hal/memory/memgrob.h>
 
 // gdtidt.h
 HAL_DEFGLOB_VARIABLE(gate_t, x64_idt)[IDT_MAX];

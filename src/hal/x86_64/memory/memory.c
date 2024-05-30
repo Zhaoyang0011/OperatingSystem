@@ -1,5 +1,5 @@
-#include "memarea.h"
-#include "memgrob.h"
+#include <hal/memory/memarea.h>
+#include <hal/memory/memgrob.h>
 #include <hal/memory/memory.h>
 #include <hal/memory/mempage.h>
 #include <hal/memory/phymem.h>

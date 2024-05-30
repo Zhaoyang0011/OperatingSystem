@@ -1,7 +1,7 @@
 #ifndef _MEMGROB_H
 #define _MEMGROB_H
 
-#include "memarea.h"
+#include <hal/memory/memarea.h>
 #include <hal/memory/mempage.h>
 #include <hal/memory/phymem.h>
 #include <spinlock.h>

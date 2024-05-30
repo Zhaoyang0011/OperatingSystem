@@ -1,6 +1,6 @@
 #include "../io.h"
-#include "memgrob.h"
 #include <hal/memory/memdivmer.h>
+#include <hal/memory/memgrob.h>
 #include <spinlock.h>
 
 void update_memarea(memarea_t *mareap, uint_t retpnr, uint_t flgs)
@@ -118,9 +118,9 @@ bool_t ret_mpg_onmpaflist_core(mpaflist_t *bafhp, mpdesc_t **retmstat, mpdesc_t 
 }
 
 // get memory pages on struct mpaflist
-mpdesc_t *get_mpg_onmpaflist(memarea_t *mareap, uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, mpaflist_t *divbhl)
+mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, mpaflist_t *divbhl)
 {
-    if (mareap == NULL || pages == 0 || retpnr == NULL || relbhl == NULL || divbhl == NULL)
+    if (pages == 0 || retpnr == NULL || relbhl == NULL || divbhl == NULL)
         return NULL;
 
     if (relbhl > divbhl)
@@ -129,14 +129,18 @@ mpdesc_t *get_mpg_onmpaflist(memarea_t *mareap, uint_t pages, uint_t *retpnr, mp
         return NULL;
     }
     mpdesc_t *retmsa = NULL;
-    bool_t rets = FALSE; 
+    bool_t rets = FALSE;
     mpdesc_t *retmstat = NULL, *retmend = NULL;
     if (relbhl == divbhl)
     {
         bool_t res = ret_mpg_onmpaflist_core(relbhl, &retmstat, &retmend);
-        if(res == FALSE)
+        if (res == FALSE)
+        {
+            *retpnr = 0;
             return NULL;
-        
+        }
+        *retpnr = retmend - retmstat;
+        return retmstat;
     }
 
     return NULL;
@@ -164,7 +168,7 @@ mpdesc_t *mem_divpages_onmarea(memarea_t *mareap, uint_t pages, uint_t *retpnr)
         return NULL;
     }
 
-    mpdesc_t *retmpg = get_mpg_onmpaflist(mareap, pages, retpnr, retrelbhl, retdivbhl);
+    mpdesc_t *retmpg = get_mpg_onmpaflist(pages, retpnr, retrelbhl, retdivbhl);
     if (retmpg == NULL)
     {
         *retpnr = 0;

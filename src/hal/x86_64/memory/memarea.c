@@ -1,7 +1,7 @@
-#include "memarea.h"
 #include "type.h"
 #include <console.h>
 #include <hal/halglobal.h>
+#include <hal/memory/memarea.h>
 
 void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t oderpnr)
 {
