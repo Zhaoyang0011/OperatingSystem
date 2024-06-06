@@ -1,4 +1,6 @@
 #include "../io.h"
+#include "type.h"
+#include <console.h>
 #include <hal/memory/memdivmer.h>
 #include <hal/memory/memgrob.h>
 #include <spinlock.h>
@@ -9,6 +11,22 @@ void update_memarea(memarea_t *mareap, uint_t retpnr, uint_t flgs)
 
 void update_memmgrob(uint_t retpnr, uint_t flgs)
 {
+    cpuflg_t cpuflg;
+    if (0 == flgs)
+    {
+        spinlock_cli(&memgrob.mo_lock, &cpuflg);
+        memgrob.mo_alocpages += retpnr;
+        memgrob.mo_freepages -= retpnr;
+        spinunlock_sti(&memgrob.mo_lock, &cpuflg);
+    }
+    if (1 == flgs)
+    {
+        spinlock_cli(&memgrob.mo_lock, &cpuflg);
+        memgrob.mo_alocpages -= retpnr;
+        memgrob.mo_freepages += retpnr;
+        spinunlock_sti(&memgrob.mo_lock, &cpuflg);
+    }
+    return;
 }
 
 memarea_t *memarea_by_type(memgrob_t *mmobjp, uint_t mrtype)
@@ -91,7 +109,7 @@ bool_t ret_mpg_onmpaflist_core(mpaflist_t *bafhp, mpdesc_t **retmstat, mpdesc_t 
     {
         return FALSE;
     }
-    if (1 > bafhp->af_mobjnr || 1 > bafhp->af_fobjnr)
+    if (bafhp->af_mobjnr < 1 || bafhp->af_fobjnr < 1)
     {
         *retmstat = NULL;
         *retmend = NULL;
@@ -117,6 +135,76 @@ bool_t ret_mpg_onmpaflist_core(mpaflist_t *bafhp, mpdesc_t **retmstat, mpdesc_t 
     return TRUE;
 }
 
+// set properties of divided mpdesc
+mpdesc_t *divpages_mpdesc(mpdesc_t *mpstart, uint_t mnr)
+{
+    if (mpstart == NULL || mnr == 0)
+    {
+        return NULL;
+    }
+    if ((mpstart->mpd_indxflgs.mpf_olkty != MF_OLKTY_ODER && MF_OLKTY_BAFH != mpstart->mpd_indxflgs.mpf_olkty) ||
+        mpstart->mpd_odlink == NULL || mpstart->mpd_adrflgs.paf_alloc != PAF_NO_ALLOC)
+    {
+        panic("divpages_mpdesc err1\n");
+    }
+
+    mpdesc_t *mpend = (mpdesc_t *)mpstart->mpd_odlink;
+    if (mpstart->mpd_indxflgs.mpf_olkty == MF_OLKTY_BAFH)
+    {
+        mpend = mpstart;
+    }
+    if (mpend < mpstart)
+    {
+        panic("divpages_mpdesc err2\n");
+    }
+    if ((uint_t)((mpend - mpstart) + 1) != mnr)
+    {
+        panic("divpages_mpdesc err3\n");
+    }
+    if (mpstart->mpd_indxflgs.mpf_uindx > (MF_UINDX_MAX - 1) || mpend->mpd_indxflgs.mpf_uindx > (MF_UINDX_MAX - 1) ||
+        mpstart->mpd_indxflgs.mpf_uindx != mpend->mpd_indxflgs.mpf_uindx)
+    {
+        panic("divpages_mpdesc err4");
+    }
+    if (mpend != mpstart)
+    {
+        mpend->mpd_indxflgs.mpf_uindx++;
+        mpend->mpd_adrflgs.paf_alloc = PAF_ALLOC;
+    }
+    mpstart->mpd_indxflgs.mpf_uindx++;
+    mpstart->mpd_adrflgs.paf_alloc = PAF_ALLOC;
+    mpstart->mpd_indxflgs.mpf_olkty = MF_OLKTY_ODER;
+    mpstart->mpd_odlink = mpend;
+    return mpstart;
+}
+
+bool_t add_pages_mpaflist(mpaflist_t *aflst, mpdesc_t *mpstart, mpdesc_t *mpend)
+{
+    uint_t mnr = (mpend - mpstart) + 1;
+    if (mnr != (uint_t)aflst->af_oderpnr)
+    {
+        return FALSE;
+    }
+    if (0 < mpend->mpd_indxflgs.mpf_uindx || 0 < mpend->mpd_indxflgs.mpf_uindx)
+    {
+        return FALSE;
+    }
+
+    if (mpstart == mpend && 1 != mnr && 1 != aflst->af_oderpnr)
+    {
+        return FALSE;
+    }
+    mpstart->mpd_indxflgs.mpf_olkty = MF_OLKTY_ODER;
+    mpstart->mpd_odlink = mpend;
+
+    mpend->mpd_indxflgs.mpf_olkty = MF_OLKTY_BAFH;
+    mpend->mpd_odlink = aflst;
+    list_add(&mpstart->mpd_list, &aflst->af_frelist);
+    aflst->af_mobjnr++;
+    aflst->af_fobjnr++;
+    return TRUE;
+}
+
 // get memory pages on struct mpaflist
 mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, mpaflist_t *divbhl)
 {
@@ -131,18 +219,35 @@ mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, m
     mpdesc_t *retmsa = NULL;
     bool_t rets = FALSE;
     mpdesc_t *retmstat = NULL, *retmend = NULL;
+
+    bool_t res = ret_mpg_onmpaflist_core(relbhl, &retmstat, &retmend);
+
+    if (res == FALSE || retmend - retmstat != relbhl->af_oderpnr - 1)
+    {
+        *retpnr = 0;
+        return NULL;
+    }
+
+    uint_t divnr = divbhl->af_oderpnr;
+
     if (relbhl == divbhl)
     {
-        bool_t res = ret_mpg_onmpaflist_core(relbhl, &retmstat, &retmend);
-        if (res == FALSE)
-        {
-            *retpnr = 0;
-            return NULL;
-        }
+        divpages_mpdesc(retmstat, divnr);
         *retpnr = retmend - retmstat;
         return retmstat;
     }
 
+    for (mpaflist_t *tmpbhl = divbhl - 1; tmpbhl >= relbhl; tmpbhl--)
+    {
+        if (add_pages_mpaflist(tmpbhl, &retmstat[tmpbhl->af_oderpnr], (mpdesc_t *)retmstat->mpd_odlink) == FALSE)
+        {
+            panic("mrdmb_add_msa_bafh fail\n");
+        }
+        retmstat->mpd_odlink = &retmstat[tmpbhl->af_oderpnr - 1];
+        divnr -= tmpbhl->af_oderpnr;
+    }
+
+    divpages_mpdesc(retmstat, divnr);
     return NULL;
 }
 
@@ -162,7 +267,7 @@ mpdesc_t *mem_divpages_onmarea(memarea_t *mareap, uint_t pages, uint_t *retpnr)
 
     mpaflist_t *retrelbhl = NULL, *retdivbhl = NULL;
     bool_t rets = get_mpaflist_onpages(mareap, pages, &retrelbhl, &retdivbhl);
-    if (FALSE == rets)
+    if (rets == FALSE)
     {
         *retpnr = 0;
         return NULL;
@@ -177,6 +282,7 @@ mpdesc_t *mem_divpages_onmarea(memarea_t *mareap, uint_t pages, uint_t *retpnr)
     return retmpg;
 }
 
+// memory divide core function
 mpdesc_t *memory_divide_pages_core(memarea_t *mareap, uint_t pages, uint_t *retrelpnr, uint_t flgs)
 {
     if (flgs != DMF_RELDIV && flgs != DMF_MAXDIV)
@@ -196,14 +302,24 @@ mpdesc_t *memory_divide_pages_core(memarea_t *mareap, uint_t pages, uint_t *retr
 
     spinlock_cli(&mareap->ma_lock, &cpuflg);
 
-    if (DMF_MAXDIV == flgs)
+    do
     {
-        retmpg = mem_maxdivpages_onmarea(mareap, &retpnr);
-    }
-    else if (DMF_RELDIV == flgs)
-    {
-        retmpg = mem_divpages_onmarea(mareap, pages, &retpnr);
-    }
+        if (DMF_MAXDIV == flgs)
+        {
+            retmpg = mem_maxdivpages_onmarea(mareap, &retpnr);
+            break;
+        }
+
+        if (DMF_RELDIV == flgs)
+        {
+            retmpg = mem_divpages_onmarea(mareap, pages, &retpnr);
+            break;
+        }
+
+        retpnr = 0;
+        retmpg = NULL;
+    } while (FALSE);
+
     if (retmpg != NULL && retpnr != 0)
     {
         update_memarea(mareap, retpnr, 0);
@@ -216,12 +332,6 @@ mpdesc_t *memory_divide_pages_core(memarea_t *mareap, uint_t pages, uint_t *retr
     return retmpg;
 }
 
-// 内存分配页面接口
-// mmobjp->内存管理数据结构指针 memory management structure pointer
-// pages->请求分配的内存页面数 page number needed
-// retrealpnr->存放实际分配内存页面数的指针 return real page number
-// matype->请求的分配内存页面的内存区类型 memory area type
-// flgs->请求分配的内存页面的标志位 flags
 mpdesc_t *mm_divpages_framework(memgrob_t *mmobjp, uint_t pages, uint_t *retrelpnr, uint_t matype, uint_t flgs)
 {
 
@@ -235,6 +345,12 @@ mpdesc_t *mm_divpages_framework(memgrob_t *mmobjp, uint_t pages, uint_t *retrelp
     return memory_divide_pages_core(marea, pages, retrelpnr, flgs);
 }
 
+// 内存分配页面接口
+// mmobjp->内存管理数据结构指针 memory management structure pointer
+// pages->请求分配的内存页面数 page number needed
+// retrealpnr->存放实际分配内存页面数的指针 return real divided page number
+// matype->请求的分配内存页面的内存区类型 memory area type
+// flgs->请求分配的内存页面的标志位 flags
 mpdesc_t *memory_divide_pages(memgrob_t *mmobjp, uint_t pages, uint_t *retrealpnr, uint_t mrtype, uint_t flgs)
 {
     if (mmobjp == NULL || retrealpnr == NULL || mrtype == 0)

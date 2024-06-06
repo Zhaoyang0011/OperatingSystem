@@ -222,7 +222,9 @@ bool_t load_continous_mempage_mpaflist(mpaflist_t *mpaflst, mpdesc_t *start, mpd
         return FALSE;
     list_add(&start->mpd_list, &mpaflst->af_frelist);
     start->mpd_odlink = end;
+    start->mpd_indxflgs.mpf_olkty = MF_OLKTY_ODER;
     end->mpd_odlink = mpaflst;
+    end->mpd_indxflgs.mpf_olkty = MF_OLKTY_BAFH;
     mpaflst->af_fobjnr++;
     mpaflst->af_mobjnr++;
     return TRUE;
