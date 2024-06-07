@@ -5,8 +5,23 @@
 #include <hal/memory/memgrob.h>
 #include <spinlock.h>
 
-void update_memarea(memarea_t *mareap, uint_t retpnr, uint_t flgs)
+void update_memarea(memarea_t *mareap, uint_t pgnr, uint_t flgs)
 {
+	if (NULL == mareap)
+	{
+		return;
+	}
+	if (0 == flgs)
+	{
+		mareap->ma_freepages -= pgnr;
+		mareap->ma_allocpages += pgnr;
+	}
+	if (1 == flgs)
+	{
+		mareap->ma_freepages += pgnr;
+		mareap->ma_allocpages -= pgnr;
+	}
+	return;
 }
 
 void update_memmgrob(uint_t retpnr, uint_t flgs)
