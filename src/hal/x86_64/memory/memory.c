@@ -3,6 +3,7 @@
 #include <hal/memory/memory.h>
 #include <hal/memory/mempage.h>
 #include <hal/memory/phymem.h>
+#include <hal/memory/memdivmer.h>
 
 // order of the fuction call matters
 void init_memory()
@@ -13,4 +14,12 @@ void init_memory()
     init_memory_area();
     load_mempage_memarea();
     init_memgrob();
+
+    uint_t ret_pgnr;
+    mpdesc_t* mp = memory_divide_pages(&memgrob, 3, &ret_pgnr, MA_TYPE_KRNL, DMF_RELDIV);
+    while (TRUE)
+    {
+        /* code */
+    }
+    
 }

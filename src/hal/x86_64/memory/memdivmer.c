@@ -151,11 +151,11 @@ bool_t ret_mpg_onmpaflist_core(mpaflist_t *bafhp, mpdesc_t **retmstat, mpdesc_t 
 }
 
 // set properties of divided mpdesc
-mpdesc_t *divpages_mpdesc(mpdesc_t *mpstart, uint_t mnr)
+void divpages_mpdesc(mpdesc_t *mpstart, uint_t mnr)
 {
     if (mpstart == NULL || mnr == 0)
     {
-        return NULL;
+        return;
     }
     if ((mpstart->mpd_indxflgs.mpf_olkty != MF_OLKTY_ODER && MF_OLKTY_BAFH != mpstart->mpd_indxflgs.mpf_olkty) ||
         mpstart->mpd_odlink == NULL || mpstart->mpd_adrflgs.paf_alloc != PAF_NO_ALLOC)
@@ -190,7 +190,6 @@ mpdesc_t *divpages_mpdesc(mpdesc_t *mpstart, uint_t mnr)
     mpstart->mpd_adrflgs.paf_alloc = PAF_ALLOC;
     mpstart->mpd_indxflgs.mpf_olkty = MF_OLKTY_ODER;
     mpstart->mpd_odlink = mpend;
-    return mpstart;
 }
 
 bool_t add_pages_mpaflist(mpaflist_t *aflst, mpdesc_t *mpstart, mpdesc_t *mpend)
@@ -235,9 +234,9 @@ mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, m
     bool_t rets = FALSE;
     mpdesc_t *retmstat = NULL, *retmend = NULL;
 
-    bool_t res = ret_mpg_onmpaflist_core(relbhl, &retmstat, &retmend);
+    bool_t res = ret_mpg_onmpaflist_core(divbhl, &retmstat, &retmend);
 
-    if (res == FALSE || retmend - retmstat != relbhl->af_oderpnr - 1)
+    if (res == FALSE || retmend - retmstat != divbhl->af_oderpnr - 1)
     {
         *retpnr = 0;
         return NULL;
@@ -263,7 +262,8 @@ mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, m
     }
 
     divpages_mpdesc(retmstat, divnr);
-    return NULL;
+
+    return retmstat;
 }
 
 mpdesc_t *mem_divpages_onmarea(memarea_t *mareap, uint_t pages, uint_t *retpnr)
