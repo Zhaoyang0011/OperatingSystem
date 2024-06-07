@@ -1,3 +1,4 @@
+#include "../io.h"
 #include "type.h"
 #include <console.h>
 #include <hal/halglobal.h>
@@ -221,10 +222,13 @@ bool_t load_continous_mempage_mpaflist(mpaflist_t *mpaflst, mpdesc_t *start, mpd
     if (end - start + 1 != mpaflst->af_oderpnr)
         return FALSE;
     list_add(&start->mpd_list, &mpaflst->af_frelist);
+
     start->mpd_odlink = end;
     start->mpd_indxflgs.mpf_olkty = MF_OLKTY_ODER;
+
     end->mpd_odlink = mpaflst;
     end->mpd_indxflgs.mpf_olkty = MF_OLKTY_BAFH;
+
     mpaflst->af_fobjnr++;
     mpaflst->af_mobjnr++;
     return TRUE;
@@ -244,9 +248,7 @@ bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_st
     mpdesc_t *load_start = continous_start;
     while (n > 0)
     {
-        uint32_t shar = 0;
-        while (n >> (shar + 1) > 0)
-            shar++;
+        sint32_t shar = search_64lbits(n);
 
         uint32_t load_num = 1 << shar;
         if (!load_continous_mempage_mpaflist(&memarea->ma_mdmdata.dm_mdmlst[shar], load_start,
