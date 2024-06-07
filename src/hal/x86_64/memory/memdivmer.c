@@ -262,7 +262,7 @@ mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, m
     }
 
     divpages_mpdesc(retmstat, divnr);
-
+    *retpnr = divnr;
     return retmstat;
 }
 
