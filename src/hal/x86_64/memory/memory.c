@@ -16,7 +16,8 @@ void init_memory()
     init_memgrob();
 
     uint_t ret_pgnr;
-    mpdesc_t* mp = memory_divide_pages(&memgrob, 3, &ret_pgnr, MA_TYPE_KRNL, DMF_RELDIV);
+    mpdesc_t* mp = memory_divide_pages(&memgrob, 7, &ret_pgnr, MA_TYPE_KRNL, DMF_RELDIV);
+    memory_merge_pages(&memgrob, mp,ret_pgnr);
     while (TRUE)
     {
         /* code */

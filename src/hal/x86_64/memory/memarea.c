@@ -255,7 +255,6 @@ bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_st
                                              load_start + load_num - 1))
             return FALSE;
 
-        memarea->ma_mdmdata.dm_mdmlst[shar].af_freindx++;
         memarea->ma_maxpages += load_num;
         memarea->ma_freepages += load_num;
         memarea->ma_allmsadscnr += load_num;

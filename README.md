@@ -2,7 +2,7 @@
 
 In this project, I will implement a simple operating system and record my learning process.
 
-## Project Compilation
+## Build Project
 
 Install qemu:
 ```
@@ -24,7 +24,9 @@ Run the project through QEMU in debug mode:
 make qemug
 ```
 
-## Bootloader
+## Components
+
+### Bootloader
 
 A bootloader is a computer program that is responsible for booting a computer.
 
