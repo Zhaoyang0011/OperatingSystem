@@ -87,7 +87,7 @@ typedef struct memory_object_manager_list
 } momgrlist_t;
 
 // 管理momgr_t结构的数据结构
-typedef struct mo_mgr_header
+typedef struct memory_object_manager_header
 {
     spinlock_t ks_lock; // 保护自身的自旋锁
     list_t ks_tclst;    // 链表
@@ -98,5 +98,7 @@ typedef struct mo_mgr_header
 } momgrheader_t;
 
 void init_memory_object_manager();
+
+void momgrlist_init(momgrlist_t *initp, size_t mobsz);
 
 #endif
