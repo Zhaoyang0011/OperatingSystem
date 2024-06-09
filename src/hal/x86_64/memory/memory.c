@@ -1,3 +1,4 @@
+#include "hal/memory/memobject.h"
 #include <hal/memory/memarea.h>
 #include <hal/memory/memgrob.h>
 #include <hal/memory/memory.h>
@@ -13,14 +14,6 @@ void init_memory()
     init_mempage_occupation();
     init_memory_area();
     load_mempage_memarea();
+    init_memory_object_manager();
     init_memgrob();
-
-    uint_t ret_pgnr;
-    mpdesc_t* mp = memory_divide_pages(&memgrob, 7, &ret_pgnr, MA_TYPE_KRNL, DMF_RELDIV);
-    memory_merge_pages(&memgrob, mp,ret_pgnr);
-    while (TRUE)
-    {
-        /* code */
-    }
-    
 }

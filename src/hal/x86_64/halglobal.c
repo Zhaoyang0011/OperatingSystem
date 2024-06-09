@@ -20,5 +20,5 @@ HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
 HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
 
-// memarea.h
+// memgrob.h
 HAL_DEFGLOB_VARIABLE(memgrob_t, memgrob);

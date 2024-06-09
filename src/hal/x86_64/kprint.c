@@ -12,7 +12,7 @@ KLINE char *kstrcpy(char *s, char *d)
     return s;
 }
 
-KLINE char * kprint_int(char *str, int n, int base)
+KLINE char *kprint_int(char *str, int n, int base)
 {
     register char *p;
     char strbuf[36];
@@ -43,7 +43,7 @@ void kprint(const char *fmt, ...)
     va_list args;
     va_start(args, fmt);
     char *p = buf;
-    while (*fmt)
+    while (*fmt && p < buf + 510)
     {
         if (*fmt != '%')
         {

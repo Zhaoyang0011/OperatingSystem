@@ -2,6 +2,7 @@
 #define _MEMGROB_H
 
 #include <hal/memory/memarea.h>
+#include <hal/memory/memobject.h>
 #include <hal/memory/mempage.h>
 #include <hal/memory/phymem.h>
 #include <spinlock.h>
@@ -26,7 +27,7 @@ typedef struct memgrob
     uint64_t mo_msanr;
     memarea_t *mo_mareastat;
     uint64_t mo_mareanr;
-    // kmsobmgrhed_t mo_kmsobmgr;
+    momgrheader_t mo_mobmgr;
     // void *mo_privp;
     // void *mo_extp;
 } memgrob_t;
