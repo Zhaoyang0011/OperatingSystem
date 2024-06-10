@@ -18,6 +18,7 @@ ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
 				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
+				${BUILD}/cga.o\
 				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o \
 				${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
@@ -47,6 +48,9 @@ ${BUILD}/apci.o: ./apci.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/mp.o: ./mp.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/cga.o: ./cga.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/apic.o: ./interrupt/apic.c

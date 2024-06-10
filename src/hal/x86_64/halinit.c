@@ -6,7 +6,7 @@
 
 void init_hal()
 {
-    init_memory();
     init_mp();
+    init_memory();
     init_interrupt();
 }

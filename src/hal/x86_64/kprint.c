@@ -1,3 +1,4 @@
+#include "cga.h"
 #include <kprint.h>
 #include <type.h>
 
@@ -33,10 +34,6 @@ KLINE char *kprint_int(char *str, int n, int base)
     return str;
 }
 
-KLINE void kwrite_console(char *str)
-{
-}
-
 void kprint(const char *fmt, ...)
 {
     char buf[512];
@@ -70,5 +67,5 @@ void kprint(const char *fmt, ...)
         }
     }
     va_end(args);
-    kwrite_console(buf);
+    cga_console(buf);
 }
