@@ -35,10 +35,6 @@ void kernel_main()
 {
     
     copy_kernel_desc();
-    for(int i = 0; i< 25; ++i)
-    {
-        kprint("Entered kernel!\n");
-    }
     init_hal();
 
     //

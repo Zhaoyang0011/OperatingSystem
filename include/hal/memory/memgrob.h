@@ -27,7 +27,7 @@ typedef struct memgrob
     uint64_t mo_msanr;
     memarea_t *mo_mareastat;
     uint64_t mo_mareanr;
-    momgrheader_t mo_mobmgr;
+    kmomgr_header_t mo_mobmgr;
     // void *mo_privp;
     // void *mo_extp;
 } memgrob_t;

@@ -8,6 +8,7 @@
 
 // 4k
 #define PAGE_SIZE (1UL << 12)
+#define PAGE_SHR 12
 
 #define MF_OLKTY_INIT (0)
 #define MF_OLKTY_ODER (1)
