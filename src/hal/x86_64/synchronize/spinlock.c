@@ -1,13 +1,11 @@
 #include <spinlock.h>
 
-void spinlock_init(spinlock_t *spinlock)
-{
+void spinlock_init(spinlock_t *spinlock) {
     spinlock->lock = 0;
 }
 
 // 加锁函数
-void spin_lock(spinlock_t *lock)
-{
+void spin_lock(spinlock_t *lock) {
     __asm__ __volatile__("1:         \n"
                          "lock; xchg  %0, %1 \n"
                          "cmpl   $0, %0      \n"
@@ -20,21 +18,19 @@ void spin_lock(spinlock_t *lock)
                          "jne    2b      \n"
                          "jmp    1b      \n"
                          ".previous      \n"
-                         :
-                         : "r"(1), "m"(*lock));
+            :
+            : "r"(1), "m"(*lock));
     return;
 }
 
 // 解锁函数
-void spin_unlock(spinlock_t *lock)
-{
+void spin_unlock(spinlock_t *lock) {
     __asm__ __volatile__("movl   $0, %0\n" // 解锁把lock内存中的值设为0就行
-                         :
-                         : "m"(*lock));
+            :
+            : "m"(*lock));
 }
 
-void spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg)
-{
+void spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg) {
     __asm__ __volatile__("pushfq             \n\t"
                          "cli                \n\t"
                          "popq %0            \n\t"
@@ -51,17 +47,16 @@ void spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg)
                          "jne    2b          \n\t"
                          "jmp    1b          \n\t"
                          ".previous          \n\t"
-                         : "=m"(*cpuflg)
-                         : "r"(1), "m"(*lock));
+            : "=m"(*cpuflg)
+            : "r"(1), "m"(*lock));
     return;
 }
 
-void spinunlock_sti(spinlock_t *lock, cpuflg_t *cpuflg)
-{
+void spinunlock_sti(spinlock_t *lock, cpuflg_t *cpuflg) {
     __asm__ __volatile__("movl   $0, %0\n\t"
                          "pushq %1 \n\t"
                          "popfq \n\t"
-                         :
-                         : "m"(*lock), "m"(*cpuflg));
+            :
+            : "m"(*lock), "m"(*cpuflg));
     return;
 }

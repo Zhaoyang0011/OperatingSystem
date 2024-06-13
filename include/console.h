@@ -4,11 +4,9 @@
 #include <kprint.h>
 #include <type.h>
 
-KLINE void panic(char *info)
-{
+KLINE void panic(char *info) {
     kprint(info);
-    while (TRUE)
-        ;
+    while (TRUE);
 }
 
 #endif

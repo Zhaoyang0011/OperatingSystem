@@ -6,8 +6,7 @@
 #include <struct/list.h>
 
 // interrupt fault descriptor 中断异常描述符
-typedef struct int_fault_desc
-{
+typedef struct int_fault_desc {
     spinlock_t i_lock;
     uint32_t i_flag;
     uint32_t i_status;

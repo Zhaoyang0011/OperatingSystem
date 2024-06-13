@@ -27,8 +27,7 @@
 #define PM_F_HAL_MASK 0xff
 
 // structure for physical memory, we will use it to replace original e820 memory structure
-typedef struct physical_memory
-{
+typedef struct physical_memory {
     spinlock_t lock;       // The spinclock that protects this structure
     uint32_t pm_type;      // Physical memory type
     uint32_t pm_stype;     // Physical memory subtype

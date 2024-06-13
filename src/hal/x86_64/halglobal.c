@@ -1,4 +1,5 @@
 #define HALGOBAL_HEAD
+
 #include "interrupt/gdtidt.h"
 #include <hal/halglobal.h>
 #include <hal/interrupt.h>

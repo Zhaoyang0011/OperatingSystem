@@ -13,8 +13,7 @@
 #define MPAF_STUS_DIVM 3
 
 // memory page alloc free list
-typedef struct mpaflist
-{
+typedef struct mpaflist {
     spinlock_t af_lock; // 保护自身结构的自旋锁
     uint32_t af_stus;   // 状态
     uint_t af_oder;     // 页面数的位移量
@@ -33,8 +32,7 @@ void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t od
 #define MDIVMER_ARR_LMAX 52
 #define MDIVMER_ARR_BMAX 11
 #define MDIVMER_ARR_OMAX 9
-typedef struct memdivmer
-{
+typedef struct memdivmer {
     spinlock_t dm_lock;
     uint32_t dm_stus;
     uint_t dm_dmmaxindx;
@@ -64,8 +62,7 @@ void memdivmer_t_init(memdivmer_t *memdivmer);
 #define MA_PROC_LSZ (0xffffffffffffffff - 0x400000000)
 #define MA_PROC_LEND (MA_PROC_LSTART + MA_PROC_LSZ)
 // 0x400000000  0x40000000
-typedef struct s_MEMAREA
-{
+typedef struct s_MEMAREA {
     list_t ma_list;     // 内存区自身的链表
     spinlock_t ma_lock; // 保护内存区的自旋锁
     uint_t ma_stus;     // 内存区的状态
@@ -104,7 +101,9 @@ typedef struct s_MEMAREA
 } memarea_t;
 
 void init_memory_area();
+
 void memarea_t_init(memarea_t *memarea);
+
 void load_mempage_memarea();
 
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];

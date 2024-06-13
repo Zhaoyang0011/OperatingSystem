@@ -7,8 +7,7 @@
 #include <hal/memory/memdivmer.h>
 
 // order of the fuction call matters
-void init_memory()
-{
+void init_memory() {
     init_physical_memory();
     init_memory_page();
     init_mempage_occupation();

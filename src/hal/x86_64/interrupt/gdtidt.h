@@ -84,8 +84,7 @@
 #define INT_VECTOR_SYSCALL 0xFF
 
 // Interrupt descriptor
-typedef struct gate
-{
+typedef struct gate {
     uint16_t offset1;  // Offset 0-15
     uint16_t selector; // Code Selector
     uint8_t dcount;    /* 该字段只在调用门描述符中有效。如果在利用
@@ -99,8 +98,7 @@ typedef struct gate
     uint32_t resv;     // reserved bits
 } __attribute__((packed)) gate_t;
 
-typedef struct idt_reg
-{
+typedef struct idt_reg {
     uint16_t idtLen;
     uint64_t idtbass;
 } __attribute__((packed)) idtr_t;

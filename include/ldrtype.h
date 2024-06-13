@@ -18,15 +18,13 @@
 #define RAM_AREACON 5
 #define RAM_MEGER 6
 
-typedef struct e820_map
-{
+typedef struct e820_map {
     uint64_t addr; // start of memory segment8
     uint64_t size; // size of memory segment8
     uint32_t type; // type of memory segment 4
 } __attribute__((packed)) e820_map_t;
 
-typedef struct e820_desc
-{
+typedef struct e820_desc {
     uint32_t e820_num;
     e820_map_t maps[E820_MAX];
 } __attribute__((packed)) e820_desc_t;
@@ -44,14 +42,12 @@ typedef struct e820_desc
 /**
  * cpu information macro and structure
  */
-typedef struct cpuid_desc
-{
+typedef struct cpuid_desc {
     uint32_t function_id;
     uint32_t info[4];
 } __attribute__((packed)) cpuid_desc_t;
 
-typedef struct cpu_desc
-{
+typedef struct cpu_desc {
 
 } __attribute__((packed)) cpu_info_t;
 
@@ -59,8 +55,7 @@ typedef struct cpu_desc
     (uint64_t)((((uint64_t)'Z') << 56) | (((uint64_t)'H') << 48) | (((uint64_t)'O') << 40) | (((uint64_t)'S') << 32) | \
                (((uint64_t)'M') << 24) | (((uint64_t)'A') << 16) | (((uint64_t)'C') << 8) | ((uint64_t)'H'))
 
-typedef struct kernel_desc
-{
+typedef struct kernel_desc {
     // kernel info
     uint64_t kernel_magic; // magic number of os
     uint64_t kernel_start; // starting address of kernel

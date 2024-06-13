@@ -3,8 +3,7 @@
 
 #include <type.h>
 
-typedef struct spinlock
-{
+typedef struct spinlock {
     volatile uint32_t lock;
 } spinlock_t;
 

@@ -11,24 +11,21 @@
 #define KUC_DELFLG (2)
 #define KUC_DSYFLG (3)
 
-typedef struct kernel_free_memory_object
-{
+typedef struct kernel_free_memory_object {
     list_t oh_list;
     uint_t oh_stus;
     void *oh_stat;
 } freekmemobj_t;
 
 // 管理内存对象容器占用的内存页面所对应的mpgdesc_t结构
-typedef struct kernel_memory_object_manager_mpglist
-{
+typedef struct kernel_memory_object_manager_mpglist {
     uint_t mpl_msanr; // 多少个mpgdesc_t
     uint_t mpl_ompnr; // 一个mpgdesc_t对应的连续的物理内存页面数
     list_t mpl_list;  // 挂载mpgdesc_t的链表
 } kmopglist_t;
 
 // 管理内存对象容器占用的内存
-typedef struct kernel_memory_object_manager_mpglist_container
-{
+typedef struct kernel_memory_object_manager_mpglist_container {
     // kmopglist_t结构数组mc_lst[0]=1个连续页面的mpgdesc_t
     //                mc_lst[1]=2个连续页面的mpgdesc_t
     //                mc_lst[2]=4个连续页面的mpgdesc_t
@@ -44,8 +41,7 @@ typedef struct kernel_memory_object_manager_mpglist_container
 } kmopglist_container_t;
 
 // 内存对象容器
-typedef struct kernel_memory_object_manager
-{
+typedef struct kernel_memory_object_manager {
     list_t so_list;     // 链表
     spinlock_t so_lock; // 保护结构自身的自旋锁
     uint_t so_stus;     // 状态与标志
@@ -66,8 +62,7 @@ typedef struct kernel_memory_object_manager
 } kmomgr_t;
 
 // 管理内存对象容器扩展容量
-typedef struct kernel_memory_object_manager_extention
-{
+typedef struct kernel_memory_object_manager_extention {
     list_t mt_list;    // 链表
     addr_t mt_vstat;   // 内存对象容器扩展容量开始地址
     addr_t mt_vend;    // 内存对象容器扩展容量结束地址
@@ -78,8 +73,7 @@ typedef struct kernel_memory_object_manager_extention
 #define KOBLST_MAX (64)
 
 // 挂载momgr_t结构
-typedef struct kernel_memory_object_manager_list
-{
+typedef struct kernel_memory_object_manager_list {
     list_t ol_emplst;   // 挂载momgr_t结构的链表
     kmomgr_t *ol_cache; // 最近一次查找的momgr_t结构
     uint_t ol_emnr;     // 挂载momgr_t结构的数量
@@ -87,8 +81,7 @@ typedef struct kernel_memory_object_manager_list
 } kmomgr_list_t;
 
 // 管理momgr_t结构的数据结构
-typedef struct kernel_memory_object_manager_header
-{
+typedef struct kernel_memory_object_manager_header {
     spinlock_t ks_lock; // 保护自身的自旋锁
     list_t ks_tclst;    // 链表
     uint_t ks_tcnr;

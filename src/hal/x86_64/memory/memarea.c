@@ -4,8 +4,7 @@
 #include <hal/halglobal.h>
 #include <hal/memory/memarea.h>
 
-void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t oderpnr)
-{
+void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t oderpnr) {
     spinlock_init(&mapflist->af_lock);
     mapflist->af_stus = stus;
     mapflist->af_oder = oder;
@@ -18,8 +17,7 @@ void mpaflist_t_init(mpaflist_t *mapflist, uint32_t stus, uint_t oder, uint_t od
     list_init(&mapflist->af_alclist);
 }
 
-void memdivmer_t_init(memdivmer_t *memdivmer)
-{
+void memdivmer_t_init(memdivmer_t *memdivmer) {
     spinlock_init(&memdivmer->dm_lock);
     memdivmer->dm_stus = 0;
     memdivmer->dm_dmmaxindx = 0;
@@ -28,16 +26,14 @@ void memdivmer_t_init(memdivmer_t *memdivmer)
     memdivmer->dm_divnr = 0;
     memdivmer->dm_mernr = 0;
 
-    for (uint_t li = 0; li < MDIVMER_ARR_LMAX; li++)
-    {
+    for (uint_t li = 0; li < MDIVMER_ARR_LMAX; li++) {
         mpaflist_t_init(&memdivmer->dm_mdmlst[li], MPAF_STUS_DIVM, li, (1UL << li));
     }
     mpaflist_t_init(&memdivmer->dm_onelst, MPAF_STUS_ONEM, 0, 1UL);
     return;
 }
 
-void memarea_t_init(memarea_t *memarea)
-{
+void memarea_t_init(memarea_t *memarea) {
     list_init(&memarea->ma_list);
     spinlock_init(&memarea->ma_lock);
     memarea->ma_stus = 0;
@@ -60,10 +56,8 @@ void memarea_t_init(memarea_t *memarea)
     memarea->ma_privp = NULL;
 }
 
-void init_memory_area()
-{
-    for (uint_t i = 0; i < MEMAREA_MAX; i++)
-    {
+void init_memory_area() {
+    for (uint_t i = 0; i < MEMAREA_MAX; i++) {
         memarea_t_init(&memarea_arr[i]);
     }
 
@@ -84,13 +78,13 @@ void init_memory_area()
 
     memarea_arr[3].ma_type = MA_TYPE_SHAR;
 
-    kernel_descriptor.ma_desc_arr = (uint64_t)memarea_arr;
+    kernel_descriptor.ma_desc_arr = (uint64_t) memarea_arr;
     kernel_descriptor.ma_nr = MEMAREA_MAX;
     kernel_descriptor.ma_sz = sizeof(memarea_t) * MEMAREA_MAX;
 }
 
-void search_memarea_mempage(const memarea_t *memarea, const mpdesc_t *mpdesc_arr, uint64_t mpnr, int *sindx, int *eindx)
-{
+void
+search_memarea_mempage(const memarea_t *memarea, const mpdesc_t *mpdesc_arr, uint64_t mpnr, int *sindx, int *eindx) {
     *sindx = -1;
     *eindx = -1;
 
@@ -98,11 +92,9 @@ void search_memarea_mempage(const memarea_t *memarea, const mpdesc_t *mpdesc_arr
     uint64_t eaddr = memarea->ma_logicend;
     saddr = saddr & PAF_ADDR_MASK;
 
-    for (int i = 0; i < mpnr; ++i)
-    {
+    for (int i = 0; i < mpnr; ++i) {
         uint64_t page_addr = (mpdesc_arr[i].mpd_addr & PAF_ADDR_MASK);
-        if (page_addr >= saddr && page_addr < eaddr)
-        {
+        if (page_addr >= saddr && page_addr < eaddr) {
             *sindx = i;
             break;
         }
@@ -111,10 +103,8 @@ void search_memarea_mempage(const memarea_t *memarea, const mpdesc_t *mpdesc_arr
     if (*sindx < 0)
         return;
 
-    for (int i = *sindx; i < mpnr; ++i)
-    {
-        if ((mpdesc_arr[i].mpd_addr & PAF_ADDR_MASK) > eaddr)
-        {
+    for (int i = *sindx; i < mpnr; ++i) {
+        if ((mpdesc_arr[i].mpd_addr & PAF_ADDR_MASK) > eaddr) {
             *eindx = i - 1;
             break;
         }
@@ -124,8 +114,7 @@ void search_memarea_mempage(const memarea_t *memarea, const mpdesc_t *mpdesc_arr
         *eindx = mpnr - 1;
 }
 
-int set_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, const memarea_t *memarea)
-{
+int set_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, const memarea_t *memarea) {
     if (mpdesc_arr == NULL || memarea == NULL || mpnr == 0)
         return -1;
 
@@ -138,10 +127,8 @@ int set_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, const memarea_t
         return 0;
 
     int retnr = 0;
-    for (int i = sindx; i <= eindx; ++i)
-    {
-        if (mpdesc_arr[i].mpd_indxflgs.mpf_marty == MF_MARTY_INIT)
-        {
+    for (int i = sindx; i <= eindx; ++i) {
+        if (mpdesc_arr[i].mpd_indxflgs.mpf_marty == MF_MARTY_INIT) {
             mpdesc_arr[i].mpd_indxflgs.mpf_marty = memarea->ma_type;
             retnr++;
         }
@@ -150,9 +137,8 @@ int set_mempage_memarea_one(mpdesc_t *mpdesc_arr, uint64_t mpnr, const memarea_t
     return retnr;
 }
 
-bool_t set_mempage_memarea()
-{
-    mpdesc_t *mpdesc_arr = (mpdesc_t *)kernel_descriptor.mp_desc_arr;
+bool_t set_mempage_memarea() {
+    mpdesc_t *mpdesc_arr = (mpdesc_t *) kernel_descriptor.mp_desc_arr;
     uint64_t mpnr = kernel_descriptor.mp_desc_nr;
 
     // set memory pages flags belong to hardware memory area
@@ -177,14 +163,12 @@ bool_t set_mempage_memarea()
 }
 
 bool_t scan_continuous_free_memorypage(mpdesc_t *scan_start, mpdesc_t *scan_end, const memarea_t *memarea,
-                                       mpdesc_t **ret_start, mpdesc_t **ret_end)
-{
+                                       mpdesc_t **ret_start, mpdesc_t **ret_end) {
     if (scan_start == NULL || scan_end == NULL || memarea == NULL || ret_start == NULL || ret_end == NULL)
         return FALSE;
 
     mpdesc_t *continous_start = scan_start;
-    for (; continous_start <= scan_end; ++continous_start)
-    {
+    for (; continous_start <= scan_end; ++continous_start) {
         if (continous_start->mpd_adrflgs.paf_alloc == PAF_NO_ALLOC &&
             continous_start->mpd_indxflgs.mpf_marty == memarea->ma_type)
             break;
@@ -193,21 +177,18 @@ bool_t scan_continuous_free_memorypage(mpdesc_t *scan_start, mpdesc_t *scan_end,
     *ret_start = NULL;
     *ret_end = NULL;
     if (continous_start->mpd_adrflgs.paf_alloc != PAF_NO_ALLOC ||
-        continous_start->mpd_indxflgs.mpf_marty != memarea->ma_type)
-    {
+        continous_start->mpd_indxflgs.mpf_marty != memarea->ma_type) {
         return TRUE;
     }
 
     *ret_start = continous_start;
-    for (int i = 1; continous_start + i <= scan_end; ++i)
-    {
+    for (int i = 1; continous_start + i <= scan_end; ++i) {
         uint64_t paddr = continous_start[i - 1].mpd_addr & PAF_ADDR_MASK;
         uint64_t caddr = continous_start[i].mpd_addr & PAF_ADDR_MASK;
 
         if (paddr + PAGE_SIZE != caddr || continous_start[i].mpd_adrflgs.paf_alloc != PAF_NO_ALLOC ||
             continous_start[i].mpd_indxflgs.mpf_marty != memarea->ma_type ||
-            continous_start[i].mpd_indxflgs.mpf_marty != memarea->ma_type)
-        {
+            continous_start[i].mpd_indxflgs.mpf_marty != memarea->ma_type) {
             *ret_end = &continous_start[i - 1];
             return TRUE;
         }
@@ -217,8 +198,7 @@ bool_t scan_continuous_free_memorypage(mpdesc_t *scan_start, mpdesc_t *scan_end,
     return TRUE;
 }
 
-bool_t load_continous_mempage_mpaflist(mpaflist_t *mpaflst, mpdesc_t *start, mpdesc_t *end)
-{
+bool_t load_continous_mempage_mpaflist(mpaflist_t *mpaflst, mpdesc_t *start, mpdesc_t *end) {
     if (end - start + 1 != mpaflst->af_oderpnr)
         return FALSE;
     list_add(&start->mpd_list, &mpaflst->af_frelist);
@@ -234,8 +214,7 @@ bool_t load_continous_mempage_mpaflist(mpaflist_t *mpaflst, mpdesc_t *start, mpd
     return TRUE;
 }
 
-bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_start, mpdesc_t *continous_end)
-{
+bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_start, mpdesc_t *continous_end) {
     if (continous_start == NULL || continous_end == NULL || continous_start > continous_end)
         return FALSE;
 
@@ -246,8 +225,7 @@ bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_st
 
     uint64_t n = continous_end - continous_start + 1;
     mpdesc_t *load_start = continous_start;
-    while (n > 0)
-    {
+    while (n > 0) {
         sint32_t shar = search_64lbits(n);
 
         uint32_t load_num = 1 << shar;
@@ -266,8 +244,7 @@ bool_t load_continous_mempage_memarea(memarea_t *memarea, mpdesc_t *continous_st
     return TRUE;
 }
 
-bool_t load_mempage_memarea_one(memarea_t *memarea, mpdesc_t *mpdesc_arr, uint64_t mpnr)
-{
+bool_t load_mempage_memarea_one(memarea_t *memarea, mpdesc_t *mpdesc_arr, uint64_t mpnr) {
     if (mpdesc_arr == NULL || memarea == NULL || mpnr == 0)
         return FALSE;
 
@@ -278,12 +255,12 @@ bool_t load_mempage_memarea_one(memarea_t *memarea, mpdesc_t *mpdesc_arr, uint64
     if (sindx < 0 || eindx < 0)
         return TRUE;
 
-    for (mpdesc_t *scan_start = mpdesc_arr + sindx; scan_start <= mpdesc_arr + eindx;)
-    {
+    for (mpdesc_t *scan_start = mpdesc_arr + sindx; scan_start <= mpdesc_arr + eindx;) {
         mpdesc_t *continous_start = NULL;
         mpdesc_t *continous_end = NULL;
         bool_t retb =
-            scan_continuous_free_memorypage(scan_start, &mpdesc_arr[eindx], memarea, &continous_start, &continous_end);
+                scan_continuous_free_memorypage(scan_start, &mpdesc_arr[eindx], memarea, &continous_start,
+                                                &continous_end);
 
         if (retb == FALSE)
             panic("Scan continous free memory page error!");
@@ -299,13 +276,11 @@ bool_t load_mempage_memarea_one(memarea_t *memarea, mpdesc_t *mpdesc_arr, uint64
     return TRUE;
 }
 
-bool_t load_mempage_memarea_core()
-{
-    mpdesc_t *mpdesc_arr = (mpdesc_t *)kernel_descriptor.mp_desc_arr;
+bool_t load_mempage_memarea_core() {
+    mpdesc_t *mpdesc_arr = (mpdesc_t *) kernel_descriptor.mp_desc_arr;
     uint64_t mpnr = kernel_descriptor.mp_desc_nr;
 
-    for (int i = 0; i < MEMAREA_MAX - 1; ++i)
-    {
+    for (int i = 0; i < MEMAREA_MAX - 1; ++i) {
         if (!load_mempage_memarea_one(&memarea_arr[i], mpdesc_arr, mpnr))
             return FALSE;
     }
@@ -314,8 +289,7 @@ bool_t load_mempage_memarea_core()
 }
 
 // load memory page to memory area
-void load_mempage_memarea()
-{
+void load_mempage_memarea() {
     if (set_mempage_memarea() == FALSE)
         panic("Set memory page area error!");
     if (load_mempage_memarea_core() == FALSE)

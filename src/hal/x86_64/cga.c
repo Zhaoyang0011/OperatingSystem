@@ -10,8 +10,7 @@
 
 static spinlock_t cga_lock;
 
-static void cga_putc(int c)
-{
+static void cga_putc(int c) {
     int pos;
 
     // Cursor position: col + 80*row.
@@ -22,19 +21,16 @@ static void cga_putc(int c)
 
     if (c == '\n')
         pos += 80 - pos % 80;
-    else if (c == BACKSPACE)
-    {
+    else if (c == BACKSPACE) {
         if (pos > 0)
             --pos;
-    }
-    else
+    } else
         CGA_CONSOLE[pos++] = (c & 0xff) | 0x0700; // black on white
 
     if (pos < 0 || pos > 25 * 80)
         panic("pos under/overflow");
 
-    if ((pos / 80) >= 24)
-    { // Scroll up.
+    if ((pos / 80) >= 24) { // Scroll up.
         memcpy(CGA_CONSOLE + 80, CGA_CONSOLE, sizeof(CGA_CONSOLE[0]) * 23 * 80);
         pos -= 80;
         memset(CGA_CONSOLE + pos, 0, sizeof(CGA_CONSOLE[0]) * (24 * 80 - pos));
@@ -47,12 +43,10 @@ static void cga_putc(int c)
     CGA_CONSOLE[pos] = ' ' | 0x0700;
 }
 
-void cga_console(char *arr)
-{
+void cga_console(char *arr) {
     spin_lock(&cga_lock);
 
-    while (*arr)
-    {
+    while (*arr) {
         cga_putc(*arr);
         ++arr;
     }

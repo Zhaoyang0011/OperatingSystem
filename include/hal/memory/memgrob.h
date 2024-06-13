@@ -8,8 +8,7 @@
 #include <spinlock.h>
 #include <struct/list.h>
 
-typedef struct memgrob
-{
+typedef struct memgrob {
     list_t mo_list;
     spinlock_t mo_lock;
     uint_t mo_stus;
