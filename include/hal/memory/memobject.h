@@ -68,17 +68,17 @@ typedef struct kernel_memory_object_manager_extention {
     addr_t mt_vend;    // 内存对象容器扩展容量结束地址
     kmomgr_t *mt_kmsb; // 指向内存对象容器结构
     uint_t mt_mobjnr;  // 内存对象容器扩展容量的内存中有多少对象
-} kmomgr_ext_t;
+} kmomgrext_t;
 
 #define KOBLST_MAX (64)
 
-// 挂载momgr_t结构
+// 挂载kmomgr_t结构
 typedef struct kernel_memory_object_manager_list {
-    list_t ol_emplst;   // 挂载momgr_t结构的链表
-    kmomgr_t *ol_cache; // 最近一次查找的momgr_t结构
-    uint_t ol_emnr;     // 挂载momgr_t结构的数量
-    size_t ol_sz;       // momgr_t结构中内存对象的大小
-} kmomgr_list_t;
+    list_t ol_emplst;   // 挂载kmomgr_t结构的链表
+    kmomgr_t *ol_cache; // 最近一次查找的kmomgr_t结构
+    uint_t ol_emnr;     // 挂载kmomgr_t结构的数量
+    size_t ol_sz;       // kmomgr_t结构中内存对象的大小
+} kmomgrlist_t;
 
 // 管理momgr_t结构的数据结构
 typedef struct kernel_memory_object_manager_header {
@@ -87,9 +87,11 @@ typedef struct kernel_memory_object_manager_header {
     uint_t ks_tcnr;
     uint_t ks_msobnr;                     // 总共多少个momgr_t结构
     kmomgr_t *ks_msobche;                 // 最近分配内存对象的momgr_t结构
-    kmomgr_list_t ks_msoblst[KOBLST_MAX]; // mo_mgr_list_t结构数组
-} kmomgr_header_t;
+    kmomgrlist_t ks_msoblst[KOBLST_MAX]; // mo_mgr_list_t结构数组
+} kmomgrlist_header_t;
 
 void init_memory_object_manager();
+
+void *mobj_alloc(size_t size);
 
 #endif
