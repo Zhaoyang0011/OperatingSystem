@@ -19,7 +19,7 @@ typedef short sint16_t;
 typedef int sint32_t;
 typedef long long sint64_t;
 typedef long sint_t;
-typedef unsigned long addr_t;
+typedef unsigned long long addr_t;
 
 typedef sint_t bool_t;
 typedef uint64_t cpuflg_t;

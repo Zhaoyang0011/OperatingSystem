@@ -4,6 +4,7 @@
 #include <spinlock.h>
 #include <struct/list.h>
 #include <type.h>
+#include <hal/memory/memarea.h>
 
 #define MSCLST_MAX (5)
 #define KOBLST_MAX (64)
@@ -27,15 +28,15 @@ typedef struct kernel_memory_object_manager_mpglist {
 // 管理内存对象容器占用的内存
 typedef struct kernel_memory_object_manager_mpglist_container {
     // kmopglist_t结构数组mc_lst[0]=1个连续页面的mpgdesc_t
-    //                mc_lst[1]=2个连续页面的mpgdesc_t
-    //                mc_lst[2]=4个连续页面的mpgdesc_t
-    //                mc_lst[3]=8个连续页面的mpgdesc_t
-    //                mc_lst[4]=16个连续页面的mpgdesc_t
+    //                  mc_lst[1]=2个连续页面的mpgdesc_t
+    //                  mc_lst[2]=4个连续页面的mpgdesc_t
+    //                  mc_lst[3]=8个连续页面的mpgdesc_t
+    //                  mc_lst[4]=16个连续页面的mpgdesc_t
     kmopglist_t mc_lst[MSCLST_MAX];
     uint_t mc_mpgnr; // 总共多个mpgdesc_t结构
-    list_t mc_list;
+//    list_t mc_list;
     // 内存对象容器第一个占用mpgdesc_t
-    list_t mc_kmobinlst;
+    mpdesc_t *mc_mpdescptr;
     // 内存对象容器第一个占用mpgdesc_t对应的连续的物理内存页面数
     uint_t mc_kmobinpnr;
 } kmopglist_container_t;
@@ -87,11 +88,13 @@ typedef struct kernel_memory_object_manager_header {
     uint_t ks_tcnr;
     uint_t ks_msobnr;                     // 总共多少个momgr_t结构
     kmomgr_t *ks_msobche;                 // 最近分配内存对象的momgr_t结构
-    kmomgrlist_t ks_msoblst[KOBLST_MAX]; // mo_mgr_list_t结构数组
+    kmomgrlist_t ks_msoblst[KOBLST_MAX];  // mo_mgr_list_t结构数组
 } kmomgrlist_header_t;
 
 void init_memory_object_manager();
 
 void *mobj_alloc(size_t size);
+
+bool_t mobj_free(void *addr, size_t size);
 
 #endif

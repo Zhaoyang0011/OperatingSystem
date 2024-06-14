@@ -16,8 +16,4 @@ void init_memory() {
     load_mempage_memarea();
     init_memory_object_manager();
     init_memgrob();
-
-    void * ret = mobj_alloc(32);
-    if(ret == NULL)
-        panic("Fuck you!");
 }
