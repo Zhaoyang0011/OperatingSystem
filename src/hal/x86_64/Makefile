@@ -20,7 +20,7 @@ ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
 				${BUILD}/cga.o\
 				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o \
-				${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o
+				${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o ${BUILD}/virmem.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
@@ -87,6 +87,9 @@ ${BUILD}/memdivmer.o: ./memory/memdivmer.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/memobj.o: ./memory/memobj.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/virmem.o: ./memory/virmem.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/spinlock.o: ./synchronize/spinlock.c

@@ -17,7 +17,6 @@ void update_memarea(memarea_t *mareap, uint_t pgnr, uint_t flgs) {
         mareap->ma_freepages += pgnr;
         mareap->ma_allocpages -= pgnr;
     }
-    return;
 }
 
 void update_memmgrob(uint_t retpnr, uint_t flgs) {
@@ -34,7 +33,6 @@ void update_memmgrob(uint_t retpnr, uint_t flgs) {
         memgrob.mo_freepages += retpnr;
         spinunlock_sti(&memgrob.mo_lock, &cpuflg);
     }
-    return;
 }
 
 memarea_t *memarea_by_type(memgrob_t *mmobjp, uint_t mrtype) {

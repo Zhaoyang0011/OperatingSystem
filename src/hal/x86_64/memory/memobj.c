@@ -447,7 +447,7 @@ static bool_t try_free_kmomgr(kmomgrlist_header_t *kmobmgrp, kmomgrlist_t *koblp
             list_for_each_head_dell(tmplst, &mscp[j].mpl_list) {
                 msa = list_entry(tmplst, mpdesc_t, mpd_list);
                 list_del(&msa->mpd_list);
-                if (memory_merge_pages(&memgrob, msa, (uint_t) mscp[j].mpl_ompnr) == FALSE) {
+                if (!memory_merge_pages(&memgrob, msa, (uint_t) mscp[j].mpl_ompnr)) {
                     panic("_destroy_kmsob_core mm_merge_pages FALSE2\n");
                 }
             }

@@ -1,10 +1,5 @@
-/**********************************************************
-        physical memory header file
-***********************************************************
-            Zhaoyang Shi
-**********************************************************/
-#ifndef _HAL_MEM_H
-#define _HAL_MEM_H
+#ifndef _PHY_MEM_H
+#define _PHY_MEM_H
 
 #include <spinlock.h>
 

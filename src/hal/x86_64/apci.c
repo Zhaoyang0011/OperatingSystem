@@ -1,4 +1,5 @@
 #include "apci.h"
+#include "console.h"
 
 #include <kprint.h>
 #include <string.h>
@@ -105,8 +106,7 @@ MADT_t *find_madt() {
     void *rsdp_adr = find_rsdp();
 
     if (rsdp_adr == NULL) {
-        kprint("Unable to find RSDP!");
-        while (TRUE);
+        panic("Unable to find RSDP!");
     }
 
     XSDP_t *xsdp = rsdp_adr;

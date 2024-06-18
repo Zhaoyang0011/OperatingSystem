@@ -1,5 +1,6 @@
 #include "../io.h"
 #include "type.h"
+#include "memlayout.h"
 #include <console.h>
 #include <hal/halglobal.h>
 #include <hal/memory/memarea.h>
@@ -277,7 +278,7 @@ bool_t load_mempage_memarea_one(memarea_t *memarea, mpdesc_t *mpdesc_arr, uint64
 }
 
 bool_t load_mempage_memarea_core() {
-    mpdesc_t *mpdesc_arr = (mpdesc_t *) kernel_descriptor.mp_desc_arr;
+    mpdesc_t *mpdesc_arr = (mpdesc_t *) P2V(kernel_descriptor.mp_desc_arr);
     uint64_t mpnr = kernel_descriptor.mp_desc_nr;
 
     for (int i = 0; i < MEMAREA_MAX - 1; ++i) {
@@ -294,5 +295,4 @@ void load_mempage_memarea() {
         panic("Set memory page area error!");
     if (load_mempage_memarea_core() == FALSE)
         panic("load memory page to memory area error!");
-    return;
 }
