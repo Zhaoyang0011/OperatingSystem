@@ -25,8 +25,10 @@ void copy_kernel_desc() {
 void kernel_main() {
 
     copy_kernel_desc();
+
     init_hal();
     init_krl();
+
     //
     while (TRUE);
 }

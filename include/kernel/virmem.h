@@ -6,6 +6,18 @@
 #include <semaphore.h>
 #include <atomic.h>
 
+#define KRNL_MAP_VIRTADDRESS_SIZE 0x400000000
+#define KRNL_VIRTUAL_ADDRESS_START 0xffff800000000000
+#define KRNL_VIRTUAL_ADDRESS_END 0xffffffffffffffff
+#define USER_VIRTUAL_ADDRESS_START 0
+#define USER_VIRTUAL_ADDRESS_END 0x00007fffffffffff
+#define KRNL_MAP_PHYADDRESS_START 0
+#define KRNL_MAP_PHYADDRESS_END 0x400000000
+#define KRNL_MAP_PHYADDRESS_SIZE 0x400000000
+#define KRNL_MAP_VIRTADDRESS_START KRNL_VIRTUAL_ADDRESS_START
+#define KRNL_MAP_VIRTADDRESS_END (KRNL_MAP_VIRTADDRESS_START+KRNL_MAP_VIRTADDRESS_SIZE)
+#define KRNL_ADDR_ERROR 0xf800000000000
+
 typedef struct kernel_virtual_memory_container_box_manager {
     list_t kbm_list;          //链表
     spinlock_t kbm_lock;      //保护自身的自旋锁
@@ -85,6 +97,7 @@ typedef struct process_virtual_memory_space_descriptor {
     addr_t msd_ebrk;
 } pvmspacdesc_t;
 
-
+kvmareadesc_t *new_kvmareadesc();
+bool_t del_kvmareadesc(kvmareadesc_t *desc);
 
 #endif //_VIRMEM_H
