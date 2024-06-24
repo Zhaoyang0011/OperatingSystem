@@ -18,6 +18,8 @@
 #define KRNL_MAP_VIRTADDRESS_END (KRNL_MAP_VIRTADDRESS_START+KRNL_MAP_VIRTADDRESS_SIZE)
 #define KRNL_ADDR_ERROR 0xf800000000000
 
+#define VADSZ_ALIGN(x) ALIGN(x,0x1000)
+
 typedef struct kernel_virtual_memory_container_box_manager {
     list_t kbm_list;          //链表
     spinlock_t kbm_lock;      //保护自身的自旋锁
@@ -100,4 +102,6 @@ typedef struct process_virtual_memory_space_descriptor {
 kvmareadesc_t *new_kvmareadesc();
 bool_t del_kvmareadesc(kvmareadesc_t *desc);
 
-#endif //_VIRMEM_H
+bool_t virmemspace_init(virmemspace_t *vma);
+
+#endif

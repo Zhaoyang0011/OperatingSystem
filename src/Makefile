@@ -14,8 +14,8 @@ ${BIN}/kernel.pkg: ${BUILD}/OSTool ${BIN}/kernel.bin
 ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
-${BUILD}/kernel.o: ${BUILD}/hal.o \
-					 ${BUILD}/krlinit.o ${BUILD}/kernel_main.o ${BUILD}/virmem.o
+${BUILD}/kernel.o: ${BUILD}/hal.o  ${BUILD}/kernel_main.o \
+				   ${BUILD}/krlinit.o ${BUILD}/virmem.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/hal.o:
@@ -28,6 +28,9 @@ ${BUILD}/krlinit.o: ./kernel/krlinit.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/virmem.o: ./kernel/virmem.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/thread.o: ./kernel/thread.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c

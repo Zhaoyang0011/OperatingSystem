@@ -3,7 +3,7 @@
 
 #define KLINE static inline
 
-#define NULL ((void *)0) // null pointer
+#define NULL (0) // null pointer
 
 typedef unsigned char uint8_t;
 typedef unsigned char uchar_t;
