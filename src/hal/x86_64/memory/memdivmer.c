@@ -222,7 +222,7 @@ mpdesc_t *get_mpg_onmpaflist(uint_t pages, uint_t *retpnr, mpaflist_t *relbhl, m
 }
 
 mpdesc_t *mem_divpages_onmarea(memarea_t *mareap, uint_t pages, uint_t *retpnr) {
-    if (mareap == NULL || pages == 0 || retpnr == NULL) {
+    if (mareap == NULL || pages == 0) {
         *retpnr = 0;
         return NULL;
     }

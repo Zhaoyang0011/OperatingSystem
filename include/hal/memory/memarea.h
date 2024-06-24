@@ -61,6 +61,7 @@ void memdivmer_t_init(memdivmer_t *memdivmer);
 #define MA_PROC_LSTART 0x400000000
 #define MA_PROC_LSZ (0xffffffffffffffff - 0x400000000)
 #define MA_PROC_LEND (MA_PROC_LSTART + MA_PROC_LSZ)
+
 // 0x400000000  0x40000000
 typedef struct s_MEMAREA {
     list_t ma_list;     // 内存区自身的链表

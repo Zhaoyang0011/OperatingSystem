@@ -1,6 +1,3 @@
-//
-// Created by szy on 6/21/24.
-//
 #include <semaphore.h>
 
 void kwlist_init(kwlist_t *initp) {

@@ -1,6 +1,5 @@
 #include <hal/halglobal.h>
 #include <hal/halinit.h>
-#include <kprint.h>
 #include <ldrtype.h>
 #include <string.h>
 #include <type.h>

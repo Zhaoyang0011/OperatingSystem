@@ -433,7 +433,7 @@ static kmomgr_t *try_free_onkmomgrlist(kmomgrlist_t *pmgrlist, void *addr) {
 static bool_t try_free_kmomgr(kmomgrlist_header_t *kmobmgrp, kmomgrlist_t *koblp, kmomgr_t *kmsp) {
     if (kmsp->so_mobjnr < kmsp->so_fobjnr)
         panic("kmomogr_t free object bigger than total!");
-    if (kmsp->so_fobjnr < kmsp->so_fobjnr)
+    if (kmsp->so_fobjnr < kmsp->so_mobjnr)
         return FALSE;
 
     list_t *tmplst = NULL;

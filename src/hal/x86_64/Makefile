@@ -89,7 +89,7 @@ ${BUILD}/memdivmer.o: ./memory/memdivmer.c
 ${BUILD}/memobj.o: ./memory/memobj.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/virmem.o: ./memory/virmem.c
+${BUILD}/virmem.o: memory/virmem.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/spinlock.o: ./synchronize/spinlock.c
