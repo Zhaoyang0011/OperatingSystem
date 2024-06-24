@@ -22,7 +22,7 @@ ${BIN}/boot.bin ${BIN}/setup.bin:
 	$(MAKE) -C ${SRC}/boot/${ARC} ROOT_PATH=${ROOT_PATH}
 
 ${BIN}/kernel.pkg:
-	$(MAKE) -C ${SRC}/hal/${ARC} ROOT_PATH=${ROOT_PATH}
+	$(MAKE) -C ${SRC} ROOT_PATH=${ROOT_PATH} ARC=${ARC}
 
 ${BUILD}:
 	$(shell mkdir ${BUILD})

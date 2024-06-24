@@ -1,5 +1,6 @@
 #include <hal/halglobal.h>
 #include <hal/halinit.h>
+#include <kernel/krlinit.h>
 #include <ldrtype.h>
 #include <string.h>
 #include <type.h>
@@ -25,7 +26,7 @@ void kernel_main() {
 
     copy_kernel_desc();
     init_hal();
-
+    init_krl();
     //
     while (TRUE);
 }

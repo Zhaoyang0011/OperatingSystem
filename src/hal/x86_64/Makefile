@@ -4,16 +4,9 @@ BUILD:=${ROOT_PATH}/build
 BIN:=${ROOT_PATH}/bin
 INCLUDE:=-I${ROOT_PATH}/include
 
-all: ${BIN}/kernel.pkg
+all: ${BUILD}/hal.o
 
-${BIN}/kernel.pkg: ${BUILD}/OSTool ${BIN}/kernel.bin
-	${BUILD}/OSTool ${BIN}/kernel.bin $@
-	chmod 777 $@
-
-${BIN}/kernel.bin: ${BUILD}/kernel.o
-	objcopy -O binary $< $@
-
-${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
+${BUILD}/hal.o:${BUILD}/kernel_entry.o \
 				${BUILD}/halinit.o ${BUILD}/halglobal.o \
 				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o ${BUILD}/semaphore.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
@@ -21,13 +14,10 @@ ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/cga.o\
 				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o \
 				${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o ${BUILD}/virmem.o
-	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
+	ld -r $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
 	nasm -f elf64 -g $< -o $@
-
-${BUILD}/kernel_main.o: ./kernel_main.c
-	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/halinit.o: ./halinit.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
@@ -89,7 +79,7 @@ ${BUILD}/memdivmer.o: ./memory/memdivmer.c
 ${BUILD}/memobj.o: ./memory/memobj.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/virmem.o: memory/virmem.c
+${BUILD}/virmem.o: ../../kernel/virmem.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/spinlock.o: ./synchronize/spinlock.c
@@ -97,7 +87,3 @@ ${BUILD}/spinlock.o: ./synchronize/spinlock.c
 
 ${BUILD}/semaphore.o: ./synchronize/semaphore.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
-
-${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c
-	gcc $< -o $@
-	chmod 777 $<
