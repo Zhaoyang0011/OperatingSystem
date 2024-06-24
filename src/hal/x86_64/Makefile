@@ -15,7 +15,7 @@ ${BIN}/kernel.bin: ${BUILD}/kernel.o
 
 ${BUILD}/kernel.o:${BUILD}/kernel_entry.o ${BUILD}/kernel_main.o \
 				${BUILD}/halinit.o ${BUILD}/halglobal.o \
-				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o \
+				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o ${BUILD}/semaphore.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
 				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
 				${BUILD}/cga.o\
@@ -93,6 +93,9 @@ ${BUILD}/virmem.o: ./memory/virmem.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/spinlock.o: ./synchronize/spinlock.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/semaphore.o: ./synchronize/semaphore.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c

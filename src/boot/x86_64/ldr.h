@@ -32,6 +32,6 @@ void init_memory_info(kernel_desc_t *kernel_desc);
  * After entering long mode we will modify the paging settings and use 4K as the
  * page size.
  */
-void init_pages(kernel_desc_t *kernel_desc);
+void init_page_table(kernel_desc_t *kernel_desc);
 
 #endif

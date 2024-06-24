@@ -182,7 +182,7 @@ void init_memory_info(kernel_desc_t *kernel_desc)
     kernel_desc->mach_memsize = get_memsize(e820_desc);
 }
 
-void init_pages(kernel_desc_t *kernel_desc)
+void init_page_table(kernel_desc_t *kernel_desc)
 {
     uint64_t *p = (uint64_t *)KINITPAGE_PHYADR;
     uint64_t *pdpte = (uint64_t *)(KINITPAGE_PHYADR + 0x1000);
