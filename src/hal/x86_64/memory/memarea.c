@@ -1,6 +1,6 @@
 #include "../io.h"
-#include "type.h"
-#include "memlayout.h"
+#include <type.h>
+#include <memlayout.h>
 #include <console.h>
 #include <hal/halglobal.h>
 #include <hal/memory/memarea.h>

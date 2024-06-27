@@ -8,10 +8,10 @@ all: ${BUILD}/hal.o
 
 ${BUILD}/hal.o:${BUILD}/kernel_entry.o \
 				${BUILD}/halinit.o ${BUILD}/halglobal.o \
-				${BUILD}/kprint.o ${BUILD}/cpu.o ${BUILD}/spinlock.o ${BUILD}/semaphore.o \
+				${BUILD}/kprint.o ${BUILD}/spinlock.o ${BUILD}/semaphore.o \
 				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
 				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
-				${BUILD}/cga.o\
+				${BUILD}/cga.o \
 				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o \
 				${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o
 	ld -r $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map

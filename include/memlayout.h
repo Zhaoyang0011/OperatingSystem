@@ -1,5 +1,5 @@
-#ifndef _MEMLAYOUT_X84_64
-#define _MEMLAYOUT_X84_64
+#ifndef _MEMLAYOUT_H
+#define _MEMLAYOUT_H
 
 /**
  * kernel information macro and structure

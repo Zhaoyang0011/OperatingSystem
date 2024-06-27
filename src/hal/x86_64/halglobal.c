@@ -1,8 +1,8 @@
 #define HALGOBAL_HEAD
 
 #include "interrupt/gdtidt.h"
-#include <hal/context.h>
 #include "cpu.h"
+#include <hal/context.h>
 #include <hal/halglobal.h>
 #include <hal/interrupt.h>
 #include <hal/memory/memarea.h>
