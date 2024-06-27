@@ -2,5 +2,5 @@
 #include <kernel/virmem.h>
 
 void init_krl() {
-    new_kvmareadesc();
+  new_kvmareadesc();
 }

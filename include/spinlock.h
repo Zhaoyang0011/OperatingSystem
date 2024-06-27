@@ -4,7 +4,7 @@
 #include <type.h>
 
 typedef struct spinlock {
-    volatile uint32_t lock;
+  volatile uint32_t lock;
 } spinlock_t;
 
 void spinlock_init(spinlock_t *spinlock);

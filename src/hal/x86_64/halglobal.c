@@ -1,6 +1,8 @@
 #define HALGOBAL_HEAD
 
 #include "interrupt/gdtidt.h"
+#include <hal/context.h>
+#include "cpu.h"
 #include <hal/halglobal.h>
 #include <hal/interrupt.h>
 #include <hal/memory/memarea.h>
@@ -23,3 +25,6 @@ HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
 
 // memgrob.h
 HAL_DEFGLOB_VARIABLE(memgrob_t, memgrob);
+
+// cpu.h
+HAL_DEFGLOB_VARIABLE(x64tss_t, x64tss)[CPU_CORE_MAX];

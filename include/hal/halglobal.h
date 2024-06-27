@@ -1,7 +1,6 @@
 #ifndef _HAL_GLOBAL_H
 #define _HAL_GLOBAL_H
 
-#include <hal/cpu.h>
 #include <ldrtype.h>
 
 #ifdef HALGOBAL_HEAD

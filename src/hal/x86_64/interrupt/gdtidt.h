@@ -85,22 +85,22 @@
 
 // Interrupt descriptor
 typedef struct gate {
-    uint16_t offset1;  // Offset 0-15
-    uint16_t selector; // Code Selector
-    uint8_t dcount;    /* 该字段只在调用门描述符中有效。如果在利用
+  uint16_t offset1;  // Offset 0-15
+  uint16_t selector; // Code Selector
+  uint8_t dcount;    /* 该字段只在调用门描述符中有效。如果在利用
                调用门调用子程序时引起特权级的转换和堆栈
                的改变，需要将外层堆栈中的参数复制到内层
                堆栈。该双字计数字段就是用于说明这种情况
                发生时，要复制的双字参数的数量。*/
-    uint8_t attr;      // P(1) DPL(2) DT(1) TYPE(4)
-    uint16_t offset2;  // Offset 16 - 31
-    uint32_t offset3;  // Offset 32 - 63
-    uint32_t resv;     // reserved bits
+  uint8_t attr;      // P(1) DPL(2) DT(1) TYPE(4)
+  uint16_t offset2;  // Offset 16 - 31
+  uint32_t offset3;  // Offset 32 - 63
+  uint32_t resv;     // reserved bits
 } __attribute__((packed)) gate_t;
 
 typedef struct idt_reg {
-    uint16_t idtLen;
-    uint64_t idtbass;
+  uint16_t idtLen;
+  uint64_t idtbass;
 } __attribute__((packed)) idtr_t;
 
 typedef void (*int_handler_t)();

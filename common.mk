@@ -16,5 +16,6 @@ CFLAGS_X64+= -fno-pie				# position independent executable
 CFLAGS_X64+= -nostdlib				# no std lib
 CFLAGS_X64+= -fno-stack-protector	# no stack protector
 CFLAGS_X64+= -ffreestanding
+CFLAGS_X64+= -Dx86_64
 
 DEBUG:= -g

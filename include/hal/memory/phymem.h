@@ -23,16 +23,16 @@
 
 // structure for physical memory, we will use it to replace original e820 memory structure
 typedef struct physical_memory {
-    spinlock_t lock;       // The spinclock that protects this structure
-    uint32_t pm_type;      // Physical memory type
-    uint32_t pm_stype;     // Physical memory subtype
-    uint32_t pm_flags;     // Physical memory flags
-    uint32_t pm_status;    // Physical memory status
-    uint64_t pm_start;     // Physical memory start address
-    uint64_t pm_size;      // Physical memory size
-    uint64_t pm_end;       // Physical memory end address
-    uint64_t pm_rsv_start; // Physical memory reserved start address
-    uint64_t pm_rsv_end;   // Physical memory reserved end address
+  spinlock_t lock;       // The spinclock that protects this structure
+  uint32_t pm_type;      // Physical memory type
+  uint32_t pm_stype;     // Physical memory subtype
+  uint32_t pm_flags;     // Physical memory flags
+  uint32_t pm_status;    // Physical memory status
+  uint64_t pm_start;     // Physical memory start address
+  uint64_t pm_size;      // Physical memory size
+  uint64_t pm_end;       // Physical memory end address
+  uint64_t pm_rsv_start; // Physical memory reserved start address
+  uint64_t pm_rsv_end;   // Physical memory reserved end address
 } physical_memory_t;
 
 void init_physical_memory();

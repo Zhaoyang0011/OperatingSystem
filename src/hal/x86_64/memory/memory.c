@@ -9,11 +9,11 @@
 
 // order of the fuction call matters
 void init_memory() {
-    init_physical_memory();
-    init_memory_page();
-    init_mempage_occupation();
-    init_memory_area();
-    load_mempage_memarea();
-    init_memory_object_manager();
-    init_memgrob();
+  init_physical_memory();
+  init_memory_page();
+  init_mempage_occupation();
+  init_memory_area();
+  load_mempage_memarea();
+  init_memory_object_manager();
+  init_memgrob();
 }

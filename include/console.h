@@ -5,8 +5,8 @@
 #include <type.h>
 
 KLINE void panic(char *info) {
-    kprint(info);
-    while (TRUE);
+  kprint(info);
+  while (TRUE);
 }
 
 #endif

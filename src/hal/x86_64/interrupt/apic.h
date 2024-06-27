@@ -92,8 +92,8 @@ void init_lapic();
 
 // write lapic register
 KLINE void lapicw(uint32_t index, uint32_t value) {
-    lapic[index] = value;
-    lapic[LAPIC_ID];
+  lapic[index] = value;
+  lapic[LAPIC_ID];
 }
 
 #endif

@@ -15,7 +15,7 @@ ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
 ${BUILD}/kernel.o: ${BUILD}/hal.o  ${BUILD}/kernel_main.o \
-				   ${BUILD}/krlinit.o ${BUILD}/virmem.o
+				   ${BUILD}/krlinit.o ${BUILD}/virmem.o ${BUILD}/thread.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/hal.o:
