@@ -75,7 +75,6 @@ typedef struct kernel_desc {
   uint64_t ma_nr;        //
   uint64_t ma_sz;
   uint64_t next_pg; // next paging address
-  uint64_t bp;
 } __attribute__((packed)) kernel_desc_t;
 
 #endif

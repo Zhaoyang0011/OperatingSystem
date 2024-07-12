@@ -4,9 +4,9 @@
 
 KLINE char *kstrcpy(char *s, char *d) {
   while (*s) {
-	*d = *s;
-	++s;
-	++d;
+    *d = *s;
+    ++s;
+    ++d;
   }
   return s;
 }
@@ -18,12 +18,12 @@ KLINE char *kprint_int(char *str, int n, int base) {
   *p = 0;
 
   do {
-	*--p = "0123456789abcdef"[n % base];
-	n /= base;
+    *--p = "0123456789abcdef"[n % base];
+    n /= base;
   } while (n);
 
   while (*p) {
-	*str++ = *p++;
+    *str++ = *p++;
   }
 
   return str;
@@ -35,23 +35,23 @@ void kprint(const char *fmt, ...) {
   va_start(args, fmt);
   char *p = buf;
   while (*fmt && p < buf + 510) {
-	if (*fmt != '%') {
-	  *p++ = *fmt++;
-	  continue;
-	}
-	fmt++;
-	switch (*fmt) {
-	  case 'd':p = kprint_int(p, va_arg(args, uint_t), 10);
-		fmt++;
-		break;
-	  case 'x':p = kprint_int(p, va_arg(args, uint_t), 16);
-		fmt++;
-		break;
-	  case 's':p = kstrcpy(p, (char *)va_arg(args, uint_t));
-		fmt++;
-		break;
-	  default:break;
-	}
+    if (*fmt != '%') {
+      *p++ = *fmt++;
+      continue;
+    }
+    fmt++;
+    switch (*fmt) {
+      case 'd':p = kprint_int(p, va_arg(args, uint_t), 10);
+        fmt++;
+        break;
+      case 'x':p = kprint_int(p, va_arg(args, uint_t), 16);
+        fmt++;
+        break;
+      case 's':p = kstrcpy(p, (char *)va_arg(args, uint_t));
+        fmt++;
+        break;
+      default:break;
+    }
   }
   va_end(args);
   cga_console(buf);

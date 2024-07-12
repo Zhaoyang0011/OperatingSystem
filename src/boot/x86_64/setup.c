@@ -1,5 +1,6 @@
 #include "ldr.h"
 #include <type.h>
+#include <ldrtype.h>
 
 #define VIDEO_MEM 0xB8000
 
@@ -14,9 +15,11 @@ void setup_die() {
   while (TRUE);
 }
 
-volatile int bp = 0;
-
-void boot_processor() {
+/**
+ * This is the main function of the setup.
+ * It will call other functions that prepares our device information.
+ */
+void setup_main() {
   ata_lba_read(12, 8, KERNEL_START + KERNEL_DESC_OFF);
 
   kernel_desc_t *kernel_desc = (kernel_desc_t *)(KERNEL_START + KERNEL_DESC_OFF);
@@ -28,23 +31,7 @@ void boot_processor() {
 
   uint32_t sector_count = kernel_desc->kernel_size / 512;
   if (kernel_desc->kernel_size % 512 != 0)
-	sector_count++;
-  kernel_desc->bp = 1;
-  ata_lba_read(20, sector_count, KERNEL_START);
-}
-
-void app_processor() {
-
-}
-
-/**
- * This is the main function of the setup.
- * It will call other functions that prepares our device information.
- */
-void setup_main() {
-  if (bp == 0) {
-	boot_processor();
-	bp = 1;
-  } else
-	app_processor();
+    sector_count++;
+  for (int i = 0; i < sector_count; ++i)
+    ata_lba_read(20 + i, 1, KERNEL_START + 512 * i);
 }

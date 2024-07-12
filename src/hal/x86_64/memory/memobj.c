@@ -20,7 +20,7 @@ void kmopglist_init(kmopglist_t *initp, uint_t pnr) {
 
 void kmopglist_container_init(kmopglist_container_t *initp) {
   for (uint_t i = 0; i < MSCLST_MAX; i++) {
-	kmopglist_init(&initp->mc_lst[i], 1UL << i);
+    kmopglist_init(&initp->mc_lst[i], 1UL << i);
   }
   initp->mc_mpgnr = 0;
 //    list_init(&initp->mc_list);
@@ -71,26 +71,26 @@ void init_memory_object_manager() {
   initp->ks_msobnr = 0;
   initp->ks_msobche = NULL;
   for (uint_t i = 0; i < KOBLST_MAX; i++) {
-	kmomgr_list_init(&initp->ks_msoblst[i], mobsz);
-	mobsz += 32;
+    kmomgr_list_init(&initp->ks_msoblst[i], mobsz);
+    mobsz += 32;
   }
 }
 
 KLINE sint_t retn_mscidx(uint_t pages) {
   sint_t pbits = search_64rlbits((uint_t)pages) - 1;
   if (pages & (pages - 1)) {
-	pbits++;
+    pbits++;
   }
   return pbits;
 }
 
 kmomgrlist_t *onmsz_ret_kmomgrlist(kmomgrlist_header_t *pmomgrh, size_t size) {
   if (pmomgrh == NULL || size < 1 || size > 2048)
-	return NULL;
+    return NULL;
 
   for (int i = 0; i < KOBLST_MAX; ++i) {
-	if (size < pmomgrh->ks_msoblst[i].ol_sz)
-	  return &pmomgrh->ks_msoblst[i];
+    if (size < pmomgrh->ks_msoblst[i].ol_sz)
+      return &pmomgrh->ks_msoblst[i];
   }
 
   return NULL;
@@ -98,28 +98,28 @@ kmomgrlist_t *onmsz_ret_kmomgrlist(kmomgrlist_header_t *pmomgrh, size_t size) {
 
 bool_t kmomgr_isok(kmomgr_t *momgrp, size_t msz) {
   if (momgrp == NULL || msz < 1)
-	return FALSE;
+    return FALSE;
 
   if (momgrp->so_fobjnr > 0 && momgrp->so_objsz > msz)
-	return TRUE;
+    return TRUE;
 
   return FALSE;
 }
 
 kmomgr_t *onmgrlist_ret_kmomgr(kmomgrlist_t *pmgrlist, size_t msz) {
   if (pmgrlist == NULL || pmgrlist->ol_sz < msz)
-	return NULL;
+    return NULL;
 
   if (kmomgr_isok(pmgrlist->ol_cache, msz))
-	return pmgrlist->ol_cache;
+    return pmgrlist->ol_cache;
 
   if (pmgrlist->ol_emnr > 0) {
-	list_t *tmplst = NULL;
-	list_for_each(tmplst, &pmgrlist->ol_emplst) {
-	  kmomgr_t *momgrp = list_entry(tmplst, kmomgr_t, so_list);
-	  if (kmomgr_isok(momgrp, msz))
-		return momgrp;
-	}
+    list_t *tmplst = NULL;
+    list_for_each(tmplst, &pmgrlist->ol_emplst) {
+      kmomgr_t *momgrp = list_entry(tmplst, kmomgr_t, so_list);
+      if (kmomgr_isok(momgrp, msz))
+        return momgrp;
+    }
   }
 
   return NULL;
@@ -127,9 +127,9 @@ kmomgr_t *onmgrlist_ret_kmomgr(kmomgrlist_t *pmgrlist, size_t msz) {
 
 kmomgr_t *_create_kmomgr_onmpg(mpdesc_t *mpgs, uint_t relpnr, size_t objsz) {
   if (NULL == mpgs || 1 > relpnr)
-	return NULL;
+    return NULL;
   if (objsz < sizeof(freekmemobj_t))
-	return NULL;
+    return NULL;
 
   uint64_t phyadr = mpgs->mpd_addr & ~(PAGE_SIZE - 1);
   uint64_t phyade = phyadr + (relpnr << PAGE_SHR) - 1;
@@ -137,9 +137,9 @@ kmomgr_t *_create_kmomgr_onmpg(mpdesc_t *mpgs, uint_t relpnr, size_t objsz) {
   addr_t vadre = P2V((addr_t)phyade);
 
   if ((vadre - vadrs) != PAGE_SIZE - 1)
-	return NULL;
+    return NULL;
   if ((vadre - vadrs + 1) <= (sizeof(kmomgr_t) + sizeof(freekmemobj_t)))
-	return NULL;
+    return NULL;
 
   kmomgr_t *pkmomgr = (kmomgr_t *)vadrs;
 
@@ -158,24 +158,24 @@ kmomgr_t *_create_kmomgr_onmpg(mpdesc_t *mpgs, uint_t relpnr, size_t objsz) {
   uint_t ap = (uint_t)fohstat;
   freekmemobj_t *tmpfoh = (freekmemobj_t *)ap;
   for (; tmpfoh < fohend;) {
-	if ((ap + (uint_t)pkmomgr->so_objsz) <= (uint_t)vadre) {
-	  freekmemobj_init(tmpfoh, 0, (void *)tmpfoh);
-	  list_add(&tmpfoh->oh_list, &pkmomgr->so_frelst);
-	  pkmomgr->so_mobjnr++;
-	  pkmomgr->so_fobjnr++;
-	}
-	ap += (uint_t)pkmomgr->so_objsz;
-	tmpfoh = (freekmemobj_t *)((uint_t)ap);
+    if ((ap + (uint_t)pkmomgr->so_objsz) <= (uint_t)vadre) {
+      freekmemobj_init(tmpfoh, 0, (void *)tmpfoh);
+      list_add(&tmpfoh->oh_list, &pkmomgr->so_frelst);
+      pkmomgr->so_mobjnr++;
+      pkmomgr->so_fobjnr++;
+    }
+    ap += (uint_t)pkmomgr->so_objsz;
+    tmpfoh = (freekmemobj_t *)((uint_t)ap);
   }
   return pkmomgr;
 }
 
 bool_t kmomgrlist_add_kmpmgr(kmomgrlist_t *koblp, kmomgr_t *kmsp) {
   if (koblp == NULL || kmsp == NULL)
-	return FALSE;
+    return FALSE;
 
   if (kmsp->so_objsz > koblp->ol_sz)
-	return FALSE;
+    return FALSE;
 
   list_add(&kmsp->so_list, &koblp->ol_emplst);
   koblp->ol_emnr++;
@@ -184,35 +184,35 @@ bool_t kmomgrlist_add_kmpmgr(kmomgrlist_t *koblp, kmomgr_t *kmsp) {
 
 static kmomgr_t *create_init_kmomgr(kmomgrlist_header_t *pmomgrh, kmomgrlist_t *koblp) {
   if (pmomgrh == NULL || koblp == NULL)
-	return NULL;
+    return NULL;
 
   size_t objsz = koblp->ol_sz;
 
   uint_t pages = 1;
   uint_t relpnr = 0;
   if (128 < objsz)
-	pages = 2;
+    pages = 2;
   if (512 < objsz)
-	pages = 4;
+    pages = 4;
 
   mpdesc_t *mpgs = memory_divide_pages(&memgrob, pages, &relpnr, MA_TYPE_KRNL, DMF_RELDIV);
   if (NULL == mpgs)
-	return NULL;
+    return NULL;
 
   if (0 == relpnr) {
-	panic("_create_kmomgr memory_divide_pages fail\n");
-	return NULL;
+    panic("_create_kmomgr memory_divide_pages fail\n");
+    return NULL;
   }
 
   kmomgr_t *kmsp = _create_kmomgr_onmpg(mpgs, relpnr, koblp->ol_sz);
 
   if (kmsp == NULL) {
-	if (memory_merge_pages(&memgrob, mpgs, relpnr) == FALSE)
-	  panic("_create_kmomgr memory_merge_pages fail\n");
-	return NULL;
+    if (memory_merge_pages(&memgrob, mpgs, relpnr) == FALSE)
+      panic("_create_kmomgr memory_merge_pages fail\n");
+    return NULL;
   }
   if (kmomgrlist_add_kmpmgr(koblp, kmsp) == FALSE) {
-	panic("_create_kmomgr b kmsob_add_koblst FALSE\n");
+    panic("_create_kmomgr b kmsob_add_koblst FALSE\n");
   }
 
   pmomgrh->ks_msobnr++;
@@ -221,34 +221,34 @@ static kmomgr_t *create_init_kmomgr(kmomgrlist_header_t *pmomgrh, kmomgrlist_t *
 
 static uint_t scan_kmomgr_objnr(kmomgr_t *kmsp) {
   if (kmsp->so_fobjnr > 1 && !list_is_empty_careful(&kmsp->so_frelst))
-	return kmsp->so_fobjnr;
+    return kmsp->so_fobjnr;
   return 0;
 }
 
 static bool_t kmomgr_extern_pages(kmomgr_t *pmomgr) {
   if ((~0UL) <= pmomgr->so_mobjnr || (~0UL) <= pmomgr->so_mextnr || (~0UL) <= pmomgr->so_fobjnr) {
-	return FALSE;
+    return FALSE;
   }
   mpdesc_t *mpgs = NULL;
   uint_t relpnr = 0;
   uint_t pages = 1;
   if (128 < pmomgr->so_objsz) {
-	pages = 2;
+    pages = 2;
   }
   if (512 < pmomgr->so_objsz) {
-	pages = 4;
+    pages = 4;
   }
 
   mpgs = memory_divide_pages(&memgrob, pages, &relpnr, MA_TYPE_KRNL, DMF_RELDIV);
   if (NULL == mpgs)
-	return FALSE;
+    return FALSE;
 
   if (0 == relpnr)
-	panic("kmomgr_extern_pages memory_divide_pages fail\n");
+    panic("kmomgr_extern_pages memory_divide_pages fail\n");
 
   if (relpnr != pages) {
-	memory_merge_pages(&memgrob, mpgs, relpnr);
-	panic("kmomgr_extern_pages memory_divide_pages number error\n");
+    memory_merge_pages(&memgrob, mpgs, relpnr);
+    panic("kmomgr_extern_pages memory_divide_pages number error\n");
   }
 
   uint64_t phyadr = mpgs->mpd_addr & ~(PAGE_SIZE - 1);
@@ -265,15 +265,15 @@ static bool_t kmomgr_extern_pages(kmomgr_t *pmomgr) {
 
   freekmemobj_t *fmobj = (freekmemobj_t *)(pext + 1);
   for (; fmobj < (freekmemobj_t *)vadre;) {
-	addr_t temp = (addr_t)fmobj;
-	if (temp + pmomgr->so_objsz < vadre) {
-	  freekmemobj_init(fmobj, 0, (void *)fmobj);
-	  list_add(&fmobj->oh_list, &pmomgr->so_frelst);
-	  pmomgr->so_mobjnr++;
-	  pmomgr->so_fobjnr++;
-	  pext->mt_mobjnr++;
-	}
-	fmobj = (freekmemobj_t *)(temp + pmomgr->so_objsz);
+    addr_t temp = (addr_t)fmobj;
+    if (temp + pmomgr->so_objsz < vadre) {
+      freekmemobj_init(fmobj, 0, (void *)fmobj);
+      list_add(&fmobj->oh_list, &pmomgr->so_frelst);
+      pmomgr->so_mobjnr++;
+      pmomgr->so_fobjnr++;
+      pext->mt_mobjnr++;
+    }
+    fmobj = (freekmemobj_t *)(temp + pmomgr->so_objsz);
   }
 
   // Add kmomgrext_t to kmomgr_t
@@ -284,38 +284,38 @@ static bool_t kmomgr_extern_pages(kmomgr_t *pmomgr) {
 
 static bool_t scan_kmomgr_isok(kmomgr_t *kmsp, size_t msz) {
   if (1 > kmsp->so_fobjnr || 1 > kmsp->so_mobjnr) {
-	return FALSE;
+    return FALSE;
   }
   if (msz > kmsp->so_objsz) {
-	return FALSE;
+    return FALSE;
   }
   if ((kmsp->so_vend - kmsp->so_vstat + 1) < PAGE_SIZE ||
-	  (kmsp->so_vend - kmsp->so_vstat + 1) < (addr_t)(sizeof(kmomgr_t) + sizeof(freekmemobj_t))) {
-	return FALSE;
+      (kmsp->so_vend - kmsp->so_vstat + 1) < (addr_t)(sizeof(kmomgr_t) + sizeof(freekmemobj_t))) {
+    return FALSE;
   }
   if (list_is_empty_careful(&kmsp->so_frelst) == TRUE) {
-	return FALSE;
+    return FALSE;
   }
   return TRUE;
 }
 
 static void *onkmomgr_ret_memobj(kmomgr_t *kmsp, size_t msz) {
   if (NULL == kmsp) {
-	return NULL;
+    return NULL;
   }
   void *retptr = NULL;
   cpuflg_t cpuflg;
   spinlock_cli(&kmsp->so_lock, &cpuflg);
 
   if (scan_kmomgr_objnr(kmsp) < 1) {
-	if (kmomgr_extern_pages(kmsp) == FALSE) {
-	  retptr = NULL;
-	  goto ret_step;
-	}
+    if (kmomgr_extern_pages(kmsp) == FALSE) {
+      retptr = NULL;
+      goto ret_step;
+    }
   }
 
   if (!scan_kmomgr_isok(kmsp, msz))
-	goto ret_step;
+    goto ret_step;
 
   freekmemobj_t *fobh = list_entry(kmsp->so_frelst.next, freekmemobj_t, oh_list);
   list_del(&fobh->oh_list);
@@ -342,20 +342,20 @@ static void *mobj_alloc_core(size_t msz) {
 
   kmomgrlist_t *pmgrlist = onmsz_ret_kmomgrlist(pmomgrh, msz);
   if (NULL == pmgrlist) {
-	retptr = NULL;
-	goto out;
+    retptr = NULL;
+    goto out;
   }
 
   kmomgr_t *kmsp = onmgrlist_ret_kmomgr(pmgrlist, msz);
   if (kmsp == NULL) {
-	kmsp = create_init_kmomgr(pmomgrh, pmgrlist);
-	if (kmsp == NULL)
-	  goto out;
+    kmsp = create_init_kmomgr(pmomgrh, pmgrlist);
+    if (kmsp == NULL)
+      goto out;
   }
 
   retptr = onkmomgr_ret_memobj(kmsp, msz);
   if (retptr == NULL)
-	goto out;
+    goto out;
 
   // update cache
   kmomgrhead_update_cache(pmomgrh, kmsp);
@@ -365,48 +365,48 @@ out:
 }
 
 // 内存对象分配接口
-void *mobj_alloc(size_t msz) {
+void *kmobj_alloc(size_t size) {
   // 对于小于1 或者 大于2048字节的大小不支持 直接返回NULL表示失败
-  if (1 > msz || 2048 < msz) {
-	return NULL;
+  if (1 > size || 2048 < size) {
+    return NULL;
   }
   // 调用核心函数
-  return mobj_alloc_core(msz);
+  return mobj_alloc_core(size);
 }
 
 KLINE bool_t ismobj_from_kmomgrext(kmomgrext_t *pmomgrext, void *addr) {
   if (pmomgrext->mt_vstat < addr && pmomgrext->mt_vend > addr)
-	return TRUE;
+    return TRUE;
   return FALSE;
 }
 
 static bool_t ismobj_from_kmomgr(kmomgr_t *pmomgr, void *addr) {
   if (pmomgr == NULL)
-	return FALSE;
+    return FALSE;
 
   if (pmomgr->so_vstat < addr && pmomgr->so_vend > addr)
-	return TRUE;
+    return TRUE;
 
   list_t *temp = NULL;
   list_for_each(temp, &pmomgr->so_mextlst) {
-	kmomgrext_t *pext = list_entry(temp, kmomgrext_t, mt_list);
-	if (pext->mt_kmsb != pmomgr)
-	  panic("kmomgrext is loaded on wrong kmomgr!");
-	if (ismobj_from_kmomgrext(pext, addr))
-	  return TRUE;
+    kmomgrext_t *pext = list_entry(temp, kmomgrext_t, mt_list);
+    if (pext->mt_kmsb != pmomgr)
+      panic("kmomgrext is loaded on wrong kmomgr!");
+    if (ismobj_from_kmomgrext(pext, addr))
+      return TRUE;
   }
   return FALSE;
 }
 
 static kmomgr_t *onkmomgrlist_retfree_mobj(kmomgrlist_t *pmgrlist, void *faddr) {
   if (ismobj_from_kmomgr(pmgrlist->ol_cache, faddr))
-	return pmgrlist->ol_cache;
+    return pmgrlist->ol_cache;
 
   list_t *temp = NULL;
   list_for_each(temp, &pmgrlist->ol_emplst) {
-	kmomgr_t *pmgr = list_entry(temp, kmomgr_t, so_list);
-	if (ismobj_from_kmomgr(pmgr, faddr))
-	  return pmgr;
+    kmomgr_t *pmgr = list_entry(temp, kmomgr_t, so_list);
+    if (ismobj_from_kmomgr(pmgr, faddr))
+      return pmgr;
   }
   return FALSE;
 }
@@ -414,7 +414,7 @@ static kmomgr_t *onkmomgrlist_retfree_mobj(kmomgrlist_t *pmgrlist, void *faddr) 
 static kmomgr_t *try_free_onkmomgrlist(kmomgrlist_t *pmgrlist, void *addr) {
   kmomgr_t *pmomgr = onkmomgrlist_retfree_mobj(pmgrlist, addr);
   if (NULL == pmomgr) {
-	return NULL;
+    return NULL;
   }
 
   cpuflg_t flg = 0;
@@ -432,9 +432,9 @@ static kmomgr_t *try_free_onkmomgrlist(kmomgrlist_t *pmgrlist, void *addr) {
 
 static bool_t try_free_kmomgr(kmomgrlist_header_t *kmobmgrp, kmomgrlist_t *koblp, kmomgr_t *kmsp) {
   if (kmsp->so_mobjnr < kmsp->so_fobjnr)
-	panic("kmomogr_t free object bigger than total!");
+    panic("kmomogr_t free object bigger than total!");
   if (kmsp->so_fobjnr < kmsp->so_mobjnr)
-	return FALSE;
+    return FALSE;
 
   list_t *tmplst = NULL;
   mpdesc_t *msa = NULL;
@@ -443,23 +443,23 @@ static bool_t try_free_kmomgr(kmomgrlist_header_t *kmobmgrp, kmomgrlist_t *koblp
   koblp->ol_emnr--;
   kmobmgrp->ks_msobnr--;
   for (uint_t j = 0; j < MSCLST_MAX; j++) {
-	if (0 < mscp[j].mpl_msanr) {
-	  list_for_each_head_dell(tmplst, &mscp[j].mpl_list) {
-		msa = list_entry(tmplst, mpdesc_t, mpd_list);
-		list_del(&msa->mpd_list);
-		if (!memory_merge_pages(&memgrob, msa, (uint_t)mscp[j].mpl_ompnr)) {
-		  panic("_destroy_kmsob_core mm_merge_pages FALSE2\n");
-		}
-	  }
-	}
+    if (0 < mscp[j].mpl_msanr) {
+      list_for_each_head_dell(tmplst, &mscp[j].mpl_list) {
+        msa = list_entry(tmplst, mpdesc_t, mpd_list);
+        list_del(&msa->mpd_list);
+        if (!memory_merge_pages(&memgrob, msa, (uint_t)mscp[j].mpl_ompnr)) {
+          panic("_destroy_kmsob_core mm_merge_pages FALSE2\n");
+        }
+      }
+    }
   }
 
   if (!memory_merge_pages(&memgrob, kmsp->so_mc.mc_mpdescptr, kmsp->so_mc.mc_kmobinpnr))
-	panic("free kmomgr merge page error!");
+    panic("free kmomgr merge page error!");
   return TRUE;
 }
 
-static bool_t mobj_free_core(void *addr, size_t size) {
+static bool_t kmobj_free_core(void *addr, size_t size) {
   kmomgrlist_header_t *pmomgrh = &memgrob.mo_mobmgr;
 
   cpuflg_t cpuflg;
@@ -468,14 +468,14 @@ static bool_t mobj_free_core(void *addr, size_t size) {
   bool_t ret = FALSE;
   kmomgrlist_t *pmgrlist = onmsz_ret_kmomgrlist(pmomgrh, size);
   if (NULL == pmgrlist) {
-	ret = FALSE;
-	goto out;
+    ret = FALSE;
+    goto out;
   }
 
   kmomgr_t *ksmp = try_free_onkmomgrlist(pmgrlist, addr);
   if (ksmp == NULL) {
-	ret = FALSE;
-	goto out;
+    ret = FALSE;
+    goto out;
   }
 
   try_free_kmomgr(pmomgrh, pmgrlist, ksmp);
@@ -485,10 +485,10 @@ out:
   return ret;
 }
 
-bool_t mobj_free(void *addr, size_t size) {
+bool_t kmobj_free(void *addr, size_t size) {
   // 对于小于1 或者 大于2048字节的大小不支持 直接返回NULL表示失败
   if (addr == NULL || size == 0 || size > 2048)
-	return FALSE;
+    return FALSE;
   // 调用核心函数
-  return mobj_free_core(addr, size);
+  return kmobj_free_core(addr, size);
 }

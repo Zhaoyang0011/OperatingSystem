@@ -7,13 +7,13 @@ INCLUDE:=-I${ROOT_PATH}/include
 all: ${BUILD}/hal.o
 
 ${BUILD}/hal.o:${BUILD}/kernel_entry.o \
-				${BUILD}/halinit.o ${BUILD}/halglobal.o \
-				${BUILD}/kprint.o ${BUILD}/spinlock.o ${BUILD}/semaphore.o \
-				${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
-				${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
-				${BUILD}/cga.o \
-				${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o \
-				${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o
+               ${BUILD}/halinit.o ${BUILD}/halglobal.o \
+               ${BUILD}/kprint.o ${BUILD}/spinlock.o ${BUILD}/semaphore.o \
+               ${BUILD}/apci.o ${BUILD}/apic.o ${BUILD}/mp.o \
+               ${BUILD}/interrupt.o ${BUILD}/gdtidt.o ${BUILD}/int.asm.o ${BUILD}/i8259.o \
+               ${BUILD}/cga.o ${BUILD}/context.o ${BUILD}/cpu.o\
+               ${BUILD}/memory.o ${BUILD}/phymem.o ${BUILD}/memarea.o ${BUILD}/mempage.o \
+               ${BUILD}/memgrob.o ${BUILD}/memdivmer.o ${BUILD}/memobj.o ${BUILD}/mmu.o
 	ld -r $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/kernel_entry.o: ./kernel_entry.asm
@@ -41,6 +41,9 @@ ${BUILD}/mp.o: ./mp.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/cga.o: ./cga.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/context.o: ./context.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/apic.o: ./interrupt/apic.c
@@ -77,6 +80,9 @@ ${BUILD}/memdivmer.o: ./memory/memdivmer.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/memobj.o: ./memory/memobj.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/mmu.o: ./memory/mmu.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/spinlock.o: ./synchronize/spinlock.c

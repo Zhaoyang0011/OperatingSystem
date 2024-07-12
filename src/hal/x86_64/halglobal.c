@@ -8,23 +8,26 @@
 #include <hal/memory/memarea.h>
 #include <hal/memory/memgrob.h>
 
-// gdtidt.h
+// gdtidt.c
 HAL_DEFGLOB_VARIABLE(gate_t, x64_idt)[IDT_MAX];
 HAL_DEFGLOB_VARIABLE(idtr_t, idtr);
 HAL_DEFGLOB_VARIABLE(int_flt_desc_t, int_fault)[IDT_MAX];
+HAL_DEFGLOB_VARIABLE(gdtr_t, x64_gdtr)[CPU_CORE_MAX];
+HAL_DEFGLOB_VARIABLE(descriptor_t, x64_gdt)[CPU_CORE_MAX][GDT_MAX];
+HAL_DEFGLOB_VARIABLE(x64tss_t, x64_tss)[CPU_CORE_MAX];
 
-// lapic.h
+// lapic.c
 HAL_DEFGLOB_VARIABLE(volatile uint32_t *, lapic);
 
-// mempage.y
+// mempage.c
 HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
 
-// memarea.h
+// memarea.c
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
 HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
 
-// memgrob.h
+// memgrob.c
 HAL_DEFGLOB_VARIABLE(memgrob_t, memgrob);
 
-// cpu.h
+// cpu.c
 HAL_DEFGLOB_VARIABLE(x64tss_t, x64tss)[CPU_CORE_MAX];

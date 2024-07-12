@@ -4,6 +4,11 @@
 #include <spinlock.h>
 #include <struct/list.h>
 
+#define SEM_FLG_MUTEX 0
+#define SEM_FLG_MULTI 1
+#define SEM_MUTEX_ONE_LOCK 1
+#define SEM_MULTI_LOCK 0
+
 typedef struct kernel_wait_list {
   spinlock_t wl_lock;
   uint_t wl_tdnr;

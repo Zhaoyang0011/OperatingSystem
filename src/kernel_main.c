@@ -11,11 +11,11 @@ void copy_kernel_desc() {
   memcpy(temp, &kernel_descriptor, sizeof(kernel_desc_t));
 
   if (kernel_descriptor.kernel_magic != ZHOS_MAGIC) {
-	panic("Incorrect kernel head!");
+    panic("Incorrect kernel head!");
   }
 
   if (kernel_descriptor.kernel_size == 0) {
-	panic("Kernel size incorrect!");
+    panic("Kernel size incorrect!");
   }
 
   kernel_descriptor.next_pg = P4K_ALIGN(kernel_descriptor.next_pg);

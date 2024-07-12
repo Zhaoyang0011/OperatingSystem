@@ -3,8 +3,14 @@
 
 #include <hal/halglobal.h>
 #include <type.h>
+#include <hal/interrupt.h>
+#include <hal/context.h>
+#include <struct/list.h>
+#include <spinlock.h>
+#include "../cpu.h"
 
 #define IDT_MAX 256
+#define GDT_MAX 10
 
 /* GDT */
 /* 描述符索引 */
@@ -98,16 +104,57 @@ typedef struct gate {
   uint32_t resv;     // reserved bits
 } __attribute__((packed)) gate_t;
 
+// interrupt fault descriptor 中断异常描述符
+typedef struct int_fault_desc {
+  spinlock_t i_lock;
+  uint32_t i_flag;
+  uint32_t i_status;
+  uint_t i_priority; // 中断优先级
+  uint_t i_number;   // 中断号
+  uint_t i_depth;    // 中断嵌套深度
+  uint64_t i_index;  // 中断计数
+  list_t i_serlist;
+  uint_t i_sernr;
+  list_t i_threadlst;  // 中断线程链表头
+  uint_t i_threadnr;   // 中断线程个数
+  void *i_onethread;   // 只有一个中断线程时直接用指针
+  void *i_rbtreeroot;  // 如果中断线程太多则按优先级组成红黑树
+  list_t i_serfisrlst; // 也可以使用中断回调函数的方式
+  uint_t i_serfisrnr;  // 中断回调函数个数
+  void *i_msgmpool;    // 可能的中断消息池
+  void *i_privp;
+  void *i_extp;
+} int_flt_desc_t;
+
 typedef struct idt_reg {
   uint16_t idtLen;
   uint64_t idtbass;
 } __attribute__((packed)) idtr_t;
 
+typedef struct gdt_reg {
+  uint16_t gdtLen;
+  uint64_t gdtbass;
+} __attribute__((packed)) gdtr_t;
+
+typedef struct global_descriptor {
+  uint16_t limit_low;          /* Limit */
+  uint16_t base_low;           /* Base */
+  uint8_t base_mid;            /* Base */
+  uint8_t attr1;               /* P(1) DPL(2) DT(1) TYPE(4) */
+  uint8_t limit_high_attr2;    /* G(1) D(1) 0(1) AVL(1) LimitHigh(4) */
+  uint8_t base_high;           /* Base */
+} __attribute__((packed)) descriptor_t;
+
 typedef void (*int_handler_t)();
 
 void init_idt();
+void init_gdt();
 
 HAL_DEFGLOB_VARIABLE(gate_t, x64_idt)[IDT_MAX];
 HAL_DEFGLOB_VARIABLE(idtr_t, idtr);
+HAL_DEFGLOB_VARIABLE(int_flt_desc_t, int_fault)[IDT_MAX];
+HAL_DEFGLOB_VARIABLE(gdtr_t, x64_gdtr)[CPU_CORE_MAX];
+HAL_DEFGLOB_VARIABLE(descriptor_t, x64_gdt)[CPU_CORE_MAX][GDT_MAX];
+HAL_DEFGLOB_VARIABLE(x64tss_t, x64_tss)[CPU_CORE_MAX];
 
 #endif

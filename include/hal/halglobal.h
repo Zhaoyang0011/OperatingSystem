@@ -3,6 +3,8 @@
 
 #include <ldrtype.h>
 
+#define CPUCORE_MAX 16
+
 #ifdef HALGOBAL_HEAD
 #undef EXTERN
 #define EXTERN

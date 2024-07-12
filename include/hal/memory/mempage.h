@@ -67,14 +67,14 @@ typedef struct phyadrflgs {
 // 内存空间地址描述符
 // memory page descriptor
 typedef struct memory_page_descriptor {
-  list_t mpd_list;       // 链表
-  spinlock_t mpd_lock;   // 保护自身的自旋锁
-  mpflgs_t mpd_indxflgs; // 内存空间地址描述符标志
+  list_t mpd_list;            // 链表
+  spinlock_t mpd_lock;        // 保护自身的自旋锁
+  mpflgs_t mpd_indxflgs;      // 内存空间地址描述符标志
   union {
-	uint64_t mpd_addr;
-	phyadrflgs_t mpd_adrflgs; // 物理地址和标志
+    uint64_t mpd_addr;
+    phyadrflgs_t mpd_adrflgs; // 物理地址和标志
   };
-  void *mpd_odlink; // 相邻且相同大小msadsc的指针
+  void *mpd_odlink;           // 相邻且相同大小msadsc的指针
 } mpdesc_t;
 
 void init_memory_page();

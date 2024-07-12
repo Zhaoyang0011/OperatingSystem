@@ -34,8 +34,8 @@ typedef struct kernel_memory_object_manager_mpglist_container {
   //                  mc_lst[4]=16个连续页面的mpgdesc_t
   kmopglist_t mc_lst[MSCLST_MAX];
   uint_t mc_mpgnr; // 总共多个mpgdesc_t结构
-//    list_t mc_list;
   // 内存对象容器第一个占用mpgdesc_t
+//  list_t mc_list;
   mpdesc_t *mc_mpdescptr;
   // 内存对象容器第一个占用mpgdesc_t对应的连续的物理内存页面数
   uint_t mc_kmobinpnr;
@@ -93,8 +93,8 @@ typedef struct kernel_memory_object_manager_header {
 
 void init_memory_object_manager();
 
-void *mobj_alloc(size_t size);
+void *kmobj_alloc(size_t size);
 
-bool_t mobj_free(void *addr, size_t size);
+bool_t kmobj_free(void *addr, size_t size);
 
 #endif

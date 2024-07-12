@@ -7,13 +7,14 @@
 #include <hal/memory/phymem.h>
 #include <spinlock.h>
 #include <struct/list.h>
+#include <semaphore.h>
 
 typedef struct memgrob {
   list_t mo_list;
   spinlock_t mo_lock;
   uint_t mo_stus;
   uint_t mo_flgs;
-  // sem_t mo_sem;
+  sem_t mo_sem;
   uint64_t mo_memsz;
   uint64_t mo_maxpages;
   uint64_t mo_freepages;

@@ -38,14 +38,14 @@ void krlsem_down(sem_t *sem) {
   cpuflg_t cpuflg;
 
   while (TRUE) {
-	spinlock_cli(&sem->sem_lock, &cpuflg);
-	sem->sem_count--;
-	if (sem->sem_count > 0) {
-	  break;
-	}
-//        TODO implement kernel shcedule.
-	kwlist_wait(&sem->sem_waitlst);
-	spinunlock_sti(&sem->sem_lock, &cpuflg);
+    spinlock_cli(&sem->sem_lock, &cpuflg);
+    sem->sem_count--;
+    if (sem->sem_count > 0) {
+      break;
+    }
+    // TODO implement kernel shcedule.
+    kwlist_wait(&sem->sem_waitlst);
+    spinunlock_sti(&sem->sem_lock, &cpuflg);
 //        krlschedule_wait();
   }
 

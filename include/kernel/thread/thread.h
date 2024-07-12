@@ -1,5 +1,5 @@
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _THREAD_H
+#define _THREAD_H
 
 #include <struct/list.h>
 #include <spinlock.h>
@@ -50,22 +50,22 @@
 #define KMOD_EFLAGS    0x202
 
 typedef struct thread {
-    spinlock_t td_lock;       //进程的自旋锁
-    list_t td_list;           //进程链表
-    uint_t td_flgs;           //进程的标志
-    uint_t td_stus;           //进程的状态
-    uint_t td_cpuid;          //进程所在的CPU的id
-    uint_t td_id;             //进程的id
-    uint_t td_tick;           //进程运行了多少tick
-    uint_t td_privilege;      //进程的权限
-    uint_t td_priority;       //进程的优先级
-    uint_t td_runmode;        //进程的运行模式
-    addr_t td_krlstktop;      //应用程序内核栈顶地址
-    addr_t td_krlstkstart;    //应用程序内核栈开始地址
-    addr_t td_usrstktop;      //应用程序栈顶地址
-    addr_t td_usrstkstart;    //应用程序栈开始地址
-    pvmspacdesc_t *td_mmdsc;  //地址空间结构
-    context_t td_context;     //机器上下文件结构
+  spinlock_t td_lock;       //进程的自旋锁
+  list_t td_list;           //进程链表
+  uint_t td_flgs;           //进程的标志
+  uint_t td_stus;           //进程的状态
+  uint_t td_cpuid;          //进程所在的CPU的id
+  uint_t td_id;             //进程的id
+  uint_t td_tick;           //进程运行了多少tick
+  uint_t td_privilege;      //进程的权限
+  uint_t td_priority;       //进程的优先级
+  uint_t td_runmode;        //进程的运行模式
+  addr_t td_krlstktop;      //应用程序内核栈顶地址
+  addr_t td_krlstkstart;    //应用程序内核栈开始地址
+  addr_t td_usrstktop;      //应用程序栈顶地址
+  addr_t td_usrstkstart;    //应用程序栈开始地址
+  pvmspacdesc_t *td_mmdsc;  //地址空间结构
+  context_t td_context;     //机器上下文件结构
 //    objnode_t*  td_handtbl[TD_HAND_MAX];//打开的对象数组
 } thread_t;
 

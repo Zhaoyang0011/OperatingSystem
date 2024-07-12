@@ -7,7 +7,7 @@
 void init_mp() {
   MADT_t *madt = find_madt();
   if (madt == NULL)
-	panic("MADT address error.");
-
+    panic("MADT address error.");
   find_apic(madt);
+  init_lapic();
 }

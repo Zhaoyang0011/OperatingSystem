@@ -1,6 +1,6 @@
 #include "apic.h"
 #include "../apci.h"
-#include "../x86.h"
+#include "x86.h"
 #include "i8259.h"
 #include <console.h>
 
@@ -27,64 +27,64 @@ void io_apic_found(ioapic *local_apic) {
 
 void find_one_apic(APICHeader_t *apic_header) {
   switch (apic_header->type) {
-	case APIC_LOCAL: {
-	  local_apic_found((localapic *)apic_header);
-	  break;
-	}
-	case APIC_IO: {
-	  io_apic_found((ioapic *)apic_header);
-	  break;
-	}
-	case APIC_IO_ISO: {
-	  // TODO: deal with ioapic_iso
-	  ioapic_iso *apic2 = (ioapic_iso *)apic_header;
-	  break;
-	}
-	case APIC_IO_NMIS: {
-	  // TODO: deal with ioapic_nmis
-	  ioapic_nmis *apic3 = (ioapic_nmis *)apic_header;
-	  break;
-	}
-	case APIC_LOCAL_NMI: {
-	  // TODO: deal with lapic_nmi
-	  lapic_nmi *apic4 = (lapic_nmi *)apic_header;
-	  break;
-	}
-	case APIC_LOCAL_ADR_OVR: {
-	  // TODO: deal with lapic_adr_ovr
-	  lapic_adr_ovr *apic5 = (lapic_adr_ovr *)apic_header;
-	  break;
-	}
-	case APIC_LOCAL_X2: {
-	  // TODO: deal with lapic_x2
-	  lapic_x2 *apic9 = (lapic_x2 *)apic_header;
-	  break;
-	}
-	default: {
-	  panic("APIC type error!");
-	  break;
-	}
+    case APIC_LOCAL: {
+      local_apic_found((localapic *)apic_header);
+      break;
+    }
+    case APIC_IO: {
+      io_apic_found((ioapic *)apic_header);
+      break;
+    }
+    case APIC_IO_ISO: {
+      // TODO: deal with ioapic_iso
+      ioapic_iso *apic2 = (ioapic_iso *)apic_header;
+      break;
+    }
+    case APIC_IO_NMIS: {
+      // TODO: deal with ioapic_nmis
+      ioapic_nmis *apic3 = (ioapic_nmis *)apic_header;
+      break;
+    }
+    case APIC_LOCAL_NMI: {
+      // TODO: deal with lapic_nmi
+      lapic_nmi *apic4 = (lapic_nmi *)apic_header;
+      break;
+    }
+    case APIC_LOCAL_ADR_OVR: {
+      // TODO: deal with lapic_adr_ovr
+      lapic_adr_ovr *apic5 = (lapic_adr_ovr *)apic_header;
+      break;
+    }
+    case APIC_LOCAL_X2: {
+      // TODO: deal with lapic_x2
+      lapic_x2 *apic9 = (lapic_x2 *)apic_header;
+      break;
+    }
+    default: {
+      panic("APIC type error!");
+      break;
+    }
   }
 }
 
 void find_apic(MADT_t *madt) {
   if (madt == NULL)
-	panic("MADT address error!");
+    panic("MADT address error!");
 
   // set local apic address
   uint8_t *end = ((uint8_t *)madt) + madt->header.Length;
   lapic = (uint32_t *)madt->lapicaddr;
 
   for (uint8_t *apic_desc = madt->entry; apic_desc < end;) {
-	APICHeader_t *header = (APICHeader_t *)apic_desc;
-	find_one_apic(header);
-	apic_desc += header->length;
+    APICHeader_t *header = (APICHeader_t *)apic_desc;
+    find_one_apic(header);
+    apic_desc += header->length;
   }
 }
 
 void init_lapic() {
   if (!lapic)
-	panic("Local apic not initiated!");
+    panic("Local apic not initiated!");
 
   disable_i8259();
 
@@ -106,7 +106,7 @@ void init_lapic() {
   // Disable performance counter overflow interrupts
   // on machines that provide that interrupt entry.
   if (((lapic[LAPIC_VER] >> 16) & 0xFF) >= 4)
-	lapicw(LAPIC_PCINT, LAPIC_MASKED);
+    lapicw(LAPIC_PCINT, LAPIC_MASKED);
 
   // Map error interrupt to IRQ_ERROR.
   lapicw(LAPIC_ERROR, T_IRQ0 + IRQ_ERROR);

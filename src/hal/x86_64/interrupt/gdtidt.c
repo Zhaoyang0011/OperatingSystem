@@ -124,9 +124,9 @@ void set_int_desc(uint8_t vector, uint8_t desc_type, int_handler_t handler, uint
 KLINE void load_x64_idt(idtr_t *idtr) {
   __asm__ __volatile__("lidt (%0) \n\t"
 
-	  :
-	  : "r"(idtr)
-	  : "memory");
+      :
+      : "r"(idtr)
+      : "memory");
   return;
 }
 
@@ -137,7 +137,7 @@ void set_idtr(gate_t *idtptr) {
 
 void init_idt() {
   for (uint16_t i = 0; i < 256; i++) {
-	set_int_desc((uint32_t)i, DA_386IGate, hxi_exc_general_intpfault, PRIVILEGE_KRNL);
+    set_int_desc((uint32_t)i, DA_386IGate, hxi_exc_general_intpfault, PRIVILEGE_KRNL);
   }
 
   set_int_desc(INT_VECTOR_DIVIDE, DA_386IGate, exc_divide_error, PRIVILEGE_KRNL);
@@ -146,5 +146,81 @@ void init_idt() {
 
   set_idtr(x64_idt);
   load_x64_idt(&idtr);
-  return;
+}
+
+void set_descriptor(descriptor_t *p_desc, int base, int limit, int attribute) {
+  p_desc->limit_low = limit & 0x0FFFF;                                                   // 段界限 1(2 字节)
+  p_desc->base_low = base & 0x0FFFF;                                                     // 段基址 1(2 字节)
+  p_desc->base_mid = (base >> 16) & 0x0FF;                                               // 段基址 2(1 字节)
+  p_desc->attr1 = (uint8_t)(attribute & 0xFF);                                              // 属性 1
+  p_desc->limit_high_attr2 = (uint8_t)(((limit >> 16) & 0x0F) | ((attribute >> 8) & 0xF0)); // 段界限 2 + 属性 2
+  p_desc->base_high = (uint8_t)((base >> 24) & 0x0FF);                                      // 段基址 3\(1 字节)
+}
+
+void set_x64tss_descriptor(descriptor_t *p_desc, uint64_t base, uint32_t limit, uint16_t attribute) {
+  uint32_t *x64tssb_h = (uint32_t *)(p_desc + 1);
+
+  p_desc->limit_low = limit & 0x0FFFF;                                                   // 段界限 1(2 字节)
+  p_desc->base_low = base & 0x0FFFF;                                                     // 段基址 1(2 字节)
+  p_desc->base_mid = (base >> 16) & 0x0FF;                                               // 段基址 2(1 字节)
+  p_desc->attr1 = (uint8_t)(attribute & 0xFF);                                              // 属性 1
+  p_desc->limit_high_attr2 = (uint8_t)(((limit >> 16) & 0x0F) | ((attribute >> 8) & 0xF0)); // 段界限 2 + 属性 2
+  p_desc->base_high = (uint8_t)((base >> 24) & 0x0FF);
+
+  *x64tssb_h = (uint32_t)((base >> 32) & 0xffffffff);
+
+  *(x64tssb_h + 1) = 0;
+}
+
+void load_x64_gdt(gdtr_t *p_gdtr) {
+  __asm__ __volatile__(
+      "cli \n\t"
+      "pushq %%rax \n\t"
+      //"movq %0,%%rax \n\t"
+      "lgdt (%0) \n\t"
+
+      "movabsq $1f,%%rax \n\t"
+      //"pushq   $0  \n\t"             $x64_igdt_reg//# fake return address to stop unwinder
+      "pushq   $8 \n\t"
+      "pushq   %%rax    \n\t"
+      "lretq \n\t"
+      "1:\n\t"
+      "movw $0x10,%%ax\n\t"
+      "movw %%ax,%%ds\n\t"
+      "movw %%ax,%%es\n\t"
+      "movw %%ax,%%ss\n\t"
+      "movw %%ax,%%fs\n\t"
+      "movw %%ax,%%gs\n\t"
+      "popq %%rax \n\t"
+      :
+      : "r"(p_gdtr)
+      : "rax", "memory");
+}
+
+KLINE void load_x64_tr(uint16_t trindx) {
+  __asm__ __volatile__(
+      "ltr %0 \n\t"
+      :
+      : "r"(trindx)
+      : "memory");
+}
+
+void init_gdt() {
+
+  for (uint32_t gdtindx = 0; gdtindx < CPUCORE_MAX; gdtindx++) {
+
+    set_descriptor(&x64_gdt[gdtindx][0], 0, 0, 0);
+    set_descriptor(&x64_gdt[gdtindx][1], 0, 0, DA_CR | DA_64 | 0);
+    set_descriptor(&x64_gdt[gdtindx][2], 0, 0, DA_DRW | DA_64 | 0);
+    set_descriptor(&x64_gdt[gdtindx][3], 0, 0, DA_CR | DA_64 | DA_DPL3 | 0); //0,0xffffffff,DA_DRW | DA_32|DA_LIMIT_4K);
+    set_descriptor(&x64_gdt[gdtindx][4], 0, 0, DA_DRW | DA_64 | DA_DPL3 | 0);
+    set_x64tss_descriptor(&x64_gdt[gdtindx][6], (uint64_t)&x64_tss[gdtindx], sizeof(x64_tss[gdtindx]) - 1, DA_386TSS);
+
+    x64_gdtr[gdtindx].gdtbass = (uint64_t)x64_gdt[gdtindx];
+    x64_gdtr[gdtindx].gdtLen = sizeof(x64_gdt[gdtindx]) - 1;
+
+  }
+
+  load_x64_gdt(&x64_gdtr[0]);
+  load_x64_tr(0x30);
 }

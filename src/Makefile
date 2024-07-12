@@ -14,8 +14,9 @@ ${BIN}/kernel.pkg: ${BUILD}/OSTool ${BIN}/kernel.bin
 ${BIN}/kernel.bin: ${BUILD}/kernel.o
 	objcopy -O binary $< $@
 
-${BUILD}/kernel.o: ${BUILD}/hal.o  ${BUILD}/kernel_main.o \
-				   ${BUILD}/krlinit.o ${BUILD}/virmem.o ${BUILD}/thread.o
+${BUILD}/kernel.o: ${BUILD}/hal.o  ${BUILD}/kernel_main.o ${BUILD}/krlglobal.o \
+				   ${BUILD}/krlinit.o ${BUILD}/virmem.o ${BUILD}/krlmempool.o \
+				   ${BUILD}/thread.o ${BUILD}/scheduler.o
 	ld $^ -o $@ -T ${ROOT_PATH}/linker.ld -Map ${BUILD}/kernel.map
 
 ${BUILD}/hal.o:
@@ -24,13 +25,22 @@ ${BUILD}/hal.o:
 ${BUILD}/kernel_main.o: ./kernel_main.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
+${BUILD}/krlglobal.o: ./kernel/krlglobal.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
 ${BUILD}/krlinit.o: ./kernel/krlinit.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/krlmempool.o: kernel/krlmempool.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/virmem.o: ./kernel/virmem.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/thread.o: ./kernel/thread.c
+${BUILD}/thread.o: ./kernel/thread/thread.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/scheduler.o: ./kernel/thread/scheduler.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/OSTool: ${ROOT_PATH}/tool/main.c

@@ -31,6 +31,5 @@ typedef uint64_t cpuflg_t;
 #define FALSE 0
 
 #define EXTERN extern
-#define KEXTERN extern
 
 #endif
