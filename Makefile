@@ -16,7 +16,7 @@ HD_IMG_NAME:= "hd.img"
 all: clean ${DIRS} ${FILES}
 	dd if=${BIN}/boot.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=0 count=1 conv=sync
 	dd if=${BIN}/setup.bin of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=1 count=11 conv=sync
-	dd if=${BIN}/kernel.pkg of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=12 count=300 conv=sync
+	dd if=${BIN}/kernel.pkg of=$(BUILD)/$(HD_IMG_NAME) bs=512 seek=12 count=500 conv=sync
 
 ${BIN}/boot.bin ${BIN}/setup.bin:
 	$(MAKE) -C ${SRC}/boot/${ARC} ROOT_PATH=${ROOT_PATH}

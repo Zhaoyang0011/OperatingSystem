@@ -7,7 +7,23 @@
 
 #ifdef x86_64
 
-#define TDIRE_MAX 512
+#define TDIRE_MAX (512)
+#define SDIRE_MAX (512)
+#define IDIRE_MAX (512)
+#define MDIRE_MAX (512)
+
+#define MDIRE_IV_RSHTBIT (12)
+#define MDIRE_IV_BITMASK (0x1ffUL)
+#define MSA_PADR_LSHTBIT (12)
+#define MDIRE_PADR_LSHTBIT (12)
+#define IDIRE_IV_RSHTBIT (21)
+#define IDIRE_IV_BITMASK (0x1ffUL)
+#define IDIRE_PADR_LSHTBIT (12)
+#define SDIRE_IV_RSHTBIT (30)
+#define SDIRE_IV_BITMASK (0x1ffUL)
+#define SDIRE_PADR_LSHTBIT (12)
+#define TDIRE_IV_RSHTBIT (39)
+#define TDIRE_IV_BITMASK (0x1ffUL)
 
 typedef struct TDIREFLAGS {
   uint64_t t_p: 1;     //0

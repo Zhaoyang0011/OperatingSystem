@@ -41,15 +41,17 @@ void thrdlst_init(thrdlst_t *initp);
 
 void schdata_init(schdata_t *initp);
 
-void schedclass_t_init(schedclass_t *initp);
-
-void init_krlsched();
+void schedclass_init(schedclass_t *initp);
 
 // global scheduler for os
 extern KRL_DEFGLOB_VARIABLE(schedclass_t, scheduler);
 
-thread_t *scheduler_retn_curthread();
-thread_t *scheduler_select_thread();
+void schedule();
 void scheduler_add_thread(thread_t *td);
+void switch_context(thread_t *next, thread_t *prev);
+void retnfrom_first_sched(thread_t *thrdp);
+
+void idlethread_init();
+void idlethread_start();
 
 #endif

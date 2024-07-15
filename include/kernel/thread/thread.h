@@ -1,10 +1,10 @@
 #ifndef _THREAD_H
 #define _THREAD_H
 
+#include <kernel/thread/context.h>
 #include <struct/list.h>
 #include <spinlock.h>
 #include <kernel/virmem.h>
-#include <kernel/thread/context.h>
 
 #define TDSTUS_RUN 0
 #define TDSTUS_SLEEP 3
@@ -30,15 +30,15 @@
 #define USERTHREAD_FLG 3
 
 #ifdef x86_64
+
 #define DAFT_TDUSRSTKSZ 0x8000
 #define DAFT_TDKRLSTKSZ 0x8000
-#endif
 
-#ifdef x86_64
 #define TD_HAND_MAX 8
 #define DAFT_SPSR 0x10
 #define DAFT_CPSR 0xd3
 #define DAFT_CIDLESPSR 0x13
+
 #endif
 
 #define K_CS_IDX    0x08
@@ -68,5 +68,8 @@ typedef struct thread {
   context_t td_context;     //机器上下文件结构
 //    objnode_t*  td_handtbl[TD_HAND_MAX];//打开的对象数组
 } thread_t;
+
+thread_t *new_cpuidle_thread();
+thread_t *krl_new_thread(void *filerun, uint_t flg, uint_t prilg, uint_t prity, size_t usrstksz, size_t krlstksz);
 
 #endif

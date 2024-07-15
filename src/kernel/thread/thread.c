@@ -1,7 +1,9 @@
 #include <kernel/thread/thread.h>
+#include <kernel/thread/context.h>
 #include <kernel/thread/scheduler.h>
 #include <kernel/krlmempool.h>
 #include <string.h>
+#include <kprint.h>
 
 uint_t hal_retn_cpuid() {
   return 0;
@@ -12,7 +14,7 @@ uint_t krlretn_thread_id(thread_t *tdp) {
 }
 //初始化thread_t结构
 void thread_init(thread_t *initp) {
-  spin_lock(&initp->td_lock);
+  spinlock_init(&initp->td_lock);
   list_init(&initp->td_list);
   initp->td_flgs = TDFLAG_FREE;
   initp->td_stus = TDSTUS_NEW;//进程状态为新建
@@ -72,6 +74,27 @@ void krlthread_stack_init(thread_t *p_thread, void *runadr, uint_t cpuflags) {
   p_thread->td_context.ctx_nextrip = (uint_t)runadr;
   //设置进程下一次运行的栈地址为arp
   p_thread->td_context.ctx_nextrsp = (uint_t)arp;
+}
+
+void krlthread_userstack_init(thread_t *thdp, void *runadr, uint_t cpuflags) {
+  thdp->td_krlstktop &= (~0xf);
+  thdp->td_usrstktop &= (~0xf);
+  krlstkregs_t *arp = (krlstkregs_t *)(thdp->td_krlstktop - sizeof(krlstkregs_t));
+  memset((void *)arp, 0, sizeof(krlstkregs_t));
+
+  arp->r_rip_old = (uint_t)runadr;
+  arp->r_cs_old = U_CS_IDX;
+  arp->r_rflgs = cpuflags;
+  arp->r_rsp_old = thdp->td_usrstktop;
+  arp->r_ss_old = U_DS_IDX;
+
+  arp->r_ds = U_DS_IDX;
+  arp->r_es = U_DS_IDX;
+  arp->r_fs = U_DS_IDX;
+  arp->r_gs = U_DS_IDX;
+
+  thdp->td_context.ctx_nextrip = (uint_t)runadr;
+  thdp->td_context.ctx_nextrsp = (uint_t)arp;
 }
 
 thread_t *krl_new_krl_thread_core(void *filerun,
@@ -150,10 +173,50 @@ thread_t *krl_new_user_thread_core(void *filerun,
   ret_td->td_usrstktop = usrstkadr + (addr_t)(usrstksz - 1);
   ret_td->td_usrstkstart = usrstkadr;
   // 初始化进程的内核栈
-  krlthread_stack_init(ret_td, filerun, KMOD_EFLAGS);
+  krlthread_userstack_init(ret_td, filerun, KMOD_EFLAGS);
   // 加入进程调度系统
   scheduler_add_thread(ret_td);
   // 返回进程指针
+  return ret_td;
+}
+
+void krlcpuidle_main() {
+    uint_t i = 0;
+  for (;; i++) {
+    kprint("idle process running:%x\n", i);//打印
+    schedule();//调度进程
+  }
+}
+
+thread_t *new_cpuidle_thread() {
+
+  thread_t *ret_td = NULL;
+  bool_t acs = FALSE;
+  addr_t krlstkadr = NULL;
+  uint_t cpuid = cur_cpuid();
+  schdata_t *schdap = &scheduler.scls_schda[cpuid];
+  krlstkadr = krlnew(DAFT_TDKRLSTKSZ);
+  if (krlstkadr == NULL) {
+    return NULL;
+  }
+  ret_td = krlnew_thread_desc();
+  if (ret_td == NULL) {
+    acs = krldelete(krlstkadr, DAFT_TDKRLSTKSZ);
+    if (acs == FALSE) {
+      return NULL;
+    }
+    return NULL;
+  }
+  ret_td->td_privilege = PRILG_SYS;
+  ret_td->td_priority = PRITY_MIN;
+
+  ret_td->td_krlstktop = krlstkadr + (addr_t)(DAFT_TDKRLSTKSZ - 1);
+  ret_td->td_krlstkstart = krlstkadr;
+  krlthread_stack_init(ret_td, (void *)krlcpuidle_main, KMOD_EFLAGS);
+
+  schdap->sda_cpuidle = ret_td;
+  schdap->sda_currtd = ret_td;
+
   return ret_td;
 }
 

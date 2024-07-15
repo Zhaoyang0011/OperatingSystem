@@ -136,10 +136,11 @@ kmomgr_t *_create_kmomgr_onmpg(mpdesc_t *mpgs, uint_t relpnr, size_t objsz) {
   addr_t vadrs = P2V((addr_t)phyadr);
   addr_t vadre = P2V((addr_t)phyade);
 
-  if ((vadre - vadrs) != PAGE_SIZE - 1)
+  uint64_t adr_len = vadre - vadrs + 1;
+
+  if (adr_len < PAGE_SIZE - 1) {
     return NULL;
-  if ((vadre - vadrs + 1) <= (sizeof(kmomgr_t) + sizeof(freekmemobj_t)))
-    return NULL;
+  }
 
   kmomgr_t *pkmomgr = (kmomgr_t *)vadrs;
 

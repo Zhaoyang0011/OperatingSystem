@@ -30,7 +30,7 @@ typedef struct e820_desc {
 } __attribute__((packed)) e820_desc_t;
 
 #define KERNEL_START 0x2000000
-#define KERNEL_DESC_OFF -0x1000
+#define KERNEL_DESC_OFF (-0x1000)
 // stack macro
 #define STACK_PHYADR (0x200000 - 0x1000)
 #define STACK_SIZE 0x1000

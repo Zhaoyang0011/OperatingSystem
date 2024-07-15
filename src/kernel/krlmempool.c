@@ -8,7 +8,7 @@ addr_t mpdesc_ret_vaddr(mpdesc_t *retmsa) {
     panic("phyadr_to_viradr err");
     return KRNL_ADDR_ERROR;
   }
-  return retmsa->mpd_addr & PAGE_SIZE;
+  return (retmsa->mpd_addr & PAF_ADDR_MASK) + KRNL_MAP_VIRTADDRESS_START;
 }
 
 mpdesc_t *kmempool_del_mpdesc(kmempool_t *kmempool, uint_t relpnr, addr_t adr);

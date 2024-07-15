@@ -82,4 +82,6 @@ void init_memory_page();
 
 void init_mempage_occupation();
 
+addr_t mpdesc_ret_vaddr(mpdesc_t *retmsa);
+
 #endif
