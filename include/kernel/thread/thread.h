@@ -4,7 +4,7 @@
 #include <struct/list.h>
 #include <spinlock.h>
 #include <kernel/virmem.h>
-#include <hal/context.h>
+#include <kernel/thread/context.h>
 
 #define TDSTUS_RUN 0
 #define TDSTUS_SLEEP 3

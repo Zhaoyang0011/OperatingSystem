@@ -1,8 +1,8 @@
 #define HALGOBAL_HEAD
 
 #include "interrupt/gdtidt.h"
-#include "cpu.h"
-#include <hal/context.h>
+#include <hal/cpu.h>
+#include "kernel/thread/context.h"
 #include <hal/halglobal.h>
 #include <hal/interrupt.h>
 #include <hal/memory/memarea.h>
@@ -14,20 +14,12 @@ HAL_DEFGLOB_VARIABLE(idtr_t, idtr);
 HAL_DEFGLOB_VARIABLE(int_flt_desc_t, int_fault)[IDT_MAX];
 HAL_DEFGLOB_VARIABLE(gdtr_t, x64_gdtr)[CPU_CORE_MAX];
 HAL_DEFGLOB_VARIABLE(descriptor_t, x64_gdt)[CPU_CORE_MAX][GDT_MAX];
-HAL_DEFGLOB_VARIABLE(x64tss_t, x64_tss)[CPU_CORE_MAX];
 
 // lapic.c
 HAL_DEFGLOB_VARIABLE(volatile uint32_t *, lapic);
 
-// mempage.c
-HAL_DEFGLOB_VARIABLE(uint64_t, occunr);
-
 // memarea.c
 HAL_DEFGLOB_VARIABLE(memarea_t, memarea_arr)[MEMAREA_MAX];
-HAL_DEFGLOB_VARIABLE(uint64_t, frenr);
 
 // memgrob.c
 HAL_DEFGLOB_VARIABLE(memgrob_t, memgrob);
-
-// cpu.c
-HAL_DEFGLOB_VARIABLE(x64tss_t, x64tss)[CPU_CORE_MAX];

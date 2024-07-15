@@ -8,6 +8,7 @@
 // virtual memory page macro
 #define KRNL_VIRTUAL_ADDRESS_START 0xffff800000000000
 #define P2V(m) (KRNL_VIRTUAL_ADDRESS_START + m)
+#define V2P(m) (m - KRNL_VIRTUAL_ADDRESS_START)
 #define KPML4_P (1 << 0)
 #define KPML4_RW (1 << 1)
 #define KPML4_US (1 << 2)

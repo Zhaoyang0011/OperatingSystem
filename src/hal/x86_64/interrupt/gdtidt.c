@@ -206,9 +206,7 @@ KLINE void load_x64_tr(uint16_t trindx) {
 }
 
 void init_gdt() {
-
-  for (uint32_t gdtindx = 0; gdtindx < CPUCORE_MAX; gdtindx++) {
-
+  for (uint32_t gdtindx = 0; gdtindx < CPU_CORE_MAX; gdtindx++) {
     set_descriptor(&x64_gdt[gdtindx][0], 0, 0, 0);
     set_descriptor(&x64_gdt[gdtindx][1], 0, 0, DA_CR | DA_64 | 0);
     set_descriptor(&x64_gdt[gdtindx][2], 0, 0, DA_DRW | DA_64 | 0);
@@ -218,7 +216,6 @@ void init_gdt() {
 
     x64_gdtr[gdtindx].gdtbass = (uint64_t)x64_gdt[gdtindx];
     x64_gdtr[gdtindx].gdtLen = sizeof(x64_gdt[gdtindx]) - 1;
-
   }
 
   load_x64_gdt(&x64_gdtr[0]);

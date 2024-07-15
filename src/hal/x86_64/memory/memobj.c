@@ -375,7 +375,7 @@ void *kmobj_alloc(size_t size) {
 }
 
 KLINE bool_t ismobj_from_kmomgrext(kmomgrext_t *pmomgrext, void *addr) {
-  if (pmomgrext->mt_vstat < addr && pmomgrext->mt_vend > addr)
+  if ((void *)pmomgrext->mt_vstat < addr && (void *)pmomgrext->mt_vend > addr)
     return TRUE;
   return FALSE;
 }

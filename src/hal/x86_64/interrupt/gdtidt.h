@@ -4,10 +4,10 @@
 #include <hal/halglobal.h>
 #include <type.h>
 #include <hal/interrupt.h>
-#include <hal/context.h>
+#include "kernel/thread/context.h"
 #include <struct/list.h>
 #include <spinlock.h>
-#include "../cpu.h"
+#include "hal/cpu.h"
 
 #define IDT_MAX 256
 #define GDT_MAX 10

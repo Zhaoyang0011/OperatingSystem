@@ -15,4 +15,14 @@ KLINE sint_t search_64lbits(uint64_t val) {
   return retbitnr;
 }
 
+KLINE void write_cr3(uint_t r_val) {
+  __asm__ __volatile__(
+
+      "movq %0,%%cr3 \n\t"
+      :
+      : "r"(r_val)
+      : "memory" //, "edx"
+      );
+}
+
 #endif

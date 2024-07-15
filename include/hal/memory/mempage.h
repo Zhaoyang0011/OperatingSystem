@@ -51,6 +51,7 @@ typedef struct mpflgs {
 #define PAF_RSV_VAL (0)
 #define PAF_INIT_PADRS (0)
 #define PAF_ADDR_MASK (0xFFFFFFFFFFFFF000)
+
 typedef struct phyadrflgs {
   uint64_t paf_alloc: 1;  // 分配位
   uint64_t paf_shared: 1; // 共享位
@@ -73,7 +74,7 @@ typedef struct memory_page_descriptor {
   union {
     uint64_t mpd_addr;
     phyadrflgs_t mpd_adrflgs; // 物理地址和标志
-  };
+  } __attribute__((packed));
   void *mpd_odlink;           // 相邻且相同大小msadsc的指针
 } mpdesc_t;
 

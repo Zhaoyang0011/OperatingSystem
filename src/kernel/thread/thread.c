@@ -1,4 +1,5 @@
 #include <kernel/thread/thread.h>
+#include <kernel/thread/scheduler.h>
 #include <kernel/krlmempool.h>
 #include <string.h>
 
@@ -74,10 +75,8 @@ void krlthread_stack_init(thread_t *p_thread, void *runadr, uint_t cpuflags) {
 }
 
 thread_t *krl_new_krl_thread_core(void *filerun,
-                                  uint_t flg,
                                   uint_t prilg,
                                   uint_t prity,
-                                  size_t usrstksz,
                                   size_t krlstksz) {
   thread_t *ret_td = NULL;
   bool_t acs = FALSE;
@@ -108,19 +107,54 @@ thread_t *krl_new_krl_thread_core(void *filerun,
   //初始化进程的内核栈
   krlthread_stack_init(ret_td, filerun, KMOD_EFLAGS);
   //加入进程调度系统
-//  krlschdclass_add_thread(ret_td);
+  scheduler_add_thread(ret_td);
   //返回进程指针
   return ret_td;
 }
 
-//TODO create user thread
 thread_t *krl_new_user_thread_core(void *filerun,
-                                   uint_t flg,
                                    uint_t prilg,
                                    uint_t prity,
                                    size_t usrstksz,
                                    size_t krlstksz) {
-  return NULL;
+  thread_t *ret_td = NULL;
+  bool_t acs = FALSE;
+  addr_t usrstkadr = NULL, krlstkadr = NULL;
+  usrstkadr = krlnew(usrstksz);
+  if (usrstkadr == NULL) {
+    return NULL;
+  }
+  krlstkadr = krlnew(krlstksz);
+  if (krlstkadr == NULL) {
+    if (krldelete(usrstkadr, usrstksz) == FALSE) {
+      return NULL;
+    }
+    return NULL;
+  }
+  ret_td = krlnew_thread_desc();
+  if (ret_td == NULL) {
+    krldelete(usrstkadr, usrstksz);
+    krldelete(krlstkadr, krlstksz);
+    return NULL;
+  }
+
+  // 设置进程权限
+  ret_td->td_privilege = prilg;
+  // 设置进程优先级
+  ret_td->td_priority = prity;
+
+  // 设置进程的内核栈顶和内核栈开始地址
+  ret_td->td_krlstktop = krlstkadr + (addr_t)(krlstksz - 1);
+  ret_td->td_krlstkstart = krlstkadr;
+  // 设置进程的应用程序栈顶和内核应用程序栈开始地址
+  ret_td->td_usrstktop = usrstkadr + (addr_t)(usrstksz - 1);
+  ret_td->td_usrstkstart = usrstkadr;
+  // 初始化进程的内核栈
+  krlthread_stack_init(ret_td, filerun, KMOD_EFLAGS);
+  // 加入进程调度系统
+  scheduler_add_thread(ret_td);
+  // 返回进程指针
+  return ret_td;
 }
 
 thread_t *krl_new_thread(void *filerun, uint_t flg, uint_t prilg, uint_t prity, size_t usrstksz, size_t krlstksz) {
@@ -142,11 +176,11 @@ thread_t *krl_new_thread(void *filerun, uint_t flg, uint_t prilg, uint_t prity, 
   }
   //是否建立内核进程
   if (KERNTHREAD_FLG == flg) {
-    return krl_new_krl_thread_core(filerun, flg, prilg, prity, tustksz, tkstksz);
+    return krl_new_krl_thread_core(filerun, prilg, prity, tkstksz);
   }
     //是否建立普通进程
   else if (USERTHREAD_FLG == flg) {
-    return krl_new_user_thread_core(filerun, flg, prilg, prity, tustksz, tkstksz);
+    return krl_new_user_thread_core(filerun, prilg, prity, tustksz, tkstksz);
   }
   return NULL;
 }

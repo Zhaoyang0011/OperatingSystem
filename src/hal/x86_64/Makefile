@@ -28,6 +28,12 @@ ${BUILD}/halinit.o: ./halinit.c
 ${BUILD}/halglobal.o: ./halglobal.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
+${BUILD}/spinlock.o: ./synchronize/spinlock.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
+${BUILD}/semaphore.o: ./synchronize/semaphore.c
+	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
+
 ${BUILD}/kprint.o: ./kprint.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
@@ -43,7 +49,7 @@ ${BUILD}/mp.o: ./mp.c
 ${BUILD}/cga.o: ./cga.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
-${BUILD}/context.o: ./context.c
+${BUILD}/context.o: ../../kernel/thread/context.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/apic.o: ./interrupt/apic.c
@@ -83,10 +89,4 @@ ${BUILD}/memobj.o: ./memory/memobj.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
 
 ${BUILD}/mmu.o: ./memory/mmu.c
-	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
-
-${BUILD}/spinlock.o: ./synchronize/spinlock.c
-	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@
-
-${BUILD}/semaphore.o: ./synchronize/semaphore.c
 	gcc ${CFLAGS_X64} ${INCLUDE} ${DEBUG} -c $< -o $@

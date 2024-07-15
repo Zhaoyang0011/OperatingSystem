@@ -57,8 +57,7 @@ bool_t virmemspace_init(virmemspace_t *vma) {
 }
 
 void pvmspacdesc_init(pvmspacdesc_t *initp) {
-  if(NULL == initp)
-  {
+  if (NULL == initp) {
     return;
   }
   spinlock_init(&initp->msd_lock);
@@ -70,7 +69,7 @@ void pvmspacdesc_init(pvmspacdesc_t *initp) {
   krlsem_set_sem(&initp->msd_sem, SEM_FLG_MUTEX, SEM_MUTEX_ONE_LOCK);
 
   // TODO implement mmu related
-//  mmudsc_t_init(&initp->msd_mmu);
+  mmudesc_init(&initp->msd_mmu);
   virmemspace_init(&initp->msd_virmemadrs);
   initp->msd_stext = 0;
   initp->msd_etext = 0;
