@@ -33,5 +33,6 @@ void init_krl() {
 
   idlethread_init();
   init_ab_thread();
+  __asm__ __volatile__("sti\n\t":: :);
   idlethread_start();
 }

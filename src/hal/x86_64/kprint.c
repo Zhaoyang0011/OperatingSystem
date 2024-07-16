@@ -29,6 +29,24 @@ KLINE char *kprint_int(char *str, int n, int base) {
   return str;
 }
 
+KLINE char *kprint_addr(char *str, addr_t n, int base) {
+  register char *p;
+  char strbuf[36];
+  p = &strbuf[35];
+  *p = 0;
+
+  do {
+    *--p = "0123456789abcdef"[n % base];
+    n /= base;
+  } while (n);
+
+  while (*p) {
+    *str++ = *p++;
+  }
+
+  return str;
+}
+
 void kprint(const char *fmt, ...) {
   char buf[512];
   va_list args;
@@ -45,6 +63,9 @@ void kprint(const char *fmt, ...) {
         fmt++;
         break;
       case 'x':p = kprint_int(p, va_arg(args, uint_t), 16);
+        fmt++;
+        break;
+      case 'p':p = kprint_addr(p, (addr_t)va_arg(args, void *), 16);
         fmt++;
         break;
       case 's':p = kstrcpy(p, (char *)va_arg(args, uint_t));
