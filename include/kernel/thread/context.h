@@ -39,7 +39,14 @@ typedef struct kernel_stack_registers {
   uint_t r_ss_old;
 } krlstkregs_t;
 
+typedef struct thread thread_t;
+
 void context_init(context_t *);
+void switch_context(thread_t *next, thread_t *prev);
+void retnfrom_first_sched(thread_t *thrdp);
+
+void idlethread_init();
+void idlethread_start();
 
 #endif
 

@@ -48,10 +48,5 @@ extern KRL_DEFGLOB_VARIABLE(schedclass_t, scheduler);
 
 void schedule();
 void scheduler_add_thread(thread_t *td);
-void switch_context(thread_t *next, thread_t *prev);
-void retnfrom_first_sched(thread_t *thrdp);
-
-void idlethread_init();
-void idlethread_start();
 
 #endif
