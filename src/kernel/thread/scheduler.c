@@ -109,6 +109,7 @@ void scheduler_add_thread(thread_t *thdp) {
 void schedule() {
   thread_t *prev = scheduler_retn_curthread(),  //返回当前运行进程
   *next = scheduler_select_thread();            //选择下一个运行的进程
+  kprint("current: %x, next: %x\n", prev, next);
   switch_context(next, prev);                   //从当前进程切换到下一个进程
 }
 

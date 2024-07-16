@@ -53,6 +53,7 @@ void kprint(const char *fmt, ...) {
       default:break;
     }
   }
+  *p = 0;
   va_end(args);
   cga_console(buf);
 }

@@ -45,12 +45,13 @@ static void cga_putc(int c) {
 }
 
 void cga_console(char *arr) {
-  spin_lock(&cga_lock);
+  cpuflg_t flg;
+  spinlock_cli(&cga_lock, &flg);
 
   while (*arr) {
     cga_putc(*arr);
     ++arr;
   }
 
-  spin_unlock(&cga_lock);
+  spinunlock_sti(&cga_lock, &flg);
 }
