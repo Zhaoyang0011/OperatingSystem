@@ -1,5 +1,6 @@
 #include <hal/cpu.h>
+#include "interrupt/apic.h"
 
-int cur_cpuid() {
-  return 0;
+uint32_t cur_cpuid() {
+  return lapic_cpu[lapicid()];
 }

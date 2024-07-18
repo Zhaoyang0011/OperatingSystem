@@ -20,6 +20,6 @@ typedef struct x64tss {
 
 #endif
 
-int cur_cpuid();
+uint32_t cur_cpuid();
 
 #endif

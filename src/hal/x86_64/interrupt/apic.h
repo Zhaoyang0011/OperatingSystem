@@ -84,16 +84,24 @@
 #define IRQ_ERROR 19
 #define IRQ_SPURIOUS 31
 
-HAL_DEFGLOB_VARIABLE(uint32_t *, lapic);
+#define LAPIC_MAX 32
+
+HAL_DEFGLOB_VARIABLE(volatile uint32_t *, lapic);
+HAL_DEFGLOB_VARIABLE(volatile uint32_t, lapic_cpu)[LAPIC_MAX];
 
 void find_apic(MADT_t *madt);
 
 void init_lapic();
+void init_lapic_cpuid();
 
 // write lapic register
 KLINE void lapicw(uint32_t index, uint32_t value) {
   lapic[index] = value;
   lapic[LAPIC_ID];
+}
+
+KLINE uint32_t lapicid() {
+  return lapic[LAPIC_ID];
 }
 
 #endif

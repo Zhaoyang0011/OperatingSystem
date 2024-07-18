@@ -1,5 +1,4 @@
 #include "apic.h"
-#include "../apci.h"
 #include "x86.h"
 #include "i8259.h"
 #include <console.h>
@@ -125,4 +124,9 @@ void init_lapic() {
 
   // Enable interrupts on the APIC (but not on the processor).
   lapicw(LAPIC_TPR, 0);
+  init_lapic_cpuid();
+}
+
+void init_lapic_cpuid() {
+  lapic_cpu[lapicid()] = 0;
 }
