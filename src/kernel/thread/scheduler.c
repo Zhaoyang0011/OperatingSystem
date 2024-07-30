@@ -38,7 +38,7 @@ thread_t *scheduler_retn_idlethread() {
   uint_t cpuid = cur_cpuid();
   thread_t *idle = scheduler.scls_schda[cpuid].sda_cpuidle;
   if (idle == NULL) {
-    //若调度数据结构中当前运行进程的指针为空，就出错死机
+    //若调度数据结构中idle进程的指针为空，就出错死机
     panic("schdap->sda_cpuidle NULL");
   }
   return idle;
@@ -109,6 +109,6 @@ void scheduler_add_thread(thread_t *thdp) {
 void schedule() {
   thread_t *prev = scheduler_retn_curthread(),  //返回当前运行进程
   *next = scheduler_select_thread();            //选择下一个运行的进程
-  kprint("current: %p, next: %p\n", prev, next);
+//  kprint("current: %p, next: %p\n", prev, next);
   switch_context(next, prev);                   //从当前进程切换到下一个进程
 }

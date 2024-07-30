@@ -127,7 +127,6 @@ KLINE void load_x64_idt(idtr_t *idtr) {
       :
       : "r"(idtr)
       : "memory");
-  return;
 }
 
 void set_idtr(gate_t *idtptr) {
