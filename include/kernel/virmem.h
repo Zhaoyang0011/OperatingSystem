@@ -108,6 +108,7 @@ void pvmspacdesc_init(pvmspacdesc_t *);
 kvmareadesc_t *new_kvmareadesc();
 bool_t del_kvmareadesc(kvmareadesc_t *desc);
 bool_t virmemspace_init(virmemspace_t *vma);
+addr_t vms_new_varea(pvmspacdesc_t *mm, addr_t start, size_t vassize, uint64_t vaslimits, uint32_t vastype);
 
 sint32_t krluserspace_accessfailed(addr_t fairvadrs);
 

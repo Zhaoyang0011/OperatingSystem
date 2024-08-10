@@ -103,24 +103,30 @@ bool_t vms_kvmareadesc_is_ok(virmemspace_t *vmslocked, kvmareadesc_t *curr, addr
   kvmareadesc_t *nextkmvd = NULL;
   addr_t newend = start + (addr_t)vassize;
   //如果curr不是最后一个先检查当前kmvarsdsc_t结构
-  if (list_is_last(&curr->kva_list, &vmslocked->vs_list) == FALSE) {//就获取curr的下一个kmvarsdsc_t结构
+  if (list_is_last(&curr->kva_list, &vmslocked->vs_list) == FALSE) {
+    //就获取curr的下一个kvmareadesc_t结构
     nextkmvd = list_next_entry(curr, kvmareadesc_t, kva_list);
     //由系统动态决定分配虚拟空间的开始地址
-    if (NULL == start) {//如果curr的结束地址加上分配的大小小于等于下一个kmvarsdsc_t结构的开始地址就返回curr
+    if (NULL == start) {
+      //如果curr的结束地址加上分配的大小小于等于下一个kvmareadesc_t结构的开始地址就返回curr
       if ((curr->kva_end + (addr_t)vassize) <= nextkmvd->kva_start) {
         return TRUE;
       }
-    } else {//否则比较应用指定分配的开始、结束地址是不是在curr和下一个kmvarsdsc_t结构之间
+    } else {
+      //否则比较应用指定分配的开始、结束地址是不是在curr和下一个kvmareadesc_t结构之间
       if ((curr->kva_end <= start) && (newend <= nextkmvd->kva_start)) {
         return TRUE;
       }
     }
-  } else {//否则curr为最后一个kmvarsdsc_t结构
-    if (NULL == start) {//curr的结束地址加上分配空间的大小是不是小于整个虚拟地址空间
+  } else {
+    //否则curr为最后一个kmvarsdsc_t结构
+    if (NULL == start) {
+      //curr的结束地址加上分配空间的大小是不是小于整个虚拟地址空间
       if ((curr->kva_end + (addr_t)vassize) < vmslocked->vs_isalcend) {
         return TRUE;
       }
-    } else {//否则比较应用指定分配的开始、结束地址是不是在curr的结束地址和整个虚拟地址空间的结束地址之间
+    } else {
+      //否则比较应用指定分配的开始、结束地址是不是在curr的结束地址和整个虚拟地址空间的结束地址之间
       if ((curr->kva_end <= start) && (newend < vmslocked->vs_isalcend)) {
         return TRUE;
       }
@@ -141,14 +147,15 @@ kvmareadesc_t *vms_find_kvmareadesc(virmemspace_t *vmslocked, addr_t start, size
   if (newend > vmslocked->vs_isalcend)
     return NULL;
 
-  if (NULL != curr && vms_kvmareadesc_is_ok(vmslocked, curr, start, vassize)) {//先检查当前kmvarsdsc_t结构行不行
+  //先检查当前kmvarsdsc_t结构行不行
+  if (NULL != curr && vms_kvmareadesc_is_ok(vmslocked, curr, start, vassize)) {
     return curr;
   }
   //遍历virmemadrs_t中的所有的kmvarsdsc_t结构
   list_for_each(listpos, &vmslocked->vs_list) {
     curr = list_entry(listpos, kvmareadesc_t, kva_list);
-    //检查每个kmvarsdsc_t结构
-    if (vms_kvmareadesc_is_ok(vmslocked, curr, start, vassize)) {//如果符合要求就返回
+    //检查每个kmvarsdsc_t结构 如果符合要求就返回
+    if (vms_kvmareadesc_is_ok(vmslocked, curr, start, vassize)) {
       return curr;
     }
   }
@@ -170,7 +177,8 @@ addr_t vms_new_varea_core(pvmspacdesc_t *mm, addr_t start, size_t vassize, uint6
     }
     //进行虚拟地址区间进行检查看能否复用这个数据结构
     if (((NULL == start) || (start == currkmvd->kva_end)) && (vaslimits == currkmvd->kva_limits)
-        && (vastype == currkmvd->kva_maptype)) {//能复用的话，当前虚拟地址区间的结束地址返回
+        && (vastype == currkmvd->kva_maptype)) {
+      //能复用的话，当前虚拟地址区间的结束地址返回
       retadrs = currkmvd->kva_end;
       //扩展当前虚拟地址区间的结束地址为分配虚拟地址区间的大小
       currkmvd->kva_end += vassize;
@@ -184,7 +192,8 @@ addr_t vms_new_varea_core(pvmspacdesc_t *mm, addr_t start, size_t vassize, uint6
       break;
     }
     //如果分配的开始地址为NULL就由系统动态决定
-    if (NULL == start) {//当然是接着当前虚拟地址区间之后开始
+    if (NULL == start) {
+      //当然是接着当前虚拟地址区间之后开始
       newkmvd->kva_start = currkmvd->kva_end;
     } else {//否则这个新的虚拟地址区间的开始就是请求分配的开始地址
       newkmvd->kva_start = start;
